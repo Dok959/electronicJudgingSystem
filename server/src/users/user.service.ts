@@ -6,7 +6,7 @@ import { User, Prisma } from '@prisma/client';
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  async user(
+  async findOne(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
   ): Promise<User | null> {
     return this.prisma.user.findUnique({
@@ -14,24 +14,19 @@ export class UserService {
     });
   }
 
-  // TODO: проверка на существование || что возвращается сейчас?
   async registration(
     userCreateInput: Prisma.UserCreateInput,
   ): Promise<User | null> {
-    return this.prisma.user.create({
-      data: userCreateInput,
+    const existingUser = await this.findOne({
+      email: userCreateInput.email,
     });
-  }
 
-  async validateUser(
-    userWhereUniqueInput: Prisma.UserWhereUniqueInput,
-  ): Promise<User | null> {
-    const user = this.user(userWhereUniqueInput);
-
-    if (!user) {
+    if (existingUser) {
       return null;
     }
 
-    return user;
+    return this.prisma.user.create({
+      data: userCreateInput,
+    });
   }
 }

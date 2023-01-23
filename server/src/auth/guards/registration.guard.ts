@@ -4,16 +4,15 @@ import {
   ExecutionContext,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UserService } from '../user.service';
+import { AuthService } from '../auth.service';
 
 @Injectable()
 export class RegistrationGuard implements CanActivate {
-  constructor(private userService: UserService) {}
+  constructor(private authService: AuthService) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const { email } = request.body;
-    // const user = await this.userService.findOne({ email });
-    const user = await this.userService.validateUser({ email });
+    const user = await this.authService.validateUser(email);
 
     if (user) {
       throw new UnauthorizedException(
