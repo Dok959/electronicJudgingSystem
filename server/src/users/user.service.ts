@@ -13,4 +13,25 @@ export class UserService {
       where: userWhereUniqueInput,
     });
   }
+
+  // TODO: проверка на существование || что возвращается сейчас?
+  async registration(
+    userCreateInput: Prisma.UserCreateInput,
+  ): Promise<User | null> {
+    return this.prisma.user.create({
+      data: userCreateInput,
+    });
+  }
+
+  async validateUser(
+    userWhereUniqueInput: Prisma.UserWhereUniqueInput,
+  ): Promise<User | null> {
+    const user = this.user(userWhereUniqueInput);
+
+    if (!user) {
+      return null;
+    }
+
+    return user;
+  }
 }
