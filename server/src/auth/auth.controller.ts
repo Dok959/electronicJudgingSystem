@@ -22,6 +22,22 @@ export class AuthController {
 
   @UseGuards(LoginGuard)
   @Post('login')
+  async refreshToken(
+    @Body() loginUserDto: loginUserDto,
+    @Res() res: Response,
+  ): Promise<Response> {
+    const user = await this.userService.login(loginUserDto);
+
+    const access = await this.authService.generateAccessToken(user);
+    const refresh = await this.authService.generateRefreshToken(user.id);
+
+    res.statusCode = HttpStatus.OK;
+
+    return res.send({ ...access, ...refresh, name: user.name });
+  }
+
+  @UseGuards(LoginGuard)
+  @Post('login')
   async loginUser(
     @Body() loginUserDto: loginUserDto,
     @Res() res: Response,

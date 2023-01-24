@@ -8,23 +8,48 @@ datasource db {
 }
 
 model User {
-  id         Int     @id @default(autoincrement())
-  email      String  @unique
+  id         Int       @id @default(autoincrement())
+  email      String    @unique
   password   String
   name       String
   sirname    String
   patronymic String?
-  role       Role?   @relation(fields: [roleId], references: [id])
-  roleId     Int?    @default(1)
+  role       Role?     @default(USER)
+  Athlete    Athlete[]
 
   @@map("users")
 }
 
-model Role {
-  id    Int    @id @default(autoincrement())
-  name  String
-  power Int
-  User  User[]
+enum Role {
+  USER  @map("Пользователь")
+  JUDGE @map("Судья")
+  ADMIN @map("Администратор")
 
   @@map("roles")
+}
+
+enum Rank {
+  MC  @map("Мастер спорта")
+  KMC @map("Кандидат в мастера спорта")
+  C1  @map("1 разряд")
+  C2  @map("2 разряд")
+  C3  @map("3 разряд")
+  Y1  @map("1 юношеский")
+  Y2  @map("2 юношеский")
+  Y3  @map("3 юношеский")
+
+  @@map("ranks")
+}
+
+model Athlete {
+  id          Int       @id @default(autoincrement())
+  name        String
+  sirname     String
+  patronymic  String?
+  dateOfBirth DateTime? @db.Date
+  rank        Rank?     @default(Y3)
+  trainer     User?     @relation(fields: [trainerId], references: [id])
+  trainerId   Int?
+
+  @@map("athletes")
 }
