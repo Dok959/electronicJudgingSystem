@@ -8,12 +8,33 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { UserService } from 'src/users/user.service';
-import { RegistrationGuard } from './guards/registration.guard';
+import { RegistrationGuard, LoginGuard } from './guards';
 import { Prisma } from '@prisma/client';
+import { loginUserDto } from './dto';
+import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private authService: AuthService,
+  ) {}
+
+  @UseGuards(LoginGuard)
+  @Post('login')
+  async loginUser(
+    @Body() loginUserDto: loginUserDto,
+    @Res() res: Response,
+  ): Promise<Response> {
+    const user = await this.userService.login(loginUserDto);
+
+    const access = await this.authService.generateAccessToken(user);
+    const refresh = await this.authService.generateRefreshToken(user.id);
+
+    res.statusCode = HttpStatus.OK;
+
+    return res.send({ ...access, ...refresh, name: user.name });
+  }
 
   @UseGuards(RegistrationGuard)
   @Post('registration')
