@@ -16,6 +16,7 @@ model User {
   patronymic String?
   role       Role?     @default(USER)
   Athlete    Athlete[]
+  Judge      Judge[]
 
   @@map("users")
 }
@@ -37,19 +38,135 @@ enum Rank {
   Y1  @map("1 юношеский")
   Y2  @map("2 юношеский")
   Y3  @map("3 юношеский")
+  NO  @map("Без разряда")
 
   @@map("ranks")
 }
 
 model Athlete {
-  id          Int       @id @default(autoincrement())
-  name        String
-  sirname     String
-  patronymic  String?
-  dateOfBirth DateTime? @db.Date
-  rank        Rank?     @default(Y3)
-  trainer     User?     @relation(fields: [trainerId], references: [id])
-  trainerId   Int?
+  id                     Int                      @id @default(autoincrement())
+  name                   String
+  sirname                String
+  patronymic             String?
+  dateOfBirth            DateTime?                @db.Date
+  rank                   Rank?                    @default(NO)
+  trainer                User?                    @relation(fields: [trainerId], references: [id])
+  trainerId              Int?
+  PartisipantsIndividual PartisipantsIndividual[]
+  AthletesGroup          AthletesGroup[]
 
   @@map("athletes")
+}
+
+enum Item {
+  Ball            @map("Мяч")
+  Ribbon          @map("Лента")
+  Hoop            @map("Обруч")
+  Maces           @map("Булавы")
+  SkippingRope    @map("Скакалка")
+  WithoutAnObject @map("Без предмета")
+
+  @@map("items")
+}
+
+model Event {
+  id            Int             @id @default(autoincrement())
+  title         String
+  startDate     DateTime?       @db.Date
+  startTime     DateTime?       @db.Time
+  duration      Int             @default(1)
+  Judge         Judge[]
+  SettingsEvent SettingsEvent[]
+
+  @@map("events")
+}
+
+model Judge {
+  event   Event @relation(fields: [eventId], references: [id])
+  eventId Int
+  user    User  @relation(fields: [userId], references: [id])
+  userId  Int
+
+  @@id([eventId, userId])
+  @@map("judges")
+}
+
+enum TypesEvent {
+  Individual @map("Индивидуальное")
+  Group      @map("Групповое")
+
+  @@map("types")
+}
+
+model SettingsEvent {
+  id                     Int                      @id @default(autoincrement())
+  event                  Event                    @relation(fields: [eventId], references: [id])
+  eventId                Int
+  type                   TypesEvent?              @default(Individual)
+  rank                   Rank?                    @default(NO)
+  PartisipantsIndividual PartisipantsIndividual[]
+  PartisipantsGroup      PartisipantsGroup[]
+
+  @@map("settingsEvent")
+}
+
+model PartisipantsIndividual {
+  id                Int                 @id @default(autoincrement())
+  settingsEvent     SettingsEvent       @relation(fields: [settingsEventId], references: [id])
+  settingsEventId   Int
+  athlete           Athlete             @relation(fields: [athleteId], references: [id])
+  athleteId         Int
+  RaitingIndividual RaitingIndividual[]
+
+  @@map("partisipantsIndividual")
+}
+
+model RaitingIndividual {
+  id            Int                    @id @default(autoincrement())
+  partisipant   PartisipantsIndividual @relation(fields: [partisipantId], references: [id])
+  partisipantId Int
+  rank          Item                   @default(WithoutAnObject)
+  score         Int
+
+  @@map("raitingIndividual")
+}
+
+model Group {
+  id                Int                 @id @default(autoincrement())
+  title             String
+  AthletesGroup     AthletesGroup[]
+  PartisipantsGroup PartisipantsGroup[]
+
+  @@map("groups")
+}
+
+model AthletesGroup {
+  group     Group   @relation(fields: [groupId], references: [id])
+  groupId   Int
+  athlete   Athlete @relation(fields: [athleteId], references: [id])
+  athleteId Int
+
+  @@id([groupId, athleteId])
+  @@map("athletesGroup")
+}
+
+model PartisipantsGroup {
+  id              Int            @id @default(autoincrement())
+  settingsEvent   SettingsEvent  @relation(fields: [settingsEventId], references: [id])
+  settingsEventId Int
+  group           Group          @relation(fields: [groupId], references: [id])
+  groupId         Int
+  RaitingGroup    RaitingGroup[]
+
+  @@map("partisipantsGroup")
+}
+
+model RaitingGroup {
+  id                 Int               @id @default(autoincrement())
+  partisipantGroup   PartisipantsGroup @relation(fields: [partisipantGroupId], references: [id])
+  partisipantGroupId Int
+  rank               Item              @default(WithoutAnObject)
+  score              Int
+
+  @@map("raitingGroup")
 }

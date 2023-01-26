@@ -10,8 +10,8 @@ import { Response } from 'express';
 import { UserService } from 'src/users/user.service';
 import { RegistrationGuard, LoginGuard } from './guards';
 import { Prisma } from '@prisma/client';
-import { loginUserDto } from './dto';
 import { AuthService } from './auth.service';
+import { authUserDto } from './dto';
 
 @Controller('auth')
 export class AuthController {
@@ -23,7 +23,7 @@ export class AuthController {
   @UseGuards(LoginGuard)
   @Post('login')
   async refreshToken(
-    @Body() loginUserDto: loginUserDto,
+    @Body() loginUserDto: authUserDto,
     @Res() res: Response,
   ): Promise<Response> {
     const user = await this.userService.login(loginUserDto);
@@ -39,7 +39,7 @@ export class AuthController {
   @UseGuards(LoginGuard)
   @Post('login')
   async loginUser(
-    @Body() loginUserDto: loginUserDto,
+    @Body() loginUserDto: authUserDto,
     @Res() res: Response,
   ): Promise<Response> {
     const user = await this.userService.login(loginUserDto);
