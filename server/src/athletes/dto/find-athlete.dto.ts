@@ -1,7 +1,6 @@
 import { IsOptional } from 'class-validator';
 
-export class updateAthleteDto {
-  readonly id: number;
+export class findAthleteDto {
   @IsOptional()
   readonly name: string;
   @IsOptional()
