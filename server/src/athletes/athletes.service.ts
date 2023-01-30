@@ -6,14 +6,14 @@ import { Athlete, Prisma } from '@prisma/client';
 export class AthleteService {
   constructor(private prisma: PrismaService) {}
 
-  async deleteAthlete(
+  async delete(
     athleteDeleteInput: Prisma.AthleteDeleteArgs,
   ): Promise<Athlete | null> {
     const existingAthlete = await this.findOne({
       id: athleteDeleteInput.where.id,
     });
 
-    if (existingAthlete) {
+    if (!existingAthlete) {
       return null;
     }
 
@@ -23,24 +23,24 @@ export class AthleteService {
   }
 
   // возможно передать параметр id:number ; избавиться от проверок на существование
-  async updateAthlete(
-    athleteUpdateInput: Prisma.AthleteUpdateArgs,
+  async update(
+    AthleteUpdateArgs: Prisma.AthleteUpdateArgs,
   ): Promise<Athlete | null> {
     const existingAthlete = await this.findOne({
-      id: athleteUpdateInput.where.id,
+      id: AthleteUpdateArgs.where.id,
     });
 
-    if (existingAthlete) {
+    if (!existingAthlete) {
       return null;
     }
 
     return this.prisma.athlete.update({
-      where: { id: athleteUpdateInput.where.id },
-      data: athleteUpdateInput.data,
+      where: { id: AthleteUpdateArgs.where.id },
+      data: AthleteUpdateArgs.data,
     });
   }
 
-  async createAthlete(
+  async create(
     athleteCreateInput: Prisma.AthleteCreateArgs,
   ): Promise<Athlete | null> {
     const existingAthlete = await this.findOne({
