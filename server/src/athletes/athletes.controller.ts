@@ -50,12 +50,8 @@ export class AthleteController {
   @UseGuards(JWTGuard)
   @Post()
   @HttpCode(HttpStatus.OK)
-  async createAthlete(
-    @Body() AthleteCreateInput: Prisma.AthleteCreateInput,
-    @Req() req: any,
-  ) {
+  async createAthlete(@Body() AthleteCreateInput: Prisma.AthleteCreateInput) {
     // const token = req.token;
-
     // const user = await this.authService.getUserByTokenData(token);
 
     return await this.athleteService.create({

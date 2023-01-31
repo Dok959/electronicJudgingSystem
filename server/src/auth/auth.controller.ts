@@ -8,10 +8,10 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { UserService } from 'src/users/user.service';
-import { RegistrationGuard, LoginGuard } from './guards';
+import { RegistrationGuard, LoginGuard, RefreshJWTGuard } from './guards';
 import { Prisma } from '@prisma/client';
 import { AuthService } from './auth.service';
-import { authUserDto } from './dto';
+import { authUserDto, refreshTokenDto } from './dto';
 
 @Controller('auth')
 export class AuthController {
@@ -20,20 +20,41 @@ export class AuthController {
     private authService: AuthService,
   ) {}
 
-  @UseGuards(LoginGuard)
-  @Post('login')
+  @UseGuards(RefreshJWTGuard)
+  @Post('refresh')
   async refreshToken(
-    @Body() loginUserDto: authUserDto,
+    @Body() clientTokens: refreshTokenDto,
     @Res() res: Response,
   ): Promise<Response> {
-    const user = await this.userService.login(loginUserDto);
+    const validToken = this.authService.verifyToken(clientTokens.refresh_token);
+
+    const parseAccessToken = await this.authService.getUserByTokenData(
+      clientTokens.access_token,
+    );
+    const user = await this.userService.findOne({
+      id: parseAccessToken.id,
+      email: parseAccessToken.email,
+    });
 
     const access = await this.authService.generateAccessToken(user);
-    const refresh = await this.authService.generateRefreshToken(user.id);
 
-    res.statusCode = HttpStatus.OK;
+    if (validToken?.error) {
+      if (validToken?.error === 'jwt expired') {
+        const refresh = await this.authService.generateRefreshToken(user.id);
 
-    return res.send({ ...access, ...refresh, name: user.name });
+        res.statusCode = HttpStatus.OK;
+        return res.send({ ...access, ...refresh });
+      } else {
+        res.statusCode = HttpStatus.BAD_REQUEST;
+        return res.send({ error: validToken?.error });
+      }
+    } else {
+      res.statusCode = HttpStatus.OK;
+      return res.send({
+        ...access,
+        refresh_token: clientTokens.refresh_token,
+      });
+    }
   }
 
   @UseGuards(LoginGuard)
