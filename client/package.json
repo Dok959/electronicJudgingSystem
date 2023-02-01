@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@fontsource/inter": "^4.5.15",
+    "@fontsource/nunito": "^4.5.12",
     "@mui/material": "^5.11.7",
     "@mui/styled-engine-sc": "latest",
     "@testing-library/jest-dom": "^5.14.1",
@@ -12,6 +14,7 @@
     "@types/node": "^16.7.13",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
+    "@types/styled-components": "^5.1.26",
     "effector": "^22.5.0",
     "effector-react": "^22.4.0",
     "ky": "^0.33.2",

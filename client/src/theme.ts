@@ -1,5 +1,7 @@
 import { createTheme } from '@mui/material/styles';
 import { amber, deepOrange, grey } from '@mui/material/colors';
+const Nunito = require('@fontsource/nunito');
+const Inter = require('@fontsource/inter');
 
 export const theme = createTheme({
   breakpoints: {
@@ -20,13 +22,21 @@ export const theme = createTheme({
         disableRipple: true, // No more ripple, on the whole application 💣!
       },
     },
+    MuiCssBaseline: {
+      styleOverrides: {
+        '@global': {
+          '@font-face': [Inter, Nunito],
+        },
+      },
+    },
   },
   typography: {
     htmlFontSize: 20,
-    fontFamily: ['Montserrat ', 'sans-serif'].join(','),
+    fontFamily: 'Inter, Nunito, sans-serif',
     fontWeightRegular: 400,
     //h0-design
     h1: {
+      fontFamily: 'Nunito, sans-serif',
       fontSize: '2.75rem',
       lineHeight: '56px',
       fontWeight: 700,
@@ -79,7 +89,11 @@ export const theme = createTheme({
 export const lightTheme = createTheme(theme, {
   palette: {
     mode: 'light',
+    contrastThreshold: 4.5,
     primary: amber,
+    secondary: {
+      main: '#EC008C',
+    },
     divider: amber[200],
     text: {
       primary: grey[900],
@@ -91,6 +105,7 @@ export const lightTheme = createTheme(theme, {
 export const darkTheme = createTheme(theme, {
   palette: {
     mode: 'dark',
+    contrastThreshold: 4.5,
     primary: deepOrange,
     divider: deepOrange[700],
     background: {

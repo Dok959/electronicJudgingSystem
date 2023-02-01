@@ -1,4 +1,4 @@
-import { ThemeProvider } from '@mui/material';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import { useTheme } from './hooks';
 import { Layout, MainPage } from './pages';
 
@@ -7,7 +7,9 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline enableColorScheme />
       <div className="App">
+        gdfgdfg
         <Layout>
           <MainPage />
         </Layout>
