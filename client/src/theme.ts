@@ -70,11 +70,17 @@ export const theme = createTheme({
       fontWeight: 500,
       lineHeight: '40px',
     },
-    //body-design
+    //design
     body1: {
       fontSize: '1rem',
       lineHeight: '28px',
       fontWeight: 500,
+    },
+    //links-design
+    body2: {
+      fontSize: '1rem',
+      lineHeight: '24px',
+      fontWeight: 400,
     },
     //button-design
     button: {
@@ -90,7 +96,9 @@ export const lightTheme = createTheme(theme, {
   palette: {
     mode: 'light',
     contrastThreshold: 4.5,
-    primary: amber,
+    primary: {
+      main: '#24293D',
+    },
     secondary: {
       main: '#EC008C',
     },

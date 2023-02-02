@@ -30,13 +30,37 @@ export const BootstrapButton = styled(Button)({
   },
 });
 
-export const NavLink = styled(Link)`
-  font-family: 'Nunito';
+export const NavLink = styled(Link)((props) => ({
+  color: props.theme.palette.primary.main,
+
+  '&:hover': {
+    textDecoration: 'none',
+  },
+}));
+
+export const ActiveLink = styled(NavLink)((props) => ({
+  color: props.theme.palette.secondary.main,
+  textDecoration: 'none',
+
+  '&:after': {
+    content: '',
+    width: '100%',
+    height: 2,
+  },
+}));
+
+export const NavLink2 = styled(NavLink)`
+  color: ${(props) => props.theme.palette.secondary.main};
+`;
+
+export const NavLink1 = styled(Link)`
   color: ${(props) => props.theme.palette.secondary.main};
   position: relative;
   display: flex;
   flex-direction: column;
   margin: 15px;
+  &:after {
+  }
 
   /* ${(props) => props.theme.breakpoints.down('md')} {
     max-width: 100%;

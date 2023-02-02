@@ -1,4 +1,4 @@
-import { Box, Link } from '@mui/material';
+import { Box } from '@mui/material';
 import * as Style from './Menu.style';
 
 export const Menu = () => {
@@ -7,20 +7,25 @@ export const Menu = () => {
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-      <Style.NavLink href="#" underline="hover">
+      <Style.NavLink
+        href="#"
+        variant="body2"
+        classes={Style.ActiveLink}
+        className={Style.NavLink2}
+      >
         Главная
       </Style.NavLink>
       <>
-        <Link href="#" underline="hover">
+        <Style.NavLink href="#" variant="body2">
           О нас
-        </Link>
+        </Style.NavLink>
       </>
-      <Link href="#" underline="hover">
+      <Style.NavLink href="#" variant="body2">
         Рейтинг
-      </Link>
-      <Link href="#" underline="hover">
+      </Style.NavLink>
+      <Style.NavLink href="#" variant="body2">
         Судейство
-      </Link>
+      </Style.NavLink>
     </Box>
   );
 };

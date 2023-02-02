@@ -9,7 +9,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline enableColorScheme />
       <div className="App">
-        gdfgdfg
+        <h1>asdasdas</h1>
         <Layout>
           <MainPage />
         </Layout>
