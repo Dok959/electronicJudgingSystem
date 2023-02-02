@@ -1,3 +1,3 @@
-export const Main = () => {
+export const MainPage = () => {
   return <div>Страница</div>;
 };

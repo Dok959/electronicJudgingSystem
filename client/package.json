@@ -3,10 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@fontsource/inter": "^4.5.15",
-    "@fontsource/nunito": "^4.5.12",
-    "@mui/material": "^5.11.7",
-    "@mui/styled-engine-sc": "latest",
+    "@craco/craco": "^7.0.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^13.2.1",
@@ -14,7 +11,8 @@
     "@types/node": "^16.7.13",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
-    "@types/styled-components": "^5.1.26",
+    "@vanilla-extract/css": "^1.9.3",
+    "@vanilla-extract/webpack-plugin": "^2.2.0",
     "effector": "^22.5.0",
     "effector-react": "^22.4.0",
     "ky": "^0.33.2",
@@ -22,14 +20,13 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.8.0",
     "react-scripts": "5.0.1",
-    "styled-components": "^5.3.6",
     "typescript": "^4.4.2",
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
