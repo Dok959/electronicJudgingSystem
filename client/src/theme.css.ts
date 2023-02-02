@@ -28,6 +28,9 @@ const global = createGlobalTheme('html', {
     heading: 'Nunito, sans-serif',
     body: 'Inter, sans-serif',
   },
+  transition: {
+    width: 'width 0.4s ease-in-out',
+  },
 });
 
 const colors = createThemeContract({
