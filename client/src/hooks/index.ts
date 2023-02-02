@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react';
-import { lightTheme, darkTheme } from '../theme';
+import { light, dark } from '../theme.css';
 
 export const useTheme = () => {
   const [nameTheme, setNameTheme] = useState(
     JSON.parse(localStorage.getItem('theme') as string) || 'dark',
   );
 
-  const [theme, setTheme] = useState(
-    nameTheme === 'light' ? lightTheme : darkTheme,
-  );
+  const [theme, setTheme] = useState(nameTheme === 'light' ? light : dark);
 
   const switchTheme = () => {
     const inverseMode = nameTheme === 'light' ? 'dark' : 'light';
@@ -18,7 +16,7 @@ export const useTheme = () => {
   };
 
   useEffect(() => {
-    setTheme(nameTheme === 'light' ? lightTheme : darkTheme);
+    setTheme(nameTheme === 'light' ? light : dark);
   }, [nameTheme]);
 
   return { theme, switchTheme };

@@ -1,22 +1,15 @@
-import { CssBaseline, ThemeProvider } from '@mui/material';
-import { useTheme } from './hooks';
 import { Layout, MainPage } from './pages';
+import * as Style from './App.css';
 
-function App() {
-  const { theme } = useTheme();
-
+const App = () => {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline enableColorScheme />
-      <div className="App">
-        <h1>asdasdas</h1>
-        <Layout>
-          <MainPage />
-        </Layout>
-        {/* <button onClick={switchTheme}>Смена темы</button> */}
-      </div>
-    </ThemeProvider>
+    <Layout>
+      <>
+        <h1 className={Style.title}> dasdasd</h1>
+        <MainPage />
+      </>
+    </Layout>
   );
-}
+};
 
 export default App;
