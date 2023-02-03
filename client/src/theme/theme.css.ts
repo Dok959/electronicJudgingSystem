@@ -31,6 +31,14 @@ const global = createGlobalTheme('html', {
   transition: {
     width: 'width 0.4s ease-in-out',
   },
+  breakpoints: {
+    values: {
+      mobile: '576px',
+      tablet: '768px',
+      laptop: '992px',
+      desktop: '1200px',
+    },
+  },
 });
 
 const colors = createThemeContract({
@@ -72,7 +80,12 @@ export const vars = { ...global, colors };
 globalStyle('body', {
   margin: global.space.none,
   padding: global.space.none,
-  backgroundColor: colors.backgroundPrimary,
+  backgroundColor: vars.colors.backgroundPrimary,
   color: colors.text.normal,
   fontFamily: global.fonts.body,
+});
+
+globalStyle('#root', {
+  backgroundColor: vars.colors.backgroundPrimary,
+  color: vars.colors.text.normal,
 });

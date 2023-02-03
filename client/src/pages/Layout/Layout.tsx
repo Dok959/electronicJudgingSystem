@@ -1,4 +1,5 @@
 import { Menu } from '../../components';
+import * as Style from './Layout.css';
 
 interface ILayoutProps {
   children: JSX.Element;
@@ -8,10 +9,10 @@ export const Layout: React.FC<ILayoutProps> = (props) => {
   const { children } = props;
 
   return (
-    <div>
+    <>
       <Menu />
-      <div>{children}</div>
+      <div className={Style.container}>{children}</div>
       {/* <Footer /> */}
-    </div>
+    </>
   );
 };

@@ -6,13 +6,15 @@ import { useTheme } from './hooks';
 const Main = () => {
   const { theme, switchTheme } = useTheme();
 
+  document.getElementById('root')!.classList.add(theme);
+
   return (
-    <div className={theme}>
+    <>
       <App />
       <button onClick={() => switchTheme()}>
         Switch to {theme ? 'light' : 'dark'} theme
       </button>
-    </div>
+    </>
   );
 };
 

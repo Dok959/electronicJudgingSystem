@@ -1,42 +1,22 @@
 import { recipe } from '@vanilla-extract/recipes';
 import { vars } from '@/theme/index';
 import { style } from '@vanilla-extract/css';
-
-export const container = style({
-  // width: '100%',
-  position: 'relative',
-  background: vars.colors.backgroundSecondary,
-  // position: 'fixed',
-  // display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  alignContent: 'center',
-  flexWrap: 'wrap',
-  padding: '24px',
-  '@media': {
-    'screen and (min-width: 768px)': {
-      width: '50%',
-      margin: 'auto',
-    },
-  },
+// https://css-tricks.com/hamburger-menu-with-a-side-of-react-hooks-and-styled-components/
+export const position = style({
+  display: 'inline-flex',
+  flexDirection: 'column',
+  justifyContent: 'space-around',
+  cursor: 'pointer',
+  zIndex: 10,
+  paddingRight: '24px',
+  position: 'fixed',
 });
 
-export const navbar = style({
-  position: 'fixed',
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  alignContent: 'center',
-  flexWrap: 'wrap',
-  padding: '24px',
-  '@media': {
-    'screen and (min-width: 768px)': {
-      width: '50%',
-      margin: 'auto',
-    },
-  },
+export const active = style({
+  width: '100%',
+  height: '500px',
+  display: 'block',
+  backgroundColor: vars.colors.backgroundSecondary,
 });
 
 export const listLinks = recipe({
