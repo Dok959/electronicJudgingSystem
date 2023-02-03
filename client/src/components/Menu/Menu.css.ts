@@ -2,6 +2,10 @@ import { recipe } from '@vanilla-extract/recipes';
 import { vars } from '../../theme.css';
 import { style } from '@vanilla-extract/css';
 
+import image from './img/CloseIcon.svg';
+import image1 from './img/first.jpg';
+// использовать путь /images/CloseIcon.svg в импорте не удаётся, падает с ошибкой
+
 export const link = recipe({
   base: {
     fontWeight: 400,
@@ -69,7 +73,9 @@ export const link = recipe({
 });
 
 export const Burger = style({
-  width: '30px',
-  height: '30px',
-  backgroundImage: 'url("./img/CloseIcon.svg")',
+  width: '300px',
+  height: '300px',
+  // backgroundImage: 'url(/images/first.jpg)',
+  backgroundImage: `url(/images/CloseIcon.svg)`,
+  backgroundRepeat: 'no-repeat',
 });
