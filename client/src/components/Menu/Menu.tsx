@@ -3,31 +3,25 @@ import { BurgerIcon } from './Burger/Burger';
 import { useState } from 'react';
 
 export const Menu = () => {
-  const [open, setOpen] = useState<boolean>(false);
-  const close = () => setOpen(false); //false
+  const [isMenuOpen, toggleMenu] = useState<boolean>(false);
+
+  const toggleMenuMode = () => {
+    toggleMenu(!isMenuOpen);
+  };
 
   // const auth = true;
   // const currentPage = '/';
 
-  const hamb = document.querySelector('#hamb')!;
-
-  // Выполняем действия при клике ..
-  const hambHandler = (event: { preventDefault: () => void }): void => {
-    event.preventDefault();
-    // Переключаем стили элементов при клике
-    // popup.classList.toggle('open');
-    hamb.classList.toggle('active');
-    // body.classList.toggle('noscroll');
-    // renderPopup();
-  };
-
-  // hamb.addEventListener('click', hambHandler);
-
   return (
     <div className={Style.container}>
-      {/* <div className={Style.navbar}> */}
-      <BurgerIcon open={open} setOpen={setOpen} />
-      {/* <ul className={Style.listLinks({})}>
+      <div className={Style.navbar}>
+        <BurgerIcon isMenuOpen={isMenuOpen} toggleMenuMode={toggleMenuMode} />
+      </div>
+      <>
+        {console.log(isMenuOpen)}
+        <ul
+          className={Style.listLinks({ isOpen: isMenuOpen ? 'open' : 'close' })}
+        >
           <li>
             <a href="/" className={Style.link({ color: 'secondary' })}>
               Главная
@@ -37,6 +31,13 @@ export const Menu = () => {
             <a href="/" className={Style.link({})}>
               О нас
             </a>
+            <ul className={Style.subList}>
+              <li>
+                <a href="/" className={Style.link({})}>
+                  Контакты
+                </a>
+              </li>
+            </ul>
           </li>
           <li>
             <a href="/" className={Style.link({})}>
@@ -47,9 +48,9 @@ export const Menu = () => {
             <a href="/" className={Style.link({})}>
               Судейство
             </a>
-          </li>{' '}
-        </ul> */}
-      {/* </div> */}
+          </li>
+        </ul>
+      </>
     </div>
   );
 };

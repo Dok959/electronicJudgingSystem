@@ -30,6 +30,7 @@ const global = createGlobalTheme('html', {
   },
   transition: {
     width: 'width 0.4s ease-in-out',
+    all: '0.4s ease-in-out',
   },
   breakpoints: {
     values: {

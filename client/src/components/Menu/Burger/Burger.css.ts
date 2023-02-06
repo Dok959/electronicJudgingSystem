@@ -1,131 +1,46 @@
 import { recipe } from '@vanilla-extract/recipes';
 import { vars } from '@/theme/index';
 import { style } from '@vanilla-extract/css';
-// https://css-tricks.com/hamburger-menu-with-a-side-of-react-hooks-and-styled-components/
+
 export const position = style({
+  position: 'absolute',
   display: 'inline-flex',
   flexDirection: 'column',
   justifyContent: 'space-around',
   cursor: 'pointer',
   zIndex: 10,
-  paddingRight: '24px',
-  position: 'fixed',
+  right: '0',
+  height: '24px',
 });
 
-export const active = style({
-  width: '100%',
-  height: '500px',
-  display: 'block',
-  backgroundColor: vars.colors.backgroundSecondary,
-});
-
-export const listLinks = recipe({
+export const bar = recipe({
   base: {
-    listStyle: 'none',
-    '@media': {
-      'screen and (min-width: 768px)': {
-        padding: 100,
-      },
-      '(prefers-reduced-motion)': {
-        transitionProperty: 'color',
-      },
-    },
+    display: 'block',
+    width: '24px',
+    height: '1px',
+    backgroundColor: vars.colors.text.normal,
+    border: '1px solid',
+    borderColor: vars.colors.text.normal,
+    borderRadius: '8px',
+    transition: vars.transition.all,
   },
 
   variants: {
-    color: {
-      primary: {
-        color: vars.colors.text.normal,
-        selectors: {
-          '&:hover': {
-            width: 'inherit',
-          },
-        },
+    isOpen: {
+      openTop: {
+        transform: 'rotate(45deg)',
       },
-      secondary: {
-        color: vars.colors.accentSecondary,
-        selectors: {
-          '&:hover': {
-            width: 'inherit',
-          },
-        },
+      openBottom: {
+        transform: 'rotate(-45deg)',
+        marginTop: '-24px',
+      },
+      closeTop: {
+        transform: 'rotate(0deg)',
+      },
+      closeBottom: {
+        transform: 'rotate(0deg)',
+        marginTop: '0',
       },
     },
   },
-
-  defaultVariants: {
-    color: 'primary',
-  },
-});
-
-export const link = recipe({
-  base: {
-    fontWeight: 400,
-    fontSize: 20,
-    lineHeight: '24px',
-    textDecoration: 'none',
-    display: 'inline-block',
-    selectors: {
-      '&:hover': {
-        cursor: 'pointer',
-      },
-      '&:after': {
-        content: ' ',
-        display: 'block',
-        color: vars.colors.accentSecondary,
-        width: '0',
-        height: 2,
-        backgroundColor: vars.colors.accentSecondary,
-        transition: vars.transition.width,
-      },
-      '&:hover:after': {
-        width: '100%',
-      },
-    },
-    '@media': {
-      'screen and (min-width: 768px)': {
-        padding: 100,
-      },
-      '(prefers-reduced-motion)': {
-        transitionProperty: 'color',
-      },
-    },
-  },
-
-  variants: {
-    color: {
-      primary: {
-        color: vars.colors.text.normal,
-        selectors: {
-          '&:hover': {
-            width: 'inherit',
-          },
-        },
-      },
-      secondary: {
-        color: vars.colors.accentSecondary,
-        selectors: {
-          '&:hover': {
-            width: 'inherit',
-          },
-        },
-      },
-    },
-    size: {
-      small: { padding: vars.space.small },
-      medium: { padding: vars.space.medium },
-      large: { padding: vars.space.large },
-    },
-  },
-
-  defaultVariants: {
-    color: 'primary',
-    size: 'large',
-  },
-});
-
-export const Burger = style({
-  width: '300px',
-  height: '300px',
-  background: `url(/images/CloseIcon.svg) no-repeat`,
 });

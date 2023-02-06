@@ -3,17 +3,10 @@ import { vars } from '@/theme/index';
 import { style } from '@vanilla-extract/css';
 
 export const container = style({
-  // width: '100%',
-  position: 'relative',
+  top: '0',
+  width: '100%',
+  position: 'fixed',
   background: vars.colors.backgroundSecondary,
-  // position: 'fixed',
-  // display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  alignContent: 'center',
-  flexWrap: 'wrap',
-  padding: '24px',
   '@media': {
     'screen and (min-width: 768px)': {
       width: '50%',
@@ -23,7 +16,7 @@ export const container = style({
 });
 
 export const navbar = style({
-  position: 'fixed',
+  position: 'relative',
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',
@@ -31,6 +24,7 @@ export const navbar = style({
   alignContent: 'center',
   flexWrap: 'wrap',
   padding: '24px',
+  margin: '0 24px',
   '@media': {
     'screen and (min-width: 768px)': {
       width: '50%',
@@ -42,12 +36,18 @@ export const navbar = style({
 export const listLinks = recipe({
   base: {
     listStyle: 'none',
+    margin: '0',
+    padding: '24px 0 24px 24px',
+    transform: 'translateY(-120%)',
+    transition: vars.transition.all,
+    selectors: {
+      '&:hover': {
+        width: 'inherit',
+      },
+    },
     '@media': {
       'screen and (min-width: 768px)': {
         padding: 100,
-      },
-      '(prefers-reduced-motion)': {
-        transitionProperty: 'color',
       },
     },
   },
@@ -56,25 +56,36 @@ export const listLinks = recipe({
     color: {
       primary: {
         color: vars.colors.text.normal,
-        selectors: {
-          '&:hover': {
-            width: 'inherit',
-          },
-        },
       },
       secondary: {
         color: vars.colors.accentSecondary,
-        selectors: {
-          '&:hover': {
-            width: 'inherit',
-          },
-        },
+      },
+    },
+    isOpen: {
+      open: {
+        transform: 'translateY(0%)',
+      },
+      close: {
+        transform: 'translateY(-120%)',
       },
     },
   },
 
   defaultVariants: {
     color: 'primary',
+    isOpen: 'close',
+  },
+});
+
+export const subList = style({
+  listStyle: 'initial',
+  paddingLeft: '32px',
+  color: vars.colors.accentSecondary,
+  '@media': {
+    'screen and (min-width: 768px)': {
+      width: '50%',
+      margin: 'auto',
+    },
   },
 });
 
@@ -85,6 +96,7 @@ export const link = recipe({
     lineHeight: '24px',
     textDecoration: 'none',
     display: 'inline-block',
+    padding: '12px',
     selectors: {
       '&:hover': {
         cursor: 'pointer',
@@ -131,21 +143,9 @@ export const link = recipe({
         },
       },
     },
-    size: {
-      small: { padding: vars.space.small },
-      medium: { padding: vars.space.medium },
-      large: { padding: vars.space.large },
-    },
   },
 
   defaultVariants: {
     color: 'primary',
-    size: 'large',
   },
-});
-
-export const Burger = style({
-  width: '300px',
-  height: '300px',
-  background: `url(/images/CloseIcon.svg) no-repeat`,
 });
