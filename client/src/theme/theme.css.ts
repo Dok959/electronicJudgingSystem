@@ -57,7 +57,7 @@ export const light = createTheme(colors, {
   backgroundPrimary: '#FFFFFF',
   backgroundSecondary: '#F3F6FF',
   accentPrimary: '#EC008C',
-  accentSecondary: '#4355FA',
+  accentSecondary: '#ec008cbf',
   text: {
     normal: '#24293D',
     dimmed: '#6B7280',
