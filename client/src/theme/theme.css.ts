@@ -54,10 +54,10 @@ const colors = createThemeContract({
 });
 
 export const light = createTheme(colors, {
-  backgroundPrimary: '#F3F6FF',
-  backgroundSecondary: '#FFFFFF',
-  accentPrimary: '#4355FA',
-  accentSecondary: '#EC008C',
+  backgroundPrimary: '#FFFFFF',
+  backgroundSecondary: '#F3F6FF',
+  accentPrimary: '#EC008C',
+  accentSecondary: '#4355FA',
   text: {
     normal: '#24293D',
     dimmed: '#6B7280',
@@ -68,8 +68,8 @@ export const light = createTheme(colors, {
 export const dark = createTheme(colors, {
   backgroundPrimary: '#F3F6FF',
   backgroundSecondary: '#FFFFFF',
-  accentPrimary: '#4355FA',
-  accentSecondary: '#FFC88C',
+  accentPrimary: '#EC008C',
+  accentSecondary: '#4355FA',
   text: {
     normal: '#F9FAFB',
     dimmed: '#D1D5DB',
@@ -81,12 +81,12 @@ export const vars = { ...global, colors };
 globalStyle('body', {
   margin: global.space.none,
   padding: global.space.none,
-  backgroundColor: vars.colors.backgroundPrimary,
+  backgroundColor: vars.colors.backgroundSecondary,
   color: colors.text.normal,
   fontFamily: global.fonts.body,
 });
 
 globalStyle('#root', {
-  backgroundColor: vars.colors.backgroundPrimary,
+  backgroundColor: vars.colors.backgroundSecondary,
   color: vars.colors.text.normal,
 });

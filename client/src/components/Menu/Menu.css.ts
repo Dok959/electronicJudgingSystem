@@ -6,10 +6,9 @@ export const container = style({
   top: '0',
   width: '100%',
   position: 'fixed',
-  background: vars.colors.backgroundSecondary,
+  background: vars.colors.backgroundPrimary,
   '@media': {
     'screen and (min-width: 768px)': {
-      width: '50%',
       margin: 'auto',
     },
   },
@@ -27,8 +26,7 @@ export const navbar = style({
   margin: '0 24px',
   '@media': {
     'screen and (min-width: 768px)': {
-      width: '50%',
-      margin: 'auto',
+      display: 'none',
     },
   },
 });
@@ -40,27 +38,20 @@ export const listLinks = recipe({
     padding: '24px 0 24px 24px',
     transform: 'translateY(-120%)',
     transition: vars.transition.all,
-    selectors: {
-      '&:hover': {
-        width: 'inherit',
-      },
-    },
+    color: vars.colors.text.normal,
     '@media': {
       'screen and (min-width: 768px)': {
-        padding: 100,
+        maxWidth: 1200,
+        margin: '0 auto',
+        padding: 20,
+        display: 'flex',
+        flexDirection: 'row',
+        transform: 'translateY(0%)',
       },
     },
   },
 
   variants: {
-    color: {
-      primary: {
-        color: vars.colors.text.normal,
-      },
-      secondary: {
-        color: vars.colors.accentSecondary,
-      },
-    },
     isOpen: {
       open: {
         transform: 'translateY(0%)',
@@ -72,19 +63,39 @@ export const listLinks = recipe({
   },
 
   defaultVariants: {
-    color: 'primary',
     isOpen: 'close',
+  },
+});
+
+export const subMenu = style({
+  '@media': {
+    'screen and (min-width: 768px)': {},
   },
 });
 
 export const subList = style({
   listStyle: 'initial',
   paddingLeft: '32px',
-  color: vars.colors.accentSecondary,
+  color: vars.colors.accentPrimary,
   '@media': {
     'screen and (min-width: 768px)': {
-      width: '50%',
-      margin: 'auto',
+      display: 'none',
+      position: 'absolute',
+      background: vars.colors.backgroundPrimary,
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+      padding: 10,
+      gap: 10,
+      boxShadow: '0px 10px 40px rgba(154, 170, 207, 0.35)',
+      borderRadius: 10,
+      listStyle: 'none',
+      marginLeft: -29,
+      marginTop: -2,
+      selectors: {
+        [`${subMenu}:hover &`]: {
+          display: 'flex',
+        },
+      },
     },
   },
 });
@@ -92,7 +103,7 @@ export const subList = style({
 export const link = recipe({
   base: {
     fontWeight: 400,
-    fontSize: 20,
+    fontSize: 16,
     lineHeight: '24px',
     textDecoration: 'none',
     display: 'inline-block',
@@ -100,14 +111,15 @@ export const link = recipe({
     selectors: {
       '&:hover': {
         cursor: 'pointer',
+        width: 'inherit',
       },
       '&:after': {
         content: ' ',
         display: 'block',
-        color: vars.colors.accentSecondary,
+        color: vars.colors.accentPrimary,
         width: '0',
         height: 2,
-        backgroundColor: vars.colors.accentSecondary,
+        backgroundColor: vars.colors.accentPrimary,
         transition: vars.transition.width,
       },
       '&:hover:after': {
@@ -116,7 +128,14 @@ export const link = recipe({
     },
     '@media': {
       'screen and (min-width: 768px)': {
-        padding: 100,
+        padding: 0,
+        marginRight: 40,
+
+        selectors: {
+          [`${subList} &`]: {
+            marginRight: 0,
+          },
+        },
       },
       '(prefers-reduced-motion)': {
         transitionProperty: 'color',
@@ -126,26 +145,16 @@ export const link = recipe({
 
   variants: {
     color: {
-      primary: {
+      default: {
         color: vars.colors.text.normal,
-        selectors: {
-          '&:hover': {
-            width: 'inherit',
-          },
-        },
       },
-      secondary: {
-        color: vars.colors.accentSecondary,
-        selectors: {
-          '&:hover': {
-            width: 'inherit',
-          },
-        },
+      active: {
+        color: vars.colors.accentPrimary,
       },
     },
   },
 
   defaultVariants: {
-    color: 'primary',
+    color: 'default',
   },
 });

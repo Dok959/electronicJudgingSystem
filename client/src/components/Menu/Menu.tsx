@@ -18,16 +18,15 @@ export const Menu = () => {
         <BurgerIcon isMenuOpen={isMenuOpen} toggleMenuMode={toggleMenuMode} />
       </div>
       <>
-        {console.log(isMenuOpen)}
         <ul
           className={Style.listLinks({ isOpen: isMenuOpen ? 'open' : 'close' })}
         >
           <li>
-            <a href="/" className={Style.link({ color: 'secondary' })}>
+            <a href="/" className={Style.link({ color: 'active' })}>
               Главная
             </a>
           </li>
-          <li>
+          <li className={Style.subMenu}>
             <a href="/" className={Style.link({})}>
               О нас
             </a>
@@ -35,6 +34,11 @@ export const Menu = () => {
               <li>
                 <a href="/" className={Style.link({})}>
                   Контакты
+                </a>
+              </li>
+              <li>
+                <a href="/" className={Style.link({})}>
+                  Документы
                 </a>
               </li>
             </ul>
