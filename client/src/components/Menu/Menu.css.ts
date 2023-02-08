@@ -6,10 +6,13 @@ export const container = style({
   top: '0',
   width: '100%',
   position: 'fixed',
+  maxHeight: 48,
+  zIndex: 10,
   background: vars.colors.backgroundPrimary,
   '@media': {
     'screen and (min-width: 768px)': {
       margin: 'auto',
+      zIndex: 10,
     },
   },
 });
@@ -39,14 +42,16 @@ export const listLinks = recipe({
     transform: 'translateY(-120%)',
     transition: vars.transition.all,
     color: vars.colors.text.normal,
+    background: vars.colors.backgroundPrimary,
     '@media': {
       'screen and (min-width: 768px)': {
-        maxWidth: 1200,
+        maxWidth: 1232,
         margin: '0 auto',
         padding: 20,
         display: 'flex',
         flexDirection: 'row',
         transform: 'translateY(0%)',
+        gap: '0 40px',
       },
     },
   },
@@ -69,7 +74,9 @@ export const listLinks = recipe({
 
 export const subMenu = style({
   '@media': {
-    'screen and (min-width: 768px)': {},
+    'screen and (min-width: 768px)': {
+      position: 'relative',
+    },
   },
 });
 
@@ -79,21 +86,44 @@ export const subList = style({
   color: vars.colors.accentPrimary,
   '@media': {
     'screen and (min-width: 768px)': {
-      display: 'none',
       position: 'absolute',
       background: vars.colors.backgroundPrimary,
       flexDirection: 'column',
       alignItems: 'flex-start',
-      padding: 10,
       gap: 10,
       boxShadow: '0px 10px 40px rgba(154, 170, 207, 0.35)',
       borderRadius: 10,
       listStyle: 'none',
-      marginLeft: -29,
-      marginTop: -2,
+      margin: 0,
+      overflowY: 'hidden',
+      opacity: 0,
+      zIndex: 9999,
+      transitionProperty: 'opacity, height',
+      transitionDuration: '0.4s',
+      transitionTimingFunction: 'ease-in-out',
+      display: 'flex',
+      left: '-26px',
+      top: '24px',
+      height: '0',
+      padding: 0,
       selectors: {
         [`${subMenu}:hover &`]: {
-          display: 'flex',
+          height: '82px',
+          width: 'auto',
+          gap: 0,
+          opacity: 1,
+        },
+      },
+    },
+  },
+});
+
+export const elementList = style({
+  '@media': {
+    'screen and (min-width: 768px)': {
+      selectors: {
+        [`${subMenu} &`]: {
+          padding: '10px 10px 0 10px',
         },
       },
     },
@@ -129,8 +159,6 @@ export const link = recipe({
     '@media': {
       'screen and (min-width: 768px)': {
         padding: 0,
-        marginRight: 40,
-
         selectors: {
           [`${subList} &`]: {
             marginRight: 0,

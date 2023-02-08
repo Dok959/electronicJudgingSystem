@@ -31,12 +31,12 @@ export const Menu = () => {
               О нас
             </a>
             <ul className={Style.subList}>
-              <li>
+              <li className={Style.elementList}>
                 <a href="/" className={Style.link({})}>
                   Контакты
                 </a>
               </li>
-              <li>
+              <li className={Style.elementList}>
                 <a href="/" className={Style.link({})}>
                   Документы
                 </a>

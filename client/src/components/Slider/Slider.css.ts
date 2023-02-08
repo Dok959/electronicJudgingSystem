@@ -2,7 +2,8 @@ import { vars } from '@/theme/index';
 import { style } from '@vanilla-extract/css';
 
 export const slider = style({
-  maxWidth: '1200px',
+  maxWidth: '1232px',
+  maxHeight: '677px',
 });
 
 export const dotSize = style({
