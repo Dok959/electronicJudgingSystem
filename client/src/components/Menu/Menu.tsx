@@ -1,16 +1,20 @@
 import * as Style from './Menu.css';
 import { BurgerIcon } from './Burger/Burger';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 
 export const Menu = () => {
   const [isMenuOpen, toggleMenu] = useState<boolean>(false);
-
   const toggleMenuMode = () => {
     toggleMenu(!isMenuOpen);
   };
 
+  let location = useLocation();
+  useEffect(() => {
+    toggleMenu(false);
+  }, [location]);
+
   // const auth = true;
-  // const currentPage = '/';
 
   return (
     <div className={Style.container}>
@@ -22,9 +26,14 @@ export const Menu = () => {
           className={Style.listLinks({ isOpen: isMenuOpen ? 'open' : 'close' })}
         >
           <li>
-            <a href="/" className={Style.link({ color: 'active' })}>
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                Style.link(isActive ? { color: 'active' } : {})
+              }
+            >
               Главная
-            </a>
+            </NavLink>
           </li>
           <li className={Style.subMenu}>
             <a href="/" className={Style.link({})}>
@@ -49,9 +58,14 @@ export const Menu = () => {
             </a>
           </li>
           <li>
-            <a href="/" className={Style.link({})}>
+            <NavLink
+              to={'/login'}
+              className={({ isActive }) =>
+                Style.link(isActive ? { color: 'active' } : {})
+              }
+            >
               Судейство
-            </a>
+            </NavLink>
           </li>
         </ul>
       </>

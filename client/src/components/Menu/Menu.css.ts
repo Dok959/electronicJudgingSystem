@@ -13,6 +13,7 @@ export const container = style({
     'screen and (min-width: 768px)': {
       margin: 'auto',
       zIndex: 10,
+      maxHeight: 'initial',
     },
   },
 });

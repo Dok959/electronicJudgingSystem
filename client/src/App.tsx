@@ -1,9 +1,15 @@
-import { Layout, MainPage } from './pages';
+import { Outlet } from 'react-router-dom';
+import { useTheme } from './hooks';
+import { Layout } from './pages';
 
 const App = () => {
+  const { theme } = useTheme();
+
+  document.getElementById('root')!.classList.add(theme);
+
   return (
     <Layout>
-      <MainPage />
+      <Outlet />
     </Layout>
   );
 };

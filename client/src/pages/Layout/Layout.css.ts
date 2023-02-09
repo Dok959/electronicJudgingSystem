@@ -6,13 +6,13 @@ export const container = style({
   maxWidth: 1280,
   display: 'grid',
   justifyItems: 'center',
-  gap: '22px 0',
+  gap: '24px 0',
   margin: '48px auto 0',
   padding: '24px',
 
   '@media': {
     'screen and (min-width: 768px)': {
-      marginTop: 66,
+      marginTop: 50,
     },
   },
 });
