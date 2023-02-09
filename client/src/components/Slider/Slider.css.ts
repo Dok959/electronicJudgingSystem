@@ -9,10 +9,10 @@ export const slider = style({
 export const dotSize = style({
   width: '16px',
   height: '16px',
-  fill: vars.colors.accentSecondary,
+  fill: vars.colors.accent.secondary,
   selectors: {
     [`.active &`]: {
-      fill: vars.colors.accentPrimary,
+      fill: vars.colors.accent.primary,
     },
   },
 });

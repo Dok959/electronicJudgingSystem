@@ -3,17 +3,14 @@ import {
   createTheme,
   createThemeContract,
   globalStyle,
-  globalFontFace,
+  fontFace,
 } from '@vanilla-extract/css';
 
-const Nunito = 'Nunito';
-const Inter = 'Inter';
-
-globalFontFace(Nunito, {
-  src: 'url("./fonts/Nunito.ttf") format("truetype-variations")',
+const Nunito = fontFace({
+  src: `url("/fonts/Nunito.ttf") format("truetype-variations")`,
 });
-globalFontFace(Inter, {
-  src: 'url("./fonts/Inter.ttf") format("truetype-variations")',
+const Inter = fontFace({
+  src: `url("/fonts/Inter.ttf") format("truetype-variations")`,
 });
 
 const global = createGlobalTheme('html', {
@@ -25,8 +22,8 @@ const global = createGlobalTheme('html', {
     auto: 'auto',
   },
   fonts: {
-    heading: 'Nunito, sans-serif',
-    body: 'Inter, sans-serif',
+    heading: `${Nunito}, sans-serif`,
+    body: `${Inter}, sans-serif`,
   },
   transition: {
     width: 'width 0.4s ease-in-out',
@@ -43,36 +40,60 @@ const global = createGlobalTheme('html', {
 });
 
 const colors = createThemeContract({
-  backgroundPrimary: null,
-  backgroundSecondary: null,
-  accentPrimary: null,
-  accentSecondary: null,
+  background: {
+    primary: null,
+    secondary: null,
+  },
+  accent: {
+    primary: null,
+    secondary: null,
+  },
+  headings: {
+    primary: null,
+    secondary: null,
+  },
   text: {
-    normal: null,
-    dimmed: null,
+    primary: null,
+    secondary: null,
   },
 });
 
 export const light = createTheme(colors, {
-  backgroundPrimary: '#FFFFFF',
-  backgroundSecondary: '#F3F6FF',
-  accentPrimary: '#EC008C',
-  accentSecondary: '#ec008cbf',
+  background: {
+    primary: '#FFFFFF',
+    secondary: '#F3F6FF',
+  },
+  accent: {
+    primary: '#EC008C',
+    secondary: '#ec008cbf',
+  },
+  headings: {
+    primary: '#1F2333',
+    secondary: '#6B7280',
+  },
   text: {
-    normal: '#24293D',
-    dimmed: '#6B7280',
+    primary: '#24293D',
+    secondary: '#6B7280',
   },
 });
 
 // TODO
 export const dark = createTheme(colors, {
-  backgroundPrimary: '#F3F6FF',
-  backgroundSecondary: '#FFFFFF',
-  accentPrimary: '#EC008C',
-  accentSecondary: '#4355FA',
+  background: {
+    primary: '#FFFFFF',
+    secondary: '#F3F6FF',
+  },
+  accent: {
+    primary: '#EC008C',
+    secondary: '#ec008cbf',
+  },
+  headings: {
+    primary: '#1F2333',
+    secondary: '#6B7280',
+  },
   text: {
-    normal: '#F9FAFB',
-    dimmed: '#D1D5DB',
+    primary: '#24293D',
+    secondary: '#6B7280',
   },
 });
 
@@ -81,12 +102,10 @@ export const vars = { ...global, colors };
 globalStyle('body', {
   margin: global.space.none,
   padding: global.space.none,
-  backgroundColor: vars.colors.backgroundSecondary,
-  color: colors.text.normal,
-  fontFamily: global.fonts.body,
+  fontFamily: Inter,
 });
 
 globalStyle('#root', {
-  backgroundColor: vars.colors.backgroundSecondary,
-  color: vars.colors.text.normal,
+  backgroundColor: vars.colors.background.secondary,
+  color: vars.colors.text.primary,
 });
