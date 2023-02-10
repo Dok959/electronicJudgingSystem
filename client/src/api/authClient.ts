@@ -1,5 +1,6 @@
 import api from './kyClient';
 import { setAuth } from '../context/auth';
+import { HTTPError } from 'ky';
 
 export class authClient {
   static login = async (email: string, password: string) => {
@@ -15,7 +16,14 @@ export class authClient {
       localStorage.setItem(`auth`, JSON.stringify(result));
       return true;
     } catch (error) {
-      console.log(error);
+      if (error instanceof HTTPError) {
+        const errorJson = await error.response.json();
+        console.log(errorJson);
+        return;
+      } else if (error instanceof Error) {
+        console.log(error.message);
+        return;
+      }
     }
     return false;
   };
