@@ -1,102 +1,71 @@
 import { authClient } from '@/api/authClient';
-import { Form, redirect, useActionData } from 'react-router-dom';
+import { redirect } from 'react-router-dom';
 import * as Style from './Auth.css';
-import { useNavigate } from 'react-router-dom';
-
-interface IErrors {
-  email?: string;
-  password?: string;
-}
-
-export async function action({ request }: any) {
-  let formData = await request.formData();
-  const email = formData.get('email');
-  const password = formData.get('password');
-  const errors: IErrors = {};
-
-  // validate the fields
-  if (typeof email !== 'string' || !email.includes('@')) {
-    errors.email = "That doesn't look like an email address";
-  }
-
-  if (typeof password !== 'string' || password.length < 6) {
-    errors.password = 'Password must be > 6 characters';
-  }
-
-  // return data if we have errors
-  if (Object.keys(errors).length) {
-    return errors;
-  }
-
-  const result = await authClient.login(email, password);
-  if (!result) {
-    return null;
-  }
-  return redirect(`/primary`);
-
-  // const navigate = useNavigate();
-  // switch (request.method) {
-  //   case 'POST': {
-  //     let formData = await request.formData();
-  //     let email = formData.get('email');
-  //     console.log(email);
-  //     const result = await authClient.login(
-  //       formData.get('email'),
-  //       formData.get('password'),
-  //     );
-  //     if (!result) {
-  //       return null;
-  //     }
-  //     return redirect(`/primary`);
-  //     // navigate('/primary');
-  //     // return fakeUpdateProject(name);
-  //     // return null;
-  //   }
-  //   default: {
-  //     throw new Response('', { status: 405 });
-  //   }
-  // }
-}
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 export const AuthPage = () => {
-  const navigate = useNavigate();
-  const errors = useActionData() as IErrors;
-
-  // const handler = async (email: string, password: string) => {
-  //   if (!email || !password) {
-  //     return;
-  //   }
-
-  //   const result = await authClient.login(email, password);
-
-  //   if (!result) {
-  //     return;
-  //   }
-  //   navigate('/primary');
-  // };
-
-  // const handleAuth = (event: React.FormEvent) => {
-  //   event.preventDefault();
-  //   handler('temp@mail.ru', 'admin1');
-  // };
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    validationSchema: Yup.object({
+      email: Yup.string()
+        .trim()
+        .email('Не корректный электронный адрес')
+        .required('Обязательно'),
+      password: Yup.string()
+        .trim()
+        .min(3, 'Минимум 3 знака')
+        .max(15, 'Максимум 15 знаков')
+        .required('Обязательно'),
+    }),
+    onSubmit: async (values) => {
+      const { email, password } = values;
+      const result = await authClient.login(email, password);
+      if (!result) {
+        return null;
+      }
+      return redirect(`/primary`);
+    },
+  });
 
   return (
     <div>
       <img src="" alt="" />
-      <Form method="post">
-        {/* onSubmit={handleAuth} */}
+      <form onSubmit={formik.handleSubmit}>
         <label>
           Почта
-          <input type="email" name="email" />
-          {errors?.email && <span>{errors.email}</span>}
+          <input
+            type="email"
+            name="email"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.email}
+          />
+          {formik.touched.email && formik.errors.email ? (
+            <span>{formik.errors.email}</span>
+          ) : null}
         </label>
+
+        <br />
+
         <label>
           Пароль
-          <input type="password" name="password" />
-          {errors?.password && <span>{errors.password}</span>}
+          <input
+            type="password"
+            name="password"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.password}
+          />
+          {formik.touched.password && formik.errors.password ? (
+            <span>{formik.errors.password}</span>
+          ) : null}
         </label>
         <button type="submit">Войти</button>
-      </Form>
+      </form>
     </div>
   );
 };
