@@ -1,10 +1,32 @@
+import { authClient } from '@/api/authClient';
 import * as Style from './Auth.css';
+import { useNavigate } from 'react-router-dom';
 
 export const AuthPage = () => {
+  const navigate = useNavigate();
+
+  const handler = async (email: string, password: string) => {
+    if (!email || !password) {
+      return;
+    }
+
+    const result = await authClient.login(email, password);
+
+    if (!result) {
+      return;
+    }
+    navigate('/primary');
+  };
+
+  const handleAuth = (event: React.FormEvent) => {
+    event.preventDefault();
+    handler('temp@mail.ru', 'admin');
+  };
+
   return (
     <div>
       <img src="" alt="" />
-      <form>
+      <form onSubmit={handleAuth}>
         <label>
           Почта
           <input type="email" />
