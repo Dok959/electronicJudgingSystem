@@ -4,7 +4,9 @@ import * as Style from './Auth.css';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useState } from 'react';
-import { Spinner } from '@/components/Spinner/Spinner';
+import { Spinner } from '@/components';
+import { handleAlertMessage } from '@/utils/auth';
+import { alertStatus } from '@/utils/enum';
 
 export const AuthPage = () => {
   const [spinner, setSpinner] = useState<boolean>(false);
@@ -44,9 +46,17 @@ export const AuthPage = () => {
       const result = await authClient.login(email, password);
       if (!result) {
         setSpinner(false);
+        handleAlertMessage({
+          alertText: 'Не корректные данные',
+          alertStatus: alertStatus.warning,
+        });
         return null;
       }
-      return redirect(`/primary`);
+      redirect(`/primary`);
+      return handleAlertMessage({
+        alertText: 'Вход выполнен',
+        alertStatus: alertStatus.success,
+      });
     },
   });
 
