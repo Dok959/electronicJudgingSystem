@@ -1,20 +1,36 @@
 import { IAlertProps } from '@/types';
 import * as Style from './Alert.css';
 import { alertStatus } from '@/utils/enum';
+import { handleAlertMessage } from '@/utils/auth';
 
 export const Alert = ({ props }: IAlertProps) => {
-  const status = props.alertStatus ?? alertStatus.default;
+  const clickHandler = () => {
+    handleAlertMessage({ alertText: '', alertStatus: alertStatus.default });
+  };
+
   return (
-    // TODO
     <div
       className={Style.alert({
-        border: status ?? 'default',
+        border: props.alertStatus ?? alertStatus.default,
       })}
     >
-      <h4>{props.alertStatus}</h4>
-      <p className="text">{props.alertText}</p>
-      <button id="close-button" className="close-button">
-        &#10005;
+      <p className={Style.text}>{props.alertText}</p>
+      <button className={Style.close} onClick={clickHandler}>
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 19 19"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M18 18L9.5 9.5L1 1M1 18L18 1"
+            stroke="#24293D"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
       </button>
     </div>
   );

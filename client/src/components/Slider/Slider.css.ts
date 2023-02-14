@@ -4,6 +4,7 @@ import { style } from '@vanilla-extract/css';
 export const slider = style({
   maxWidth: '1232px',
   maxHeight: '677px',
+  borderRadius: vars.borderRadius.image,
 });
 
 export const dotSize = style({

@@ -1,5 +1,5 @@
 import { useStore } from 'effector-react';
-import { Alert, Menu } from '../../components';
+import { Alert, Footer, Menu } from '@/components';
 import { MainPage } from '../index';
 import * as Style from './Layout.css';
 import { useLocation } from 'react-router-dom';
@@ -19,11 +19,13 @@ export const Layout: React.FC<ILayoutProps> = (props) => {
   return (
     <>
       <Menu />
-      <div className={Style.container}>
-        {location.pathname === '/' ? <MainPage /> : children}
+      <div className={Style.wrapper}>
+        <div className={Style.container}>
+          {location.pathname === '/' ? <MainPage /> : children}
+        </div>
+        {alert.alertText && <Alert props={alert} />}
       </div>
-      {alert.alertText && <Alert props={alert} />}
-      {/* <Footer /> */}
+      <Footer />
     </>
   );
 };

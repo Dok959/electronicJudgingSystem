@@ -37,6 +37,14 @@ const global = createGlobalTheme('html', {
       desktop: '1200px',
     },
   },
+  borderRadius: {
+    default: '10px',
+    image: '24px',
+  },
+  shadow: {
+    default: '0px 10px 40px rgba(154, 170, 207, 0.35)',
+    buttonActive: '0px 20px 40px -12px rgba(236, 0, 140, 0.35)',
+  },
 });
 
 const colors = createThemeContract({
@@ -99,13 +107,27 @@ export const dark = createTheme(colors, {
 
 export const vars = { ...global, colors };
 
+globalStyle('html', {
+  height: '100%',
+});
+
 globalStyle('body', {
   margin: global.space.none,
   padding: global.space.none,
   fontFamily: Inter,
+  height: '100%',
 });
 
 globalStyle('#root', {
   backgroundColor: vars.colors.background.secondary,
   color: vars.colors.text.primary,
+  height: '100%',
+  // display: 'flex',
+  // flexDirection: 'column',
+  // justifyContent: 'center',
+  // alignItems: 'center',
+  justifyItems: 'center',
+  minHeight: '100%',
+  display: 'grid',
+  gridTemplateRows: 'auto 1fr auto',
 });

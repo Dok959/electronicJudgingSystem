@@ -1,3 +1,4 @@
+import { vars } from '@/theme';
 import { style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 
@@ -7,14 +8,17 @@ export const alert = recipe({
     boxSizing: 'border-box',
     display: 'flex',
     alignItems: 'center',
-    flexDirection: 'column',
-    width: '100px',
-    height: '75px',
-    bottom: 200,
-    right: 200,
-    border: '4px solid #fff',
-    borderRadius: 10,
-    transition: 'all 0.25s ease-out',
+    flexDirection: 'row',
+    bottom: 70,
+    right: 30,
+    border: '2.5px solid #fff',
+    borderRadius: vars.borderRadius.default,
+    transition: vars.transition.all,
+    boxShadow: vars.shadow.default,
+    padding: 16,
+    gap: 8,
+    backgroundColor: vars.colors.background.primary,
+    zIndex: 10,
   },
 
   variants: {
@@ -39,16 +43,15 @@ export const alert = recipe({
   },
 });
 
-// .toast {
-//   display: flex;
-//   align-items: center;
-//   position: absolute;
-//   top: 50px;
-//   right: -500px;
-//   background-color: black;
-//   border-radius: 12px;
-//   padding: 0.5rem 1rem;
-//   border: 5px solid #029c91;
-//   opacity: 0%;
-//   transition: all 0.25s ease-out;
-// }
+export const text = style({
+  margin: 0,
+});
+
+export const close = style({
+  margin: 0,
+  background: 'transparent',
+  outline: 'none',
+  border: 'none',
+  cursor: 'pointer',
+  display: 'flex',
+});

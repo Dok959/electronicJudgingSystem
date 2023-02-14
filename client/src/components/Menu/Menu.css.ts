@@ -5,13 +5,12 @@ import { style } from '@vanilla-extract/css';
 export const container = style({
   top: '0',
   width: '100%',
-  position: 'fixed',
+  position: 'sticky',
   maxHeight: 48,
   zIndex: 10,
   background: vars.colors.background.primary,
   '@media': {
     'screen and (min-width: 768px)': {
-      margin: 'auto',
       zIndex: 10,
       maxHeight: 'initial',
     },
@@ -93,7 +92,7 @@ export const subList = style({
       alignItems: 'flex-start',
       gap: 10,
       boxShadow: '0px 10px 40px rgba(154, 170, 207, 0.35)',
-      borderRadius: 10,
+      borderRadius: vars.borderRadius.default,
       listStyle: 'none',
       margin: 0,
       overflowY: 'hidden',

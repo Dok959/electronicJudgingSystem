@@ -1,6 +1,6 @@
 export enum alertStatus {
-  'default',
-  'warning',
-  'success',
-  'error',
+  default = 'default',
+  warning = 'warning',
+  success = 'success',
+  error = 'error',
 }
