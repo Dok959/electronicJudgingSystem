@@ -6,6 +6,6 @@ export const handleAlertMessage = (alert: IAlert) => {
   setAlert(alert);
   setTimeout(
     () => setAlert({ alertText: '', alertStatus: alertStatus.default }),
-    50000,
+    5000,
   );
 };

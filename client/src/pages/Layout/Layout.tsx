@@ -1,9 +1,9 @@
 import { useStore } from 'effector-react';
+import { useLocation } from 'react-router-dom';
 import { Alert, Footer, Menu } from '@/components';
 import { MainPage } from '../index';
-import * as Style from './Layout.css';
-import { useLocation } from 'react-router-dom';
 import { $alert } from '@/context/alert';
+import * as Style from './Layout.css';
 
 interface ILayoutProps {
   children: JSX.Element;

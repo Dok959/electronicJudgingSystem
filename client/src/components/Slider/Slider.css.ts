@@ -1,5 +1,5 @@
-import { vars } from '@/theme/index';
 import { style } from '@vanilla-extract/css';
+import { vars } from '@/theme/index';
 
 export const slider = style({
   maxWidth: '1232px',

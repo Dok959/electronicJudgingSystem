@@ -1,6 +1,6 @@
+import { useEffect } from 'react';
 import Carousel from 'nuka-carousel';
 import * as Style from './Slider.css';
-import { useEffect } from 'react';
 
 export const Slider = () => {
   useEffect(() => {

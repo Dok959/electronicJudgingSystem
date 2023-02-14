@@ -1,15 +1,11 @@
-import { vars } from '@/theme/index';
 import { style } from '@vanilla-extract/css';
+import { vars } from '@/theme/index';
 
 export const wrapper = style({
   height: '100%',
   background: vars.colors.background.primary,
   maxWidth: 1280,
-  // '@media': {
-  //   'screen and (min-width: 768px)': {
-  //     marginTop: 50,
-  //   },
-  // },
+  width: '100%',
 });
 
 export const container = style({
@@ -18,12 +14,5 @@ export const container = style({
   display: 'grid',
   justifyItems: 'center',
   gap: '24px 0',
-  // margin: '48px auto 0',
   padding: '24px',
-
-  // '@media': {
-  //   'screen and (min-width: 768px)': {
-  //     marginTop: 50,
-  //   },
-  // },
 });

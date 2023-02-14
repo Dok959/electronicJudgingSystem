@@ -1,12 +1,14 @@
-import { authClient } from '@/api/authClient';
+import { useState } from 'react';
 import { redirect } from 'react-router-dom';
-import * as Style from './Auth.css';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useState } from 'react';
+
+import { authClient } from '@/api/authClient';
 import { Spinner } from '@/components';
 import { handleAlertMessage } from '@/utils/auth';
 import { alertStatus } from '@/utils/enum';
+
+import * as Style from './Auth.css';
 
 export const AuthPage = () => {
   const [spinner, setSpinner] = useState<boolean>(false);

@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router-dom';
+
 import { useTheme } from './hooks';
 import { Layout } from './pages';
 

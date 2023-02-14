@@ -1,7 +1,7 @@
-import * as Style from './Menu.css';
-import { BurgerIcon } from './Burger/Burger';
 import { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+import { BurgerIcon } from './Burger/Burger';
+import * as Style from './Menu.css';
 
 export const Menu = () => {
   const [isMenuOpen, toggleMenu] = useState<boolean>(false);

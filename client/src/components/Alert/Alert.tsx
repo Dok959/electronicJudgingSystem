@@ -1,7 +1,7 @@
 import { IAlertProps } from '@/types';
-import * as Style from './Alert.css';
 import { alertStatus } from '@/utils/enum';
 import { handleAlertMessage } from '@/utils/auth';
+import * as Style from './Alert.css';
 
 export const Alert = ({ props }: IAlertProps) => {
   const clickHandler = () => {
@@ -26,9 +26,9 @@ export const Alert = ({ props }: IAlertProps) => {
           <path
             d="M18 18L9.5 9.5L1 1M1 18L18 1"
             stroke="#24293D"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </svg>
       </button>

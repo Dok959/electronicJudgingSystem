@@ -5,9 +5,10 @@ import {
   Route,
   RouterProvider,
 } from 'react-router-dom';
+import { useStore } from 'effector-react';
+
 import App from './App';
 import { AuthPage, ErrorPage } from './pages';
-import { useStore } from 'effector-react';
 import { $auth } from './context/auth';
 
 const Router = () => {

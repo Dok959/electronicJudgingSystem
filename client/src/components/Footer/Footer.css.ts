@@ -1,5 +1,5 @@
-import { vars } from '@/theme';
 import { style } from '@vanilla-extract/css';
+import { vars } from '@/theme';
 
 export const container = style({
   width: '100%',
