@@ -6,7 +6,7 @@ import { PrismaService } from 'src/prisma.service';
 export class EventsService {
   constructor(private prisma: PrismaService) {}
 
-  async findOneEvent(
+  async findOne(
     eventFindUniqueArgs: Prisma.EventFindUniqueArgs,
   ): Promise<EventModel> {
     return await this.prisma.event.findUnique({
@@ -14,7 +14,7 @@ export class EventsService {
     });
   }
 
-  async findAllEvents(
+  async findAll(
     eventFindManyArgs?: Prisma.EventFindManyArgs,
   ): Promise<EventModel[]> {
     return await this.prisma.event.findMany({
@@ -22,28 +22,21 @@ export class EventsService {
     });
   }
 
-  async createEvent(
-    eventCreateArgs: Prisma.EventCreateArgs,
-  ): Promise<EventModel> {
-    const data = eventCreateArgs.data;
-    if (data['startDate'] !== undefined) {
-      data['startDate'] = new Date(data['startDate']);
-    }
-    if (data['startTime'] !== undefined) {
-      const time: number[] = (data['startTime'] as string)
-        .split(':')
-        .map((item) => Number(item));
-      const date = new Date(
-        new Date(data['startDate']).setHours(time[0], time[1], time[2]),
-      );
-      const offset = date.getTimezoneOffset() / 60;
-      data['startTime'] = new Date(
-        new Date(date).setHours(date.getHours() - offset),
-      ).toISOString();
-    }
-
+  async create(eventCreateArgs: Prisma.EventCreateArgs): Promise<EventModel> {
     return await this.prisma.event.create({
-      data: eventCreateArgs.data,
+      ...eventCreateArgs,
+    });
+  }
+
+  async update(eventUpdateArgs: Prisma.EventUpdateArgs): Promise<EventModel> {
+    return await this.prisma.event.update({
+      ...eventUpdateArgs,
+    });
+  }
+
+  async delete(eventDeleteArgs: Prisma.EventDeleteArgs): Promise<EventModel> {
+    return await this.prisma.event.delete({
+      ...eventDeleteArgs,
     });
   }
 }

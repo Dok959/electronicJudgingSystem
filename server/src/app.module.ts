@@ -1,3 +1,4 @@
+import { SettingsModule } from './events/settings/settings.module';
 import { EventsModule } from './events/events.module';
 import { UsersModule } from './users/user.module';
 import { Module } from '@nestjs/common';
@@ -8,7 +9,13 @@ import { AuthModule } from './auth/auth.module';
 import { AthleteModule } from './athletes/athletes.module';
 
 @Module({
-  imports: [EventsModule, UsersModule, AuthModule, AthleteModule],
+  imports: [
+    SettingsModule,
+    EventsModule,
+    UsersModule,
+    AuthModule,
+    AthleteModule,
+  ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })

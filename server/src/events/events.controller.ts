@@ -6,7 +6,6 @@ import {
   HttpStatus,
   Param,
   Post,
-  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -21,8 +20,8 @@ export class EventsController {
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  async getEvent(@Param('id') id: string, @Res() res: Response) {
-    const event = await this.eventService.findOneEvent({
+  async getOne(@Param('id') id: string, @Res() res: Response) {
+    const event = await this.eventService.findOne({
       where: { id: parseInt(id) },
     });
 
@@ -31,11 +30,11 @@ export class EventsController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async getAllEvents(
+  async getAll(
     @Body() eventFindManyArgs: Prisma.EventFindManyArgs,
     @Res() res: Response,
   ) {
-    const events = await this.eventService.findAllEvents(eventFindManyArgs);
+    const events = await this.eventService.findAll(eventFindManyArgs);
 
     return res.send(events);
   }
@@ -43,11 +42,35 @@ export class EventsController {
   @UseGuards(JWTGuard)
   @Post('create')
   @HttpCode(HttpStatus.CREATED)
-  async createEvent(
+  async create(
     @Body() eventCreateArgs: Prisma.EventCreateArgs,
     @Res() res: Response,
   ) {
-    const event = await this.eventService.createEvent(eventCreateArgs);
+    const event = await this.eventService.create(eventCreateArgs);
+
+    return res.send(event);
+  }
+
+  @UseGuards(JWTGuard)
+  @Post('update')
+  @HttpCode(HttpStatus.OK)
+  async update(
+    @Body() eventUpdateArgs: Prisma.EventUpdateArgs,
+    @Res() res: Response,
+  ) {
+    const event = await this.eventService.update(eventUpdateArgs);
+
+    return res.send(event);
+  }
+
+  @UseGuards(JWTGuard)
+  @Post('delete')
+  @HttpCode(HttpStatus.OK)
+  async delete(
+    @Body() eventDeleteArgs: Prisma.EventDeleteArgs,
+    @Res() res: Response,
+  ) {
+    const event = await this.eventService.delete(eventDeleteArgs);
 
     return res.send(event);
   }

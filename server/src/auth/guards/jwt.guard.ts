@@ -10,20 +10,25 @@ import { AuthService } from '../auth.service';
 export class JWTGuard implements CanActivate {
   constructor(private authService: AuthService) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
+    try {
+      const request = context.switchToHttp().getRequest();
 
-    const token = request.headers.authorization.split(' ')[1];
+      const token: string = request.headers.authorization.split(' ')[1] || null;
 
-    if (!token) {
-      throw new UnauthorizedException('Ошибка авторизации');
+      if (!token) {
+        throw new UnauthorizedException('Ошибка авторизации');
+      }
+
+      const validToken = this.authService.verifyToken(token);
+
+      if (validToken?.error) {
+        throw new UnauthorizedException(validToken.error);
+      }
+
+      request.token = token;
+      return true;
+    } catch (error) {
+      throw new UnauthorizedException('Ошибка чтения токена');
     }
-
-    const validToken = this.authService.verifyToken(token);
-
-    if (validToken?.error) {
-      throw new UnauthorizedException(validToken.error);
-    }
-
-    return (request.token = token);
   }
 }
