@@ -1,9 +1,14 @@
 import { useLoaderData } from 'react-router-dom';
-import { Event } from '@/types/eventsList';
+import {
+  EventAndSettings,
+  SettingsEvent,
+  TypesEvent,
+} from '@/types/eventsList';
 import * as Style from './Events.css';
 
 export const EventsList = () => {
-  const events: Event[] = useLoaderData() as Event[];
+  // TODO на сервере создать createmany, updatemany, cascade delete для настроек
+  const events: EventAndSettings[] = useLoaderData() as EventAndSettings[];
   console.log(events);
 
   const parseDateTime = (dateTime: Date, isDate: boolean) => {
@@ -13,6 +18,37 @@ export const EventsList = () => {
     } else {
       return date.toLocaleString().split(', ')[1];
     }
+  };
+
+  const parseRanks = (mas: SettingsEvent[]) => {
+    const sumWithInitial = mas.reduce(
+      (accumulator, currentValue) => accumulator + currentValue.rank + ', ',
+      '',
+    );
+    return sumWithInitial;
+  };
+
+  const parseTypes = (mas: SettingsEvent[]) => {
+    let isIndivigual = false,
+      isGroup = false;
+    mas.map((item): void => {
+      // TODO не работает из-за призмы
+      console.log(item.type);
+      console.log(TypesEvent.Individual);
+      console.log(item.type == TypesEvent.Individual);
+      if (item.type === TypesEvent.Individual) {
+        isIndivigual = true;
+      } else if (item.type === TypesEvent.Group) {
+        isGroup = true;
+      }
+    });
+
+    return (
+      <>
+        {isIndivigual ? <p className={Style.tag}>Индивидуальное</p> : null}
+        {isGroup ? <p className={Style.tag}>Групповое</p> : null}
+      </>
+    );
   };
 
   return (
@@ -96,11 +132,13 @@ export const EventsList = () => {
 
                     <div className={Style.flexContainer({ flex: 'wrap' })}>
                       <p className={Style.info}>
-                        Квалификация: <span>КМС, 1С, 2С, 3Ю</span>
+                        Квалификация:{' '}
+                        <span>{parseRanks(item.SettingsEvent)}</span>
                       </p>
                       <div className={Style.tags}>
-                        <p className={Style.tag}>Индивидуальное</p>
-                        <p className={Style.tag}>Групповое</p>
+                        {parseTypes(item.SettingsEvent)}
+                        {/* <p className={Style.tag}>Индивидуальное</p>
+                        <p className={Style.tag}>Групповое</p> */}
                         <a href="/" className={Style.detail}>
                           Подробнее
                         </a>

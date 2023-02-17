@@ -18,6 +18,14 @@ import { JWTGuard } from 'src/auth/guards';
 export class EventsController {
   constructor(private readonly eventService: EventsService) {}
 
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  async getAllEvents(@Res() res: Response) {
+    const events = await this.eventService.findAllEventsAndSettings();
+
+    return res.send(events);
+  }
+
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   async getOne(@Param('id') id: string, @Res() res: Response) {
@@ -28,7 +36,7 @@ export class EventsController {
     return res.send(event);
   }
 
-  @Get()
+  @Get('all')
   @HttpCode(HttpStatus.OK)
   async getAll(
     @Body() eventFindManyArgs: Prisma.EventFindManyArgs,

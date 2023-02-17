@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { Event as EventModel, Prisma } from '@prisma/client';
+import {
+  Event as EventModel,
+  Prisma,
+  SettingsEvent as SettingsEventModel,
+} from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
@@ -19,6 +23,18 @@ export class EventsService {
   ): Promise<EventModel[]> {
     return await this.prisma.event.findMany({
       where: eventFindManyArgs.where,
+    });
+  }
+
+  async findAllEventsAndSettings(): Promise<
+    (EventModel & {
+      SettingsEvent: SettingsEventModel[];
+    })[]
+  > {
+    return await this.prisma.event.findMany({
+      include: {
+        SettingsEvent: true,
+      },
     });
   }
 

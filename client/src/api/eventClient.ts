@@ -1,11 +1,11 @@
 import api from './kyClient';
-import { Event } from '@/types/eventsList';
+import { EventAndSettings } from '@/types/eventsList';
 import { HTTPError } from 'ky';
 
 export class eventClient {
-  static getEvents = async (): Promise<Event[]> => {
+  static getEvents = async (): Promise<EventAndSettings[]> => {
     try {
-      const result: Event[] = await api.get('event/', {}).json();
+      const result: EventAndSettings[] = await api.get('event/', {}).json();
       return result;
     } catch (error) {
       if (error instanceof HTTPError) {
