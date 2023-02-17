@@ -10,13 +10,23 @@ import { useStore } from 'effector-react';
 import App from './App';
 import { AuthPage, ErrorPage } from './pages';
 import { $auth } from './context/auth';
+import { eventClient } from './api/eventClient';
+
+export async function eventsloader() {
+  return await eventClient.getEvents();
+}
 
 const Router = () => {
   const isLoggingIn = useStore($auth);
 
   const router = createBrowserRouter(
     createRoutesFromElements(
-      <Route path="/" element={<App />} errorElement={<ErrorPage />}>
+      <Route
+        path="/"
+        element={<App />}
+        errorElement={<ErrorPage />}
+        loader={eventsloader}
+      >
         <Route
           path="login"
           element={isLoggingIn ? <Navigate to={'/primary'} /> : <AuthPage />}

@@ -1,4 +1,4 @@
-import { Slider } from '@/components';
+import { EventsList, Slider } from '@/components';
 import * as Style from './Main.css';
 
 export const MainPage = () => {
@@ -7,7 +7,8 @@ export const MainPage = () => {
       <h1 className={Style.mainTitle}>
         Астраханская федерация художественной гимнастики
       </h1>
-      <Slider></Slider>
+      <Slider />
+      <EventsList />
       <div>Страница</div>
     </>
   );

@@ -19,10 +19,10 @@ export class authClient {
       if (error instanceof HTTPError) {
         const errorJson = await error.response.json();
         console.log(errorJson);
-        return;
+        // return;
       } else if (error instanceof Error) {
         console.log(error.message);
-        return;
+        // return;
       }
     }
     return false;

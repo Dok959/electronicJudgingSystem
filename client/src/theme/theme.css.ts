@@ -72,8 +72,8 @@ export const light = createTheme(colors, {
     secondary: '#F3F6FF',
   },
   accent: {
-    primary: '#EC008C',
-    secondary: '#ec008cbf',
+    primary: 'rgba(236, 0, 140, 1)',
+    secondary: 'rgba(236, 0, 140, 0.75)',
   },
   headings: {
     primary: '#1F2333',
@@ -92,8 +92,8 @@ export const dark = createTheme(colors, {
     secondary: '#F3F6FF',
   },
   accent: {
-    primary: '#EC008C',
-    secondary: '#ec008cbf',
+    primary: 'rgba(236, 0, 140, 1)',
+    secondary: 'rgba(236, 0, 140, 0.75)',
   },
   headings: {
     primary: '#1F2333',
