@@ -1,23 +1,34 @@
-import { Role } from '@prisma/client';
+export const roles = [
+  {
+    title: 'Пользователь',
+  },
+  {
+    title: 'Судья',
+  },
+  {
+    title: 'Администратор',
+  },
+];
 
 export const users = [
   {
     email: 'temp@mail.ru',
     password: 'admin',
+    roleId: 1,
     name: 'Иван',
     sirname: 'Иванов',
   },
   {
     email: 'judje@mail.ru',
     password: 'admin',
-    role: Role.USER,
+    roleId: 1,
     name: 'Абракадарба',
     sirname: ' ',
   },
   {
     email: 'admin@mail.ru',
     password: 'admin',
-    role: Role.ADMIN,
+    roleId: 3,
     name: 'Петров',
     sirname: 'Птр',
   },

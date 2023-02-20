@@ -1,0 +1,1 @@
+export { EventAndSettings } from './eventsList';

@@ -1,14 +1,20 @@
 import { PrismaClient } from '@prisma/client';
-import { users, athletes } from '../data';
+import { roles, ranks, items, types } from '../data';
 
 const prisma = new PrismaClient();
 
 async function main() {
-  await prisma.athlete.createMany({
-    data: athletes,
+  await prisma.role.createMany({
+    data: roles,
   });
-  await prisma.user.createMany({
-    data: users,
+  await prisma.rank.createMany({
+    data: ranks,
+  });
+  await prisma.item.createMany({
+    data: items,
+  });
+  await prisma.typesEvent.createMany({
+    data: types,
   });
 }
 

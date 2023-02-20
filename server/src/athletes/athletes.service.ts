@@ -40,23 +40,24 @@ export class AthleteService {
     });
   }
 
+  // TODO проверки на существование вынести в guards
   async create(
-    athleteCreateInput: Prisma.AthleteCreateArgs,
+    athleteCreateArgs: Prisma.AthleteCreateArgs,
   ): Promise<Athlete | null> {
-    const existingAthlete = await this.findOne({
-      name: athleteCreateInput.data.name,
-      sirname: athleteCreateInput.data.sirname,
-      patronymic: athleteCreateInput.data.patronymic,
-      dateOfBirth: athleteCreateInput.data.dateOfBirth,
-      rank: athleteCreateInput.data.rank,
-    });
+    // const existingAthlete = await this.findOne({
+    //   name: athleteCreateInput.data.name,
+    //   sirname: athleteCreateInput.data.sirname,
+    //   patronymic: athleteCreateInput.data.patronymic,
+    //   dateOfBirth: athleteCreateInput.data.dateOfBirth,
+    //   rankId: athleteCreateInput.data.rank,
+    // });
 
-    if (existingAthlete) {
-      return null;
-    }
+    // if (existingAthlete) {
+    //   return null;
+    // }
 
     return this.prisma.athlete.create({
-      data: athleteCreateInput.data,
+      ...athleteCreateArgs,
     });
   }
 

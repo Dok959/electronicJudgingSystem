@@ -1,4 +1,35 @@
-import { Rank } from '@prisma/client';
+export const ranks = [
+  {
+    title: 'Без разряда',
+  },
+  {
+    title: 'Мастер спорта',
+  },
+  {
+    title: 'Кандидат в мастера спорта',
+  },
+  {
+    title: '1 разряд',
+  },
+  {
+    title: '2 разряд',
+  },
+  {
+    title: '3 разряд',
+  },
+  {
+    title: '1 разряд',
+  },
+  {
+    title: '1 юношеский',
+  },
+  {
+    title: '2 юношеский',
+  },
+  {
+    title: '3 юношеский',
+  },
+];
 
 export const athletes = [
   {
@@ -8,6 +39,6 @@ export const athletes = [
   {
     name: 'Сидор',
     sirname: 'Сидоров',
-    rank: Rank.KMC,
+    rank: 'Кандидат в мастера спорта',
   },
 ];
