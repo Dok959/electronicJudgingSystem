@@ -1,11 +1,19 @@
 import api from './kyClient';
-import { EventAndSettings } from '@/types/eventsList';
+import { EventAndSettings } from '@/types';
 import { HTTPError } from 'ky';
 
 export class eventClient {
-  static getEvents = async (): Promise<EventAndSettings[]> => {
+  static getEvents = async (
+    ranks: number[] = [],
+  ): Promise<EventAndSettings[]> => {
+    console.log(ranks);
     try {
-      const result: EventAndSettings[] = await api.get('event/', {}).json();
+      const result: EventAndSettings[] = await api
+        .post('event/', {
+          json: { masRanksid: ranks },
+        })
+        .json();
+      console.log(result);
       return result;
     } catch (error) {
       if (error instanceof HTTPError) {

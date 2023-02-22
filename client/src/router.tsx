@@ -12,10 +12,12 @@ import { AuthPage, ErrorPage } from './pages';
 import { $auth } from './context/auth';
 import { eventClient } from './api/eventClient';
 
-export async function eventsloader() {
-  return await eventClient.getEvents();
+export async function eventsloader({ request }: any) {
+  console.log(request.body);
+  return await eventClient.getEvents([]);
 }
 
+// https://runebook.dev/ru/docs/react_router/components/form
 const Router = () => {
   const isLoggingIn = useStore($auth);
 

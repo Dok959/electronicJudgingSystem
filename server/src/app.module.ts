@@ -1,3 +1,4 @@
+import { RankModule } from './ranks/rank.module';
 import { SettingsModule } from './settings/settings.module';
 import { EventsModule } from './events/events.module';
 import { UsersModule } from './users/user.module';
@@ -10,6 +11,7 @@ import { AthleteModule } from './athletes/athletes.module';
 
 @Module({
   imports: [
+    RankModule,
     SettingsModule,
     EventsModule,
     UsersModule,

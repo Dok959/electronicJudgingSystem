@@ -14,15 +14,27 @@ import { EventsService } from './events.service';
 import { Prisma } from '@prisma/client';
 import { JWTGuard } from 'src/auth/guards';
 import { ExistingGuard } from './guards';
+import { RankService } from 'src/ranks/rank.service';
 
 @Controller('event')
 export class EventsController {
-  constructor(private readonly eventService: EventsService) {}
+  constructor(
+    private readonly eventService: EventsService,
+    private readonly rankService: RankService,
+  ) {}
 
-  @Get()
+  @Post()
   @HttpCode(HttpStatus.OK)
-  async getAllEvents(@Res() res: Response) {
-    const events = await this.eventService.findAll();
+  async getAllEvents(
+    @Body() args: { masRanksid: number[] } = { masRanksid: [] },
+    @Res() res: Response,
+  ) {
+    let masRanksid = args.masRanksid;
+
+    if (masRanksid?.length === 0) {
+      masRanksid = (await this.rankService.findAll()).map((item) => item.id);
+    }
+    const events = await this.eventService.findAll(masRanksid);
 
     return res.send(events);
   }

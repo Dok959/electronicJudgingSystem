@@ -1,13 +1,3 @@
-import { alertStatus } from '../utils/enum';
-export interface IAlert {
-  alertText: string;
-  alertStatus: alertStatus;
-}
-export interface IAlertProps {
-  props: IAlert;
-}
-
-export interface ISpinnerProps {
-  top: number;
-  left: number;
-}
+export type { ISpinnerProps, IAlertProps, IAlert } from './alert';
+export type { EventAndSettings, SettingsEvent } from './eventsList';
+export { Rank, TypesEvent } from './eventsList';

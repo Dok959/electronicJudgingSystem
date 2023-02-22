@@ -22,8 +22,15 @@ export class EventsService {
     });
   }
 
-  async findAll(): Promise<EventModel[] | null> {
+  async findAll(masRanksid: number[] | []): Promise<EventModel[] | null> {
     return await this.prisma.event.findMany({
+      where: {
+        SettingsEvent: {
+          some: {
+            rankId: { in: masRanksid },
+          },
+        },
+      },
       include: {
         SettingsEvent: {
           select: {
