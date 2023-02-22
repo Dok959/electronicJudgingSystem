@@ -1,4 +1,4 @@
-import { SettingsModule } from './events/settings/settings.module';
+import { SettingsModule } from './settings/settings.module';
 import { EventsModule } from './events/events.module';
 import { UsersModule } from './users/user.module';
 import { Module } from '@nestjs/common';

@@ -4,15 +4,18 @@ import {
   ExecutionContext,
   UnauthorizedException,
 } from '@nestjs/common';
-import { AuthService } from '../auth.service';
+import { UserService } from '../../users/user.service';
 
 @Injectable()
 export class LoginGuard implements CanActivate {
-  constructor(private authService: AuthService) {}
+  constructor(private userService: UserService) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const { email, password } = request.body;
-    const user = await this.authService.validateUser(email);
+    const user = await this.userService.search({
+      email: email,
+      password: password,
+    });
 
     if (!user) {
       throw new UnauthorizedException(`Пользователя не существует`);

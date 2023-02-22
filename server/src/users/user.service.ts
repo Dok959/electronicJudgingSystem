@@ -7,23 +7,17 @@ import { authUserDto } from '../auth/dto/auth-user.dto';
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  async login(loginUserDto: authUserDto): Promise<User | null> {
-    const existingUser = await this.findOne({
-      email: loginUserDto.email,
+  async search(loginUserDto: authUserDto): Promise<User | null> {
+    return await this.findOne({
+      where: { ...loginUserDto },
     });
-
-    if (!existingUser) {
-      return null;
-    }
-
-    return existingUser;
   }
 
   async registration(
     userCreateInput: Prisma.UserCreateInput,
   ): Promise<User | null> {
     const existingUser = await this.findOne({
-      email: userCreateInput.email,
+      where: { ...userCreateInput },
     });
 
     if (existingUser) {
@@ -36,10 +30,10 @@ export class UserService {
   }
 
   async findOne(
-    userWhereUniqueInput: Prisma.UserWhereInput,
+    userFindUniqueArgs: Prisma.UserFindUniqueArgs,
   ): Promise<User | null> {
     return this.prisma.user.findFirst({
-      where: userWhereUniqueInput,
+      ...userFindUniqueArgs,
     });
   }
 }

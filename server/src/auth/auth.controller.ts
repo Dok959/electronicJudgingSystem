@@ -32,8 +32,7 @@ export class AuthController {
       clientTokens.access_token,
     );
     const user = await this.userService.findOne({
-      id: parseAccessToken.id,
-      email: parseAccessToken.email,
+      where: { ...parseAccessToken },
     });
 
     const access = await this.authService.generateAccessToken(user);
@@ -63,13 +62,12 @@ export class AuthController {
     @Body() loginUserDto: authUserDto,
     @Res() res: Response,
   ): Promise<Response> {
-    const user = await this.userService.login(loginUserDto);
+    const user = await this.userService.search(loginUserDto);
 
     const access = await this.authService.generateAccessToken(user);
     const refresh = await this.authService.generateRefreshToken(user.id);
 
     res.statusCode = HttpStatus.OK;
-
     return res.send({ ...access, ...refresh, name: user.name });
   }
 
@@ -82,7 +80,6 @@ export class AuthController {
     await this.userService.registration(UserCreateInput);
 
     res.statusCode = HttpStatus.CREATED;
-
     return res.send('Пользователь создан');
   }
 }

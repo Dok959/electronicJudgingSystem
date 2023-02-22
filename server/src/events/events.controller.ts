@@ -13,6 +13,7 @@ import { Response } from 'express';
 import { EventsService } from './events.service';
 import { Prisma } from '@prisma/client';
 import { JWTGuard } from 'src/auth/guards';
+import { ExistingGuard } from './guards';
 
 @Controller('event')
 export class EventsController {
@@ -21,7 +22,7 @@ export class EventsController {
   @Get()
   @HttpCode(HttpStatus.OK)
   async getAllEvents(@Res() res: Response) {
-    const events = await this.eventService.findAllEventsAndSettings();
+    const events = await this.eventService.findAll();
 
     return res.send(events);
   }
@@ -36,18 +37,7 @@ export class EventsController {
     return res.send(event);
   }
 
-  @Get('all')
-  @HttpCode(HttpStatus.OK)
-  async getAll(
-    @Body() eventFindManyArgs: Prisma.EventFindManyArgs,
-    @Res() res: Response,
-  ) {
-    const events = await this.eventService.findAll(eventFindManyArgs);
-
-    return res.send(events);
-  }
-
-  @UseGuards(JWTGuard)
+  @UseGuards(JWTGuard, ExistingGuard)
   @Post('create')
   @HttpCode(HttpStatus.CREATED)
   async create(
@@ -59,7 +49,7 @@ export class EventsController {
     return res.send(event);
   }
 
-  @UseGuards(JWTGuard)
+  @UseGuards(JWTGuard, ExistingGuard)
   @Post('update')
   @HttpCode(HttpStatus.OK)
   async update(
@@ -71,7 +61,7 @@ export class EventsController {
     return res.send(event);
   }
 
-  @UseGuards(JWTGuard)
+  @UseGuards(JWTGuard, ExistingGuard)
   @Post('delete')
   @HttpCode(HttpStatus.OK)
   async delete(

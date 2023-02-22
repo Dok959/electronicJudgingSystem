@@ -13,6 +13,7 @@ import { Response } from 'express';
 import { SettingsService } from './settings.service';
 import { JWTGuard } from 'src/auth/guards';
 import { Prisma } from '@prisma/client';
+import { ExistingGuard } from './guards';
 
 @Controller('settings')
 export class SettingsController {
@@ -29,7 +30,7 @@ export class SettingsController {
     return res.send(settingsEvent);
   }
 
-  @UseGuards(JWTGuard)
+  @UseGuards(JWTGuard, ExistingGuard)
   @Post('create')
   @HttpCode(HttpStatus.CREATED)
   async create(
@@ -43,7 +44,7 @@ export class SettingsController {
     return res.send(settingsEvent);
   }
 
-  @UseGuards(JWTGuard)
+  @UseGuards(JWTGuard, ExistingGuard)
   @Post('update')
   @HttpCode(HttpStatus.OK)
   async update(
@@ -57,7 +58,7 @@ export class SettingsController {
     return res.send(settingsEvent);
   }
 
-  @UseGuards(JWTGuard)
+  @UseGuards(JWTGuard, ExistingGuard)
   @Post('delete')
   @HttpCode(HttpStatus.OK)
   async delete(

@@ -15,7 +15,7 @@ export class AuthService {
     const parsedTokenData = this.parseJwt(token);
 
     return await this.userService.findOne({
-      id: parsedTokenData.user.id,
+      where: { ...parsedTokenData.user },
     });
   }
 
@@ -47,15 +47,5 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign({ user }),
     };
-  }
-
-  async validateUser(email: string): Promise<UserModel | null> {
-    const user = await this.userService.findOne({ email });
-
-    if (!user) {
-      return null;
-    }
-
-    return user;
   }
 }

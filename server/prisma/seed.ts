@@ -16,6 +16,21 @@ async function main() {
   await prisma.typesEvent.createMany({
     data: types,
   });
+
+  const adminRole = await prisma.role.findFirst({
+    where: { title: 'Администратор' },
+    select: { id: true },
+  });
+
+  await prisma.user.create({
+    data: {
+      email: 'temp@mail.ru',
+      password: 'admin',
+      name: 'gfdg',
+      sirname: 'asdsdzxczc',
+      roleId: adminRole.id,
+    },
+  });
 }
 
 main()
