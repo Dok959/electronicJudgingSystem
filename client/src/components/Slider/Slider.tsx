@@ -4,9 +4,21 @@ import * as Style from './Slider.css';
 
 export const Slider = () => {
   useEffect(() => {
+    const list = document.getElementsByClassName('paging-item')!;
+    for (let i = 0; i < list.length; i++) {
+      list.item(i)!.setAttribute('style', 'margin: 1px 6px');
+    }
+  });
+  useEffect(() => {
     const dots = document.getElementsByClassName('paging-dot')!;
     for (let i = 0; i < dots.length; i++) {
       dots.item(i)!.classList.add(Style.dotSize);
+    }
+  });
+  useEffect(() => {
+    const buttons = document.getElementsByClassName('paging-item')!;
+    for (let i = 0; i < buttons.length; i++) {
+      buttons.item(i)!.children.item(0)!.classList.add(Style.button);
     }
   });
 

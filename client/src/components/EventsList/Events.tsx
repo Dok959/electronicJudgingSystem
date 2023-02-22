@@ -3,6 +3,7 @@ import {
   EventAndSettings,
   SettingsEvent,
   TypesEvent,
+  Rank,
 } from '@/types/eventsList';
 import * as Style from './Events.css';
 
@@ -21,25 +22,24 @@ export const EventsList = () => {
   };
 
   const parseRanks = (mas: SettingsEvent[]) => {
-    const sumWithInitial = mas.reduce(
-      (accumulator, currentValue) => accumulator + currentValue.rank + ', ',
-      '',
+    let result = '';
+    mas.map(
+      (item) => (result += Rank[item.rank.title as keyof typeof Rank] + ', '),
     );
-    return sumWithInitial;
+    return result.slice(0, -2);
   };
 
   const parseTypes = (mas: SettingsEvent[]) => {
     let isIndivigual = false,
       isGroup = false;
-    mas.map((item): void => {
-      // TODO не работает из-за призмы
-      console.log(item.type);
-      console.log(TypesEvent.Individual);
-      console.log(item.type == TypesEvent.Individual);
-      if (item.type === TypesEvent.Individual) {
-        isIndivigual = true;
-      } else if (item.type === TypesEvent.Group) {
-        isGroup = true;
+    mas.map((item) => {
+      if (
+        TypesEvent['Индивидуальное'] ===
+        TypesEvent[item.type.title as keyof typeof TypesEvent]
+      ) {
+        return (isIndivigual = true);
+      } else {
+        return (isGroup = true);
       }
     });
 
@@ -137,8 +137,6 @@ export const EventsList = () => {
                       </p>
                       <div className={Style.tags}>
                         {parseTypes(item.SettingsEvent)}
-                        {/* <p className={Style.tag}>Индивидуальное</p>
-                        <p className={Style.tag}>Групповое</p> */}
                         <a href="/" className={Style.detail}>
                           Подробнее
                         </a>

@@ -16,9 +16,32 @@ export const dotSize = style({
       fill: vars.colors.accent.primary,
     },
   },
+  '@media': {
+    'screen and (min-width: 768px)': {
+      width: 24,
+      height: 24,
+    },
+  },
 });
 
 export const images = style({
   maxWidth: 'inherit',
   width: '100%',
+});
+
+export const button = style({
+  padding: 0,
+  transition: vars.transition.all,
+  boxShadow: 'none',
+  borderColor: 'rgba(236, 0, 140, 0)',
+  borderWidth: 0,
+  borderStyle: 'solid',
+  borderRadius: '50%',
+  outline: '5px solid rgba(236, 0, 140, 0)',
+  display: 'flex',
+  selectors: {
+    [`&:focus`]: {
+      outlineColor: 'rgba(236, 0, 140, 0.2)',
+    },
+  },
 });
