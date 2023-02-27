@@ -18,7 +18,7 @@ export const wrapper = style({
 
 export const heading = style({
   margin: 0,
-  fontSize: 18,
+  fontSize: 20,
   fontFamily: vars.fonts.heading,
   color: vars.colors.headings.primary,
 });
@@ -28,9 +28,12 @@ export const container = style({
   gridTemplateColumns: 'auto',
   gap: 16,
   alignItems: 'baseline',
+  width: '100%',
+  justifyItems: 'center',
   '@media': {
     'screen and (min-width: 768px)': {
-      gridTemplateColumns: '1fr auto',
+      gridTemplateColumns: '1fr 2fr',
+      display: 'grid',
     },
   },
 });
@@ -40,11 +43,18 @@ export const filter = style({
   display: 'grid',
   justifyItems: 'start',
   gridTemplateColumns: '1fr 1fr 1fr',
+  minWidth: '313px',
   '@media': {
     'screen and (min-width: 768px)': {
       gridTemplateColumns: 'auto',
+      minWidth: 'auto',
     },
   },
+});
+
+export const form = style({
+  display: 'contents',
+  width: 'fit-content',
 });
 
 export const item = style({
@@ -101,6 +111,7 @@ export const content = style({
   display: 'flex',
   flexDirection: 'column',
   gap: 16,
+  alignItems: 'center',
 });
 
 export const event = style({
@@ -111,7 +122,7 @@ export const event = style({
 });
 
 export const eventTitle = style({
-  fontSize: 16,
+  fontSize: 18,
   fontFamily: vars.fonts.heading,
   color: vars.colors.headings.primary,
   margin: 0,
@@ -157,9 +168,19 @@ export const flexContainer = recipe({
 });
 
 export const info = style({
-  fontSize: 14,
+  fontSize: 16,
   margin: 0,
   width: 'fit-content',
+  selectors: {
+    '&+&': {
+      marginTop: 0,
+      '@media': {
+        'screen and (min-width: 768px)': {
+          marginTop: 8,
+        },
+      },
+    },
+  },
 });
 
 export const tags = style({

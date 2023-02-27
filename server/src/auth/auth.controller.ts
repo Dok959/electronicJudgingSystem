@@ -7,9 +7,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { UserService } from 'src/users/user.service';
-import { RegistrationGuard, LoginGuard, RefreshJWTGuard } from './guards';
 import { Prisma } from '@prisma/client';
+import { UserService } from 'src/users';
+import { RegistrationGuard, LoginGuard, RefreshJWTGuard } from './guards';
 import { AuthService } from './auth.service';
 import { authUserDto, refreshTokenDto } from './dto';
 

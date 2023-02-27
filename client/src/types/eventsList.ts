@@ -1,29 +1,17 @@
-export enum TypesEvent {
-  'Индивидуальное' = 'Индивидуальное',
-  'Групповое' = 'Групповое',
+export interface IRanks {
+  id: number;
+  title: string;
 }
 
-export enum Rank {
-  'Мастер спорта' = 'МС',
-  'Кандидат в мастера спорта' = 'КМС',
-  '1 разряд' = '1С',
-  '2 разряд' = '2С',
-  '3 разряд' = 'C3',
-  '1 юношеский' = 'Y1',
-  '2 юношеский' = 'Y2',
-  '3 юношеский' = 'Y3',
-  'Без разряда' = 'БР',
-}
-
-export type SettingsEvent = {
+export interface ISettingsEvent {
   type: { title: string };
   rank: { title: string };
-};
+}
 
-export type EventAndSettings = {
+export interface IEventAndSettings {
   id: number;
   title: string;
   startDateTime: Date;
   duration: number;
-  SettingsEvent: SettingsEvent[];
-};
+  SettingsEvent: ISettingsEvent[];
+}

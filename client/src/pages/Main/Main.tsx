@@ -9,7 +9,6 @@ export const MainPage = () => {
       </h1>
       <Slider />
       <EventsList />
-      <div>Страница</div>
     </>
   );
 };

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { SettingsController } from './settings.controller';
 import { SettingsService } from './settings.service';
 import { PrismaService } from 'src/prisma.service';
-import { AuthModule } from 'src/auth/auth.module';
+import { AuthModule } from 'src/auth';
 
 @Module({
   imports: [AuthModule],

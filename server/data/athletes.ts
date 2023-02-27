@@ -1,8 +1,5 @@
 export const ranks = [
   {
-    title: 'Без разряда',
-  },
-  {
     title: 'Мастер спорта',
   },
   {
@@ -18,9 +15,6 @@ export const ranks = [
     title: '3 разряд',
   },
   {
-    title: '1 разряд',
-  },
-  {
     title: '1 юношеский',
   },
   {
@@ -28,5 +22,8 @@ export const ranks = [
   },
   {
     title: '3 юношеский',
+  },
+  {
+    title: 'Без разряда',
   },
 ];

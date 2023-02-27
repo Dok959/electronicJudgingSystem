@@ -10,31 +10,31 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { EventsService } from './events.service';
 import { Prisma } from '@prisma/client';
+import { EventService } from './event.service';
 import { JWTGuard } from 'src/auth/guards';
 import { ExistingGuard } from './guards';
-import { RankService } from 'src/ranks/rank.service';
+import { RankService } from 'src/ranks';
 
 @Controller('event')
-export class EventsController {
+export class EventController {
   constructor(
-    private readonly eventService: EventsService,
+    private readonly eventService: EventService,
     private readonly rankService: RankService,
   ) {}
 
   @Post()
   @HttpCode(HttpStatus.OK)
-  async getAllEvents(
-    @Body() args: { masRanksid: number[] } = { masRanksid: [] },
+  async getAllEventsNew(
+    @Body() args: { masRanksId: number[] } = { masRanksId: [] },
     @Res() res: Response,
   ) {
-    let masRanksid = args.masRanksid;
+    let masRanksId = args.masRanksId;
 
-    if (masRanksid?.length === 0) {
-      masRanksid = (await this.rankService.findAll()).map((item) => item.id);
+    if (masRanksId?.length === 0) {
+      masRanksId = (await this.rankService.findAll()).map((item) => item.id);
     }
-    const events = await this.eventService.findAll(masRanksid);
+    const events = await this.eventService.findAll(masRanksId);
 
     return res.send(events);
   }

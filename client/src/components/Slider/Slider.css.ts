@@ -18,8 +18,8 @@ export const dotSize = style({
   },
   '@media': {
     'screen and (min-width: 768px)': {
-      width: 24,
-      height: 24,
+      width: 20,
+      height: 20,
     },
   },
 });

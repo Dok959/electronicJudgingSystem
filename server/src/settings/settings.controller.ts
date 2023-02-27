@@ -10,9 +10,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { Prisma } from '@prisma/client';
 import { SettingsService } from './settings.service';
 import { JWTGuard } from 'src/auth/guards';
-import { Prisma } from '@prisma/client';
 import { ExistingGuard } from './guards';
 
 @Controller('settings')

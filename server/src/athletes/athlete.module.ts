@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { AthleteService } from './athletes.service';
-import { AthleteController } from './athletes.controller';
+import { AthleteService } from './athlete.service';
+import { AthleteController } from './athlete.controller';
 import { AuthModule } from 'src/auth/auth.module';
 import { PrismaService } from 'src/prisma.service';
 

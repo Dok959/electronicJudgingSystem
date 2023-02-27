@@ -1,6 +1,6 @@
+import { HTTPError } from 'ky';
 import api from './kyClient';
 import { setAuth } from '../context/auth';
-import { HTTPError } from 'ky';
 
 export class authClient {
   static login = async (email: string, password: string) => {

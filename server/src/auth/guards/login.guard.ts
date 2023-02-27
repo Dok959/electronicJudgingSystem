@@ -4,7 +4,7 @@ import {
   ExecutionContext,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UserService } from '../../users/user.service';
+import { UserService } from '../../users';
 
 @Injectable()
 export class LoginGuard implements CanActivate {

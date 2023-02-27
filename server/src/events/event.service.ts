@@ -3,7 +3,7 @@ import { Event as EventModel, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
-export class EventsService {
+export class EventService {
   constructor(private prisma: PrismaService) {}
 
   async findOne(
@@ -25,6 +25,9 @@ export class EventsService {
   async findAll(masRanksid: number[] | []): Promise<EventModel[] | null> {
     return await this.prisma.event.findMany({
       where: {
+        startDateTime: {
+          gte: new Date(),
+        },
         SettingsEvent: {
           some: {
             rankId: { in: masRanksid },

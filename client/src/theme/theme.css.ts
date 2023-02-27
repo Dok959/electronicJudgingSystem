@@ -109,6 +109,13 @@ export const vars = { ...global, colors };
 
 globalStyle('html', {
   height: '100%',
+  // scrollbarGutter: 'stable',
+  '@media': {
+    'screen and (min-width: 768px)': {
+      height: 'auto',
+      maxHeight: '100%',
+    },
+  },
 });
 
 globalStyle('body', {
@@ -122,10 +129,6 @@ globalStyle('#root', {
   backgroundColor: vars.colors.background.secondary,
   color: vars.colors.text.primary,
   height: '100%',
-  // display: 'flex',
-  // flexDirection: 'column',
-  // justifyContent: 'center',
-  // alignItems: 'center',
   justifyItems: 'center',
   minHeight: '100%',
   display: 'grid',

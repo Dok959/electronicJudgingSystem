@@ -10,14 +10,12 @@ import { useStore } from 'effector-react';
 import App from './App';
 import { AuthPage, ErrorPage } from './pages';
 import { $auth } from './context/auth';
-import { eventClient } from './api/eventClient';
+import { rankClient } from './api/rankClient';
 
-export async function eventsloader({ request }: any) {
-  console.log(request.body);
-  return await eventClient.getEvents([]);
+export async function ranksloader() {
+  return await rankClient.getRanks();
 }
 
-// https://runebook.dev/ru/docs/react_router/components/form
 const Router = () => {
   const isLoggingIn = useStore($auth);
 
@@ -27,7 +25,7 @@ const Router = () => {
         path="/"
         element={<App />}
         errorElement={<ErrorPage />}
-        loader={eventsloader}
+        loader={ranksloader}
       >
         <Route
           path="login"

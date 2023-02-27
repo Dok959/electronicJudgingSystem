@@ -13,10 +13,10 @@ import {
   Delete,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { AthleteService } from './athletes.service';
-import { AuthService } from 'src/auth/auth.service';
-import { JWTGuard } from 'src/auth/guards/jwt.guard';
 import { Prisma } from '@prisma/client';
+import { AthleteService } from './athlete.service';
+import { AuthService } from 'src/auth/auth.service';
+import { JWTGuard } from 'src/auth/guards';
 
 @Controller('athlete')
 export class AthleteController {

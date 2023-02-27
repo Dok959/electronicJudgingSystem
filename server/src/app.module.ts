@@ -1,19 +1,19 @@
-import { RankModule } from './ranks/rank.module';
-import { SettingsModule } from './settings/settings.module';
-import { EventsModule } from './events/events.module';
-import { UsersModule } from './users/user.module';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaService } from './prisma.service';
-import { AuthModule } from './auth/auth.module';
-import { AthleteModule } from './athletes/athletes.module';
+import { RankModule } from './ranks';
+import { SettingsModule } from './settings';
+import { EventModule } from './events';
+import { UsersModule } from './users';
+import { AuthModule } from './auth';
+import { AthleteModule } from './athletes';
 
 @Module({
   imports: [
     RankModule,
     SettingsModule,
-    EventsModule,
+    EventModule,
     UsersModule,
     AuthModule,
     AthleteModule,

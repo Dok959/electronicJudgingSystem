@@ -1,17 +1,11 @@
 import { HTTPError } from 'ky';
 import api from './kyClient';
-import { IEventAndSettings } from '@/types';
+import { IRanks } from '@/types';
 
-export class eventClient {
-  static getEvents = async (
-    ranks: number[] = [],
-  ): Promise<IEventAndSettings[]> => {
+export class rankClient {
+  static getRanks = async (): Promise<IRanks[]> => {
     try {
-      const result: IEventAndSettings[] = await api
-        .post('event/', {
-          json: { masRanksId: ranks },
-        })
-        .json();
+      const result: IRanks[] = await api.get(`rank/`, {}).json();
       console.log(result);
       return result;
     } catch (error) {
