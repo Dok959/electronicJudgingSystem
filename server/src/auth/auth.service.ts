@@ -11,7 +11,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async getUserByTokenData(token: string): Promise<UserModel> {
+  async getUserByTokenData(token: string): Promise<UserModel | null> {
     const parsedTokenData = this.parseJwt(token);
 
     return await this.userService.findOne({

@@ -25,7 +25,7 @@ export class EventController {
 
   @Post()
   @HttpCode(HttpStatus.OK)
-  async getAllEventsNew(
+  async getAll(
     @Body() args: { masRanksId: number[] } = { masRanksId: [] },
     @Res() res: Response,
   ) {

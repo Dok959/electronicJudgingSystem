@@ -8,9 +8,11 @@ import { EventModule } from './events';
 import { UsersModule } from './users';
 import { AuthModule } from './auth';
 import { AthleteModule } from './athletes';
+import { RoleModule } from './roles';
 
 @Module({
   imports: [
+    RoleModule,
     RankModule,
     SettingsModule,
     EventModule,

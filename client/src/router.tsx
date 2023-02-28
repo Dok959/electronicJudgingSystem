@@ -38,7 +38,7 @@ const Router = () => {
         <Route
           path="event"
           element={isLoggingIn ? <EventPage /> : <Navigate to={'/'} />}
-          // loader={ranksLoader}
+          loader={ranksLoader}
         />
       </Route>,
     ),

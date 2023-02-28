@@ -1,39 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { User, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
-import { authUserDto } from '../auth/dto/auth-user.dto';
 
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  async search(loginUserDto: authUserDto): Promise<User | null> {
+  async login(
+    userFindFirstArgs: Prisma.UserFindFirstArgs,
+  ): Promise<User | null> {
     return await this.findOne({
-      where: { ...loginUserDto },
+      ...userFindFirstArgs,
     });
   }
 
   async registration(
-    userCreateInput: Prisma.UserCreateInput,
+    userCreateArgs: Prisma.UserCreateArgs,
   ): Promise<User | null> {
-    const existingUser = await this.findOne({
-      where: { ...userCreateInput },
-    });
-
-    if (existingUser) {
-      return null;
-    }
-
     return this.prisma.user.create({
-      data: userCreateInput,
+      ...userCreateArgs,
     });
   }
 
   async findOne(
-    userFindUniqueArgs: Prisma.UserFindUniqueArgs,
+    userFindFirstArgs: Prisma.UserFindFirstArgs,
   ): Promise<User | null> {
     return this.prisma.user.findFirst({
-      ...userFindUniqueArgs,
+      ...userFindFirstArgs,
     });
   }
 }

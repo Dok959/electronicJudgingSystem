@@ -12,9 +12,11 @@ export class LoginGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const { email, password } = request.body;
-    const user = await this.userService.search({
-      email: email,
-      password: password,
+    const user = await this.userService.findOne({
+      where: {
+        email: email,
+        password: password,
+      },
     });
 
     if (!user) {
