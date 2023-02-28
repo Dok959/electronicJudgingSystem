@@ -10,7 +10,32 @@ export class authClient {
           json: { email, password },
         })
         .json();
-      console.log(result);
+
+      setAuth(true);
+      localStorage.setItem(`auth`, JSON.stringify(result));
+      return true;
+    } catch (error) {
+      if (error instanceof HTTPError) {
+        const errorJson = await error.response.json();
+        console.log(errorJson);
+        // return;
+      } else if (error instanceof Error) {
+        console.log(error.message);
+        // return;
+      }
+    }
+    return false;
+  };
+
+  static reLogin = async () => {
+    try {
+      const auth = JSON.parse(localStorage.getItem(`auth`) || '');
+      console.log(auth);
+      const result = await api
+        .post('auth/refresh', {
+          json: { ...auth },
+        })
+        .json();
 
       setAuth(true);
       localStorage.setItem(`auth`, JSON.stringify(result));

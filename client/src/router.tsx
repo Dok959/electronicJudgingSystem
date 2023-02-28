@@ -8,16 +8,13 @@ import {
 import { useStore } from 'effector-react';
 
 import App from './App';
-import { AuthPage, ErrorPage } from './pages';
+import { AuthPage, ErrorPage, EventPage, HomePage } from './pages';
 import { $auth } from './context/auth';
-import { rankClient } from './api/rankClient';
-
-export async function ranksloader() {
-  return await rankClient.getRanks();
-}
+import { ranksLoader, reLoginLoader } from './loaders';
 
 const Router = () => {
   const isLoggingIn = useStore($auth);
+  reLoginLoader();
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -25,19 +22,23 @@ const Router = () => {
         path="/"
         element={<App />}
         errorElement={<ErrorPage />}
-        loader={ranksloader}
+        loader={ranksLoader}
       >
         <Route
           path="login"
-          element={isLoggingIn ? <Navigate to={'/primary'} /> : <AuthPage />}
+          // redirect => /home
+          element={isLoggingIn ? <Navigate to={'/event'} /> : <AuthPage />}
+          // loader={reLoginLoader}
         />
         <Route
-          path="five"
-          element={isLoggingIn ? <h2>Five</h2> : <Navigate to={'/'} />}
+          path="home"
+          element={isLoggingIn ? <HomePage /> : <Navigate to={'/'} />}
+          // loader={ranksLoader}
         />
         <Route
-          path="primary"
-          element={<h2>Вы авторизованы: Страница Home</h2>}
+          path="event"
+          element={isLoggingIn ? <EventPage /> : <Navigate to={'/'} />}
+          // loader={ranksLoader}
         />
       </Route>,
     ),

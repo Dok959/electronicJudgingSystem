@@ -6,7 +6,6 @@ export class rankClient {
   static getRanks = async (): Promise<IRanks[]> => {
     try {
       const result: IRanks[] = await api.get(`rank/`, {}).json();
-      console.log(result);
       return result;
     } catch (error) {
       if (error instanceof HTTPError) {

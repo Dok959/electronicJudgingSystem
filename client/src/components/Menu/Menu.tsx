@@ -9,12 +9,10 @@ export const Menu = () => {
     toggleMenu(!isMenuOpen);
   };
 
-  let location = useLocation();
+  const location = useLocation();
   useEffect(() => {
     toggleMenu(false);
   }, [location]);
-
-  // const auth = true;
 
   return (
     <div className={Style.container}>
@@ -25,48 +23,85 @@ export const Menu = () => {
         <ul
           className={Style.listLinks({ isOpen: isMenuOpen ? 'open' : 'close' })}
         >
-          <li>
-            <NavLink
-              to="/"
-              className={({ isActive }) =>
-                Style.link(isActive ? { color: 'active' } : {})
-              }
-            >
-              Главная
-            </NavLink>
-          </li>
-          <li className={Style.subMenu}>
-            <a href="/" className={Style.link({})}>
-              О нас
-            </a>
-            <ul className={Style.subList}>
-              <li className={Style.elementList}>
+          {location.pathname === ('/' || '/login') ? (
+            <>
+              <li>
+                <NavLink
+                  to="/"
+                  className={({ isActive }) =>
+                    Style.link(isActive ? { color: 'active' } : {})
+                  }
+                >
+                  Главная
+                </NavLink>
+              </li>
+              <li className={Style.subMenu}>
                 <a href="/" className={Style.link({})}>
-                  Контакты
+                  О нас
+                </a>
+                <ul className={Style.subList}>
+                  <li className={Style.elementList}>
+                    <a href="/" className={Style.link({})}>
+                      Контакты
+                    </a>
+                  </li>
+                  <li className={Style.elementList}>
+                    <a href="/" className={Style.link({})}>
+                      Документы
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a href="/" className={Style.link({})}>
+                  Рейтинг
                 </a>
               </li>
-              <li className={Style.elementList}>
-                <a href="/" className={Style.link({})}>
-                  Документы
-                </a>
+              <li>
+                <NavLink
+                  to={'/login'}
+                  className={({ isActive }) =>
+                    Style.link(isActive ? { color: 'active' } : {})
+                  }
+                >
+                  Судейство
+                </NavLink>
               </li>
-            </ul>
-          </li>
-          <li>
-            <a href="/" className={Style.link({})}>
-              Рейтинг
-            </a>
-          </li>
-          <li>
-            <NavLink
-              to={'/login'}
-              className={({ isActive }) =>
-                Style.link(isActive ? { color: 'active' } : {})
-              }
-            >
-              Судейство
-            </NavLink>
-          </li>
+            </>
+          ) : (
+            <>
+              <li>
+                <NavLink
+                  to="/home"
+                  className={({ isActive }) =>
+                    Style.link(isActive ? { color: 'active' } : {})
+                  }
+                >
+                  Главная
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/event"
+                  className={({ isActive }) =>
+                    Style.link(isActive ? { color: 'active' } : {})
+                  }
+                >
+                  Соревнования
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to={'/'}
+                  className={({ isActive }) =>
+                    Style.link(isActive ? { color: 'active' } : {})
+                  }
+                >
+                  На сайт
+                </NavLink>
+              </li>
+            </>
+          )}
         </ul>
       </>
     </div>

@@ -8,4 +8,5 @@ export const container = style({
   alignItems: 'center',
   justifyContent: 'center',
   padding: '12px 0',
+  fontSize: 12,
 });

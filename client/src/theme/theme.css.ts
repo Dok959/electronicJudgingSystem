@@ -109,13 +109,7 @@ export const vars = { ...global, colors };
 
 globalStyle('html', {
   height: '100%',
-  // scrollbarGutter: 'stable',
-  '@media': {
-    'screen and (min-width: 768px)': {
-      height: 'auto',
-      maxHeight: '100%',
-    },
-  },
+  minHeight: ['100vh', '-webkit-fill-available'],
 });
 
 globalStyle('body', {
@@ -123,14 +117,14 @@ globalStyle('body', {
   padding: global.space.none,
   fontFamily: Inter,
   height: '100%',
+  minHeight: ['100vh', '-webkit-fill-available'],
 });
 
 globalStyle('#root', {
   backgroundColor: vars.colors.background.secondary,
   color: vars.colors.text.primary,
-  height: '100%',
   justifyItems: 'center',
-  minHeight: '100%',
   display: 'grid',
   gridTemplateRows: 'auto 1fr auto',
+  minHeight: ['100vh', '-webkit-fill-available'],
 });

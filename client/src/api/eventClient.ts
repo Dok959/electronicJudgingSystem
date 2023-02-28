@@ -12,7 +12,6 @@ export class eventClient {
           json: { masRanksId: ranks },
         })
         .json();
-      console.log(result);
       return result;
     } catch (error) {
       if (error instanceof HTTPError) {
