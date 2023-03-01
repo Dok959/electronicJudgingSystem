@@ -42,6 +42,7 @@ export class EventService {
           },
         },
       },
+      take: 10,
     });
   }
 

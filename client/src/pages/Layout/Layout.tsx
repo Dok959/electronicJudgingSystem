@@ -20,10 +20,24 @@ export const Layout: React.FC<ILayoutProps> = (props) => {
     <>
       <Menu />
       <div className={Style.wrapper}>
-        <div className={Style.container}>
+        <div id="block" className={Style.container}>
           {location.pathname === '/' ? <MainPage /> : children}
         </div>
+
         {alert.alertText && <Alert props={alert} />}
+
+        <div id="create" className={Style.button}>
+          <span
+            className={Style.bar({
+              line: 'top',
+            })}
+          ></span>
+          <span
+            className={Style.bar({
+              line: 'bottom',
+            })}
+          ></span>
+        </div>
       </div>
       <Footer />
     </>

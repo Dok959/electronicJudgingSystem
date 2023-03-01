@@ -13,10 +13,32 @@ export const EventPage = () => {
     getRole();
   }, []);
 
+  const [isCreateForm, setIsCreateForm] = useState<boolean>(false);
+
+  const clickHandler = () => {
+    return setIsCreateForm(true);
+  };
+
+  useEffect(() => {
+    if (isCreateForm === false && role?.title === 'Администратор') {
+      const button = document.getElementById('create') as HTMLElement;
+      button.style.display = 'flex';
+      button.onclick = clickHandler;
+    } else {
+      const button = document.getElementById('create') as HTMLElement;
+      button.style.display = 'none';
+    }
+  });
+
   return (
     <>
-      <EventsList />
-      {role?.title === 'Администратор' ? <button>Создать</button> : <>{null}</>}
+      {isCreateForm ? (
+        <div>Форма создания</div>
+      ) : (
+        <>
+          <EventsList />
+        </>
+      )}
     </>
   );
 };

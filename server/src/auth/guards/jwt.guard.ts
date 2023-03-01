@@ -14,12 +14,14 @@ export class JWTGuard implements CanActivate {
       const request = context.switchToHttp().getRequest();
 
       const token: string = request.headers.authorization.split(' ')[1] || null;
+      console.log(token);
 
       if (!token) {
         throw new UnauthorizedException('Ошибка авторизации');
       }
 
       const validToken = this.authService.verifyToken(token);
+      console.log(validToken);
 
       if (validToken?.error) {
         throw new UnauthorizedException(validToken.error);

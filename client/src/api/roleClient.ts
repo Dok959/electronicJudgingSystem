@@ -7,12 +7,13 @@ export class roleClient {
     try {
       const auth = JSON.parse(localStorage.getItem(`auth`) || '');
       const result: IRoles = await api
-        .post('auth/role', {
-          json: { ...auth },
+        .get('role/user', {
+          headers: {
+            Authorization: `Bearer ${auth.access_token}`,
+          },
         })
         .json();
 
-      console.log(result);
       return result;
     } catch (error) {
       if (error instanceof HTTPError) {
