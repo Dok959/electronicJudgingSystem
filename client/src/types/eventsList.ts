@@ -3,6 +3,11 @@ export interface IRanks {
   title: string;
 }
 
+export interface IRoles {
+  id: number;
+  title: string;
+}
+
 export interface ISettingsEvent {
   type: { title: string };
   rank: { title: string };

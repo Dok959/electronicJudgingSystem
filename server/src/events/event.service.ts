@@ -4,7 +4,7 @@ import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class EventService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async findOne(
     eventFindUniqueArgs: Prisma.EventFindUniqueArgs,
@@ -46,20 +46,14 @@ export class EventService {
   }
 
   async create(eventCreateArgs: Prisma.EventCreateArgs): Promise<EventModel> {
-    return await this.prisma.event.create({
-      ...eventCreateArgs,
-    });
+    return await this.prisma.event.create(eventCreateArgs);
   }
 
   async update(eventUpdateArgs: Prisma.EventUpdateArgs): Promise<EventModel> {
-    return await this.prisma.event.update({
-      ...eventUpdateArgs,
-    });
+    return await this.prisma.event.update(eventUpdateArgs);
   }
 
   async delete(eventDeleteArgs: Prisma.EventDeleteArgs): Promise<EventModel> {
-    return await this.prisma.event.delete({
-      ...eventDeleteArgs,
-    });
+    return await this.prisma.event.delete(eventDeleteArgs);
   }
 }

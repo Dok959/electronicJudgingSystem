@@ -18,10 +18,10 @@ export class authClient {
       if (error instanceof HTTPError) {
         const errorJson = await error.response.json();
         console.log(errorJson);
-        // return;
+        return errorJson;
       } else if (error instanceof Error) {
         console.log(error.message);
-        // return;
+        return error;
       }
     }
     return false;
@@ -30,7 +30,6 @@ export class authClient {
   static reLogin = async () => {
     try {
       const auth = JSON.parse(localStorage.getItem(`auth`) || '');
-      console.log(auth);
       const result = await api
         .post('auth/refresh', {
           json: { ...auth },
@@ -44,10 +43,10 @@ export class authClient {
       if (error instanceof HTTPError) {
         const errorJson = await error.response.json();
         console.log(errorJson);
-        // return;
+        return errorJson;
       } else if (error instanceof Error) {
         console.log(error.message);
-        // return;
+        return error;
       }
     }
     return false;

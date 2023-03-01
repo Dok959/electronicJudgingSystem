@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { eventClient } from '@/api';
 import { IEventAndSettings, ISettingsEvent, IRanks } from '@/types';
-import { EnumTypesEvent, EnumRank } from '@/Enums';
+import { EnumTypesEvent, EnumRank } from '@/utils';
 import * as Style from './EventsList.css';
 
 export const EventsList = () => {

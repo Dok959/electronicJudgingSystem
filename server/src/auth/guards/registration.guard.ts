@@ -13,10 +13,8 @@ export class RegistrationGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const { email, password } = request.body;
     const user = await this.userService.findOne({
-      where: {
-        email: email,
-        password: password,
-      },
+      email: email,
+      password: password,
     });
 
     if (user) {

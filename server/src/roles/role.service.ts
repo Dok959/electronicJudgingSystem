@@ -4,17 +4,15 @@ import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class RoleService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async findOne(
     roleFindUniqueArgs: Prisma.RoleFindUniqueArgs,
-  ): Promise<RoleModel> {
-    return await this.prisma.role.findUnique({
-      ...roleFindUniqueArgs,
-    });
+  ): Promise<RoleModel | null> {
+    return await this.prisma.role.findUnique(roleFindUniqueArgs);
   }
 
-  async findAll(): Promise<RoleModel[]> {
+  async findAll(): Promise<RoleModel[] | null> {
     return await this.prisma.role.findMany();
   }
 }

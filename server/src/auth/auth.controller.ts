@@ -16,8 +16,8 @@ import { refreshTokenDto } from './dto';
 @Controller('auth')
 export class AuthController {
   constructor(
-    private userService: UserService,
-    private authService: AuthService,
+    private readonly userService: UserService,
+    private readonly authService: AuthService,
   ) {}
 
   @UseGuards(RefreshJWTGuard)
@@ -56,10 +56,10 @@ export class AuthController {
   @UseGuards(LoginGuard)
   @Post('login')
   async loginUser(
-    @Body() userFindFirstArgs: Prisma.UserFindFirstArgs,
+    @Body() userWhereInput: Prisma.UserWhereInput,
     @Res() res: Response,
   ): Promise<Response> {
-    const user = await this.userService.login(userFindFirstArgs);
+    const user = await this.userService.login(userWhereInput);
 
     const access = await this.authService.generateAccessToken(user);
     const refresh = await this.authService.generateRefreshToken(user.id);

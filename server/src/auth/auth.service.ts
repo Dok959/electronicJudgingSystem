@@ -7,16 +7,14 @@ import { jwtConstants } from './constants';
 @Injectable()
 export class AuthService {
   constructor(
-    private userService: UserService,
-    private jwtService: JwtService,
+    private readonly userService: UserService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async getUserByTokenData(token: string): Promise<UserModel | null> {
     const parsedTokenData = this.parseJwt(token);
 
-    return await this.userService.findOne({
-      where: { ...parsedTokenData.user },
-    });
+    return await this.userService.findOne(parsedTokenData.user);
   }
 
   parseJwt(token: string) {

@@ -4,16 +4,21 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { RoleService } from './role.service';
 import { JWTGuard } from 'src/auth/guards';
+import { AuthService } from 'src/auth';
 
 @Controller('role')
 export class RoleController {
-  constructor(private readonly roleService: RoleService) {}
+  constructor(
+    private readonly roleService: RoleService,
+    private readonly authService: AuthService,
+  ) {}
 
   @UseGuards(JWTGuard)
   @Get()
@@ -21,6 +26,24 @@ export class RoleController {
   async getAll(@Res() res: Response) {
     const roles = await this.roleService.findAll();
     return res.send(roles);
+  }
+
+  @UseGuards(JWTGuard)
+  @Get('user')
+  async getRole(
+    @Req() request: Request,
+    @Res() res: Response,
+  ): Promise<Response> {
+    const token: string = request.headers.authorization.split(' ')[1] || null;
+
+    const user = await this.authService.getUserByTokenData(token);
+
+    const role = await this.roleService.findOne({
+      where: { id: user.roleId },
+    });
+
+    res.statusCode = HttpStatus.OK;
+    return res.send(role);
   }
 
   @UseGuards(JWTGuard)
