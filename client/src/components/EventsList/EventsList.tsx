@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData, useLocation } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { eventClient } from '@/api';
@@ -12,12 +12,21 @@ export const EventsList = () => {
 
   // TODO на сервере создать createmany, updatemany, cascade delete для настроек
   const [events, setEvents] = useState([] as IEventAndSettings[]);
+  const [cursorInit, setCursorInit] = useState<number>(0);
+
+  const location = useLocation();
+
+  function addCursor() {
+    setCursorInit(cursorInit + 2);
+  }
 
   useEffect(() => {
     async function loadData() {
       setEvents(await eventClient.getEvents([]));
+      addCursor();
     }
     loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const parseDateTime = (dateTime: Date, isDate: boolean) => {
@@ -60,6 +69,16 @@ export const EventsList = () => {
     );
   };
 
+  const paginationHandler = async (e: any) => {
+    e.preventDefault();
+    const { ranks } = formik.values;
+    const param = ranks.map((item) => Number(item));
+    const mas = events;
+    setEvents(mas.concat(await eventClient.getEvents(param, cursorInit)));
+    addCursor();
+    // setCursorInit(cursorInit + 2);
+  };
+
   const formik = useFormik({
     initialValues: {
       ranks: [] as number[],
@@ -70,7 +89,8 @@ export const EventsList = () => {
     onSubmit: async (values) => {
       const { ranks } = values;
       const param = ranks.map((item) => Number(item));
-      setEvents(await eventClient.getEvents(param));
+      setEvents(await eventClient.getEvents(param, 0));
+      setCursorInit(2);
       return null;
     },
   });
@@ -132,14 +152,26 @@ export const EventsList = () => {
                       </p>
                       <div className={Style.tags}>
                         {parseTypes(item.SettingsEvent)}
-                        <a href="/" className={Style.detail}>
-                          Подробнее
-                        </a>
+                        {location.pathname === '/event' ? (
+                          <a href="/" className={Style.detail}>
+                            Подробнее
+                          </a>
+                        ) : (
+                          <></>
+                        )}
                       </div>
                     </div>
                   </div>
                 </article>
               ))}
+
+              {events.length % 2 === 0 ? (
+                <button onClick={paginationHandler} className={Style.detail}>
+                  Загрузить ещё
+                </button>
+              ) : (
+                <></>
+              )}
             </div>
           ) : (
             <div className={Style.content}>Соревнований нет</div>

@@ -13,21 +13,52 @@ export class JWTGuard implements CanActivate {
     try {
       const request = context.switchToHttp().getRequest();
 
-      const token: string = request.headers.authorization.split(' ')[1] || null;
-      console.log(token);
+      const accessToken: string = request.headers.authorization || null;
+      const refreshToken: string = request.headers.refresh || null;
 
-      if (!token) {
-        throw new UnauthorizedException('Ошибка авторизации');
+      if (!refreshToken) {
+        throw new UnauthorizedException(`Поле refresh_token обязательно`);
       }
 
-      const validToken = this.authService.verifyToken(token);
-      console.log(validToken);
+      if (!accessToken) {
+        throw new UnauthorizedException(`Поле access_token обязательно`);
+      }
+
+      const validToken = this.authService.verifyToken(accessToken);
 
       if (validToken?.error) {
-        throw new UnauthorizedException(validToken.error);
+        const validToken = this.authService.verifyToken(refreshToken);
+
+        const checkUser = await this.authService.getUserByTokenData(
+          accessToken,
+        );
+        if (validToken?.error && !checkUser) {
+          throw new UnauthorizedException('Ошибка чтения токена');
+        }
+        if (!checkUser) {
+          throw new UnauthorizedException(`Пользователя не существует`);
+        }
+
+        const access = await this.authService.generateAccessToken(checkUser);
+
+        if (validToken?.error) {
+          if (validToken?.error === 'jwt expired') {
+            const refresh = await this.authService.generateRefreshToken(
+              checkUser.id,
+            );
+            request.headers.authorization = access;
+            request.headers.refresh = refresh;
+            return true;
+          } else {
+            throw new UnauthorizedException(validToken.error);
+          }
+        } else {
+          request.headers.authorization = access;
+          return true;
+        }
       }
 
-      request.token = token;
+      request.token = accessToken;
       return true;
     } catch (error) {
       throw new UnauthorizedException('Ошибка чтения токена');

@@ -30,7 +30,7 @@ export class SettingsController {
     return res.send(settingsEvent);
   }
 
-  @UseGuards(JWTGuard, ExistingGuard)
+  @UseGuards(JWTGuard)
   @Post('create')
   @HttpCode(HttpStatus.CREATED)
   async create(

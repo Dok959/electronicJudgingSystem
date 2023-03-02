@@ -22,15 +22,50 @@ export class EventService {
     });
   }
 
-  async findAll(masRanksid: number[] | []): Promise<EventModel[] | null> {
+  async findAll(
+    masRanksId: number[] | [],
+    cursorInit: number,
+  ): Promise<EventModel[] | null> {
+    if (cursorInit === 0) {
+      return await this.prisma.event.findMany({
+        take: 2,
+        orderBy: {
+          startDateTime: 'asc',
+        },
+        where: {
+          startDateTime: {
+            gte: new Date(),
+          },
+          SettingsEvent: {
+            some: {
+              rankId: { in: masRanksId },
+            },
+          },
+        },
+        include: {
+          SettingsEvent: {
+            select: {
+              type: { select: { title: true } },
+              rank: { select: { title: true } },
+            },
+          },
+        },
+      });
+    }
     return await this.prisma.event.findMany({
+      take: 2,
+      skip: 1,
+      cursor: { id: cursorInit },
+      orderBy: {
+        startDateTime: 'asc',
+      },
       where: {
         startDateTime: {
           gte: new Date(),
         },
         SettingsEvent: {
           some: {
-            rankId: { in: masRanksid },
+            rankId: { in: masRanksId },
           },
         },
       },
@@ -42,7 +77,6 @@ export class EventService {
           },
         },
       },
-      take: 10,
     });
   }
 

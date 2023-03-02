@@ -5,11 +5,12 @@ import { IEventAndSettings } from '@/types';
 export class eventClient {
   static getEvents = async (
     ranks: number[] = [],
+    cursorInit: number = 0,
   ): Promise<IEventAndSettings[]> => {
     try {
       const result: IEventAndSettings[] = await api
         .post('event/', {
-          json: { masRanksId: ranks },
+          json: { masRanksId: ranks, cursorInit: cursorInit },
         })
         .json();
       return result;

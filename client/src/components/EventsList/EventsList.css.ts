@@ -133,7 +133,7 @@ export const infoContainer = style({
   gridTemplateColumns: 'auto',
   gap: 12,
   '@media': {
-    'screen and (min-width: 768px)': {
+    'screen and (min-width: 992px)': {
       gridTemplateColumns: '1fr 3fr',
     },
   },
@@ -145,7 +145,7 @@ export const flexContainer = recipe({
     gap: 12,
     flexWrap: 'wrap',
     '@media': {
-      'screen and (min-width: 768px)': {
+      'screen and (min-width: 992px)': {
         flexDirection: 'column',
       },
     },
@@ -175,7 +175,7 @@ export const info = style({
     '&+&': {
       marginTop: 0,
       '@media': {
-        'screen and (min-width: 768px)': {
+        'screen and (min-width: 992px)': {
           marginTop: 8,
         },
       },
@@ -207,4 +207,11 @@ export const detail = style({
   textDecoration: 'none',
   padding: 8,
   boxSizing: 'border-box',
+  cursor: 'pointer',
+  selectors: {
+    '&:active': {
+      outline: '5px solid rgba(236, 0, 140, 0)',
+      outlineColor: 'rgba(236, 0, 140, 0.2)',
+    },
+  },
 });

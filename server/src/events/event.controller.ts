@@ -15,6 +15,7 @@ import { EventService } from './event.service';
 import { JWTGuard } from 'src/auth/guards';
 import { ExistingGuard } from './guards';
 import { RankService } from 'src/ranks';
+import { IpaginationDto } from './dto';
 
 @Controller('event')
 export class EventController {
@@ -26,15 +27,15 @@ export class EventController {
   @Post()
   @HttpCode(HttpStatus.OK)
   async getAll(
-    @Body() args: { masRanksId: number[] } = { masRanksId: [] },
+    @Body() args: IpaginationDto = { masRanksId: [], cursorInit: 0 },
     @Res() res: Response,
   ) {
     let masRanksId = args.masRanksId;
-
     if (masRanksId?.length === 0) {
       masRanksId = (await this.rankService.findAll()).map((item) => item.id);
     }
-    const events = await this.eventService.findAll(masRanksId);
+
+    const events = await this.eventService.findAll(masRanksId, args.cursorInit);
 
     return res.send(events);
   }
@@ -49,7 +50,7 @@ export class EventController {
     return res.send(event);
   }
 
-  @UseGuards(JWTGuard, ExistingGuard)
+  @UseGuards(JWTGuard)
   @Post('create')
   @HttpCode(HttpStatus.CREATED)
   async create(
