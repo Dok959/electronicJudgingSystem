@@ -5,3 +5,4 @@ export type {
   IRanks,
   IRoles,
 } from './eventsList';
+export type { ICreateEvent } from './createEvent';

@@ -9,9 +9,7 @@ export class RankService {
   async findOne(
     rankFindUniqueArgs: Prisma.RankFindUniqueArgs,
   ): Promise<RankModel> {
-    return await this.prisma.rank.findUnique({
-      ...rankFindUniqueArgs,
-    });
+    return await this.prisma.rank.findUnique(rankFindUniqueArgs);
   }
 
   async findAll(): Promise<RankModel[]> {

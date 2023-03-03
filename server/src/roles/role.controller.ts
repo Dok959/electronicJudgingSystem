@@ -34,7 +34,7 @@ export class RoleController {
     @Req() request: Request,
     @Res() res: Response,
   ): Promise<Response> {
-    const token: string = request.headers.authorization.split(' ')[1] || null;
+    const token: string = request.headers.authorization || null;
 
     const user = await this.authService.getUserByTokenData(token);
 

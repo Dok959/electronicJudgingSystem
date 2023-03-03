@@ -9,7 +9,8 @@ export class roleClient {
       const result: IRoles = await api
         .get('role/user', {
           headers: {
-            Authorization: `Bearer ${auth.access_token}`,
+            authorization: auth.access_token,
+            refresh: auth.refresh_token,
           },
         })
         .json();

@@ -9,32 +9,26 @@ export class SettingsService {
   async findOne(
     settingsEventFindUniqueArgs: Prisma.SettingsEventFindUniqueArgs,
   ): Promise<SettingsModel> {
-    return await this.prisma.settingsEvent.findUnique({
-      ...settingsEventFindUniqueArgs,
-    });
+    return await this.prisma.settingsEvent.findUnique(
+      settingsEventFindUniqueArgs,
+    );
   }
 
   async create(
     settingsEventCreateArgs: Prisma.SettingsEventCreateArgs,
   ): Promise<SettingsModel> {
-    return await this.prisma.settingsEvent.create({
-      ...settingsEventCreateArgs,
-    });
+    return await this.prisma.settingsEvent.create(settingsEventCreateArgs);
   }
 
   async update(
     settingsEventUpdateArgs: Prisma.SettingsEventUpdateArgs,
   ): Promise<SettingsModel> {
-    return await this.prisma.settingsEvent.update({
-      ...settingsEventUpdateArgs,
-    });
+    return await this.prisma.settingsEvent.update(settingsEventUpdateArgs);
   }
 
   async delete(
     settingsEventDeleteArgs: Prisma.SettingsEventDeleteArgs,
   ): Promise<SettingsModel> {
-    return await this.prisma.settingsEvent.delete({
-      ...settingsEventDeleteArgs,
-    });
+    return await this.prisma.settingsEvent.delete(settingsEventDeleteArgs);
   }
 }

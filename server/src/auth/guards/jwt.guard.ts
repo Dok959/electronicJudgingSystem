@@ -46,19 +46,19 @@ export class JWTGuard implements CanActivate {
             const refresh = await this.authService.generateRefreshToken(
               checkUser.id,
             );
-            request.headers.authorization = access;
-            request.headers.refresh = refresh;
+            request.headers.authorization = access.access_token;
+            request.headers.refresh = refresh.refresh_token;
             return true;
           } else {
             throw new UnauthorizedException(validToken.error);
           }
         } else {
-          request.headers.authorization = access;
+          request.headers.authorization = access.access_token;
           return true;
         }
       }
 
-      request.token = accessToken;
+      // request.token = accessToken;
       return true;
     } catch (error) {
       throw new UnauthorizedException('Ошибка чтения токена');
