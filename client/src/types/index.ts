@@ -4,5 +4,6 @@ export type {
   ISettingsEvent,
   IRanks,
   IRoles,
+  ITypes,
 } from './eventsList';
 export type { ICreateEvent } from './createEvent';

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { EventsList } from '@/components';
-import { eventClient, roleClient } from '@/api';
-import { IRanks, IRoles } from '@/types';
+import { eventClient, roleClient, utilClient } from '@/api';
+import { IRanks, IRoles, ITypes } from '@/types';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Spinner } from '@/components';
@@ -41,8 +41,10 @@ export const EventPage = () => {
       title: '',
       startDateTime: '',
       duration: '1',
-      typeIndividual: 'false',
-      typeGroup: 'false',
+      typeIndividual: '1',
+      masPartisipantsIndividualRanks: [],
+      typeGroup: '2',
+      masPartisipantsGroupRanks: [],
     },
     validationSchema: Yup.object({
       title: Yup.string()
@@ -59,12 +61,28 @@ export const EventPage = () => {
       duration: Yup.number().default(1).min(1),
     }),
     onSubmit: async (values) => {
-      const { title, startDateTime, duration } = values;
+      const {
+        title,
+        startDateTime,
+        duration,
+        typeIndividual,
+        masPartisipantsIndividualRanks,
+        typeGroup,
+        masPartisipantsGroupRanks,
+      } = values;
       setSpinner(true);
       const result = await eventClient.create({
         title,
         startDateTime: new Date(startDateTime),
         duration: Number(duration),
+        typeIndividual: Number(typeIndividual),
+        masPartisipantsIndividualRanks: masPartisipantsIndividualRanks.map(
+          (item) => Number(item),
+        ),
+        typeGroup: Number(typeGroup),
+        masPartisipantsGroupRanks: masPartisipantsGroupRanks.map((item) =>
+          Number(item),
+        ),
       });
       if (!result) {
         setSpinner(false);
@@ -82,8 +100,8 @@ export const EventPage = () => {
     },
   });
 
-  const [expanded, setExpanded] = useState(false);
-  // const ranks = Object.keys(EnumRank).map((key) => key);
+  const [individualRanks, setIndividualRanks] = useState(false);
+  const [groupRanks, setGroupRanks] = useState(false);
   let ranks: IRanks[] = useLoaderData() as IRanks[];
 
   return (
@@ -171,38 +189,46 @@ export const EventPage = () => {
               )}
             </label>
 
-            <article className="question">
-              <label className={Style.label}>
-                Индивидуальная программа
+            <article className={Style.container}>
+              <p className={Style.item}>
                 <input
                   type="checkbox"
+                  id="typeIndividual"
                   name="typeIndividual"
-                  onChange={() => setExpanded(!expanded)}
+                  onChange={(e) => {
+                    setIndividualRanks(!individualRanks);
+                    formik.handleChange(e);
+                  }}
                   onBlur={formik.handleBlur}
-                  value={formik.values.typeIndividual}
-                  className={Style.input({
-                    border: 'default',
-                  })}
+                  value={1}
+                  defaultChecked={false}
+                  className={Style.inputCheckbox}
                 />
-              </label>
-              {expanded ? (
-                <section>
+                <label
+                  htmlFor="typeIndividual"
+                  className={Style.labelCheckbox({ type: 'right' })}
+                >
+                  Индивидуальная программа
+                </label>
+              </p>
+              {individualRanks ? (
+                <section className={Style.filter}>
                   {ranks.map((item) => (
-                    <p key={item.id}>
+                    <p key={item.id} className={Style.ranks}>
                       <input
                         type="checkbox"
-                        id={item.id.toString()}
-                        name="ranks"
+                        id={'individual ' + item.id.toString()}
+                        name="masPartisipantsIndividualRanks"
                         value={item.id}
                         onChange={(e) => {
                           formik.handleChange(e);
-                          formik.submitForm();
                         }}
                         onBlur={formik.handleBlur}
+                        className={Style.inputCheckbox}
                       />
                       <label
-                        htmlFor={item.id.toString()}
-                        className={Style.label}
+                        htmlFor={'individual ' + item.id.toString()}
+                        className={Style.labelCheckbox()}
                       >
                         {EnumRank[item.title as keyof typeof EnumRank]}
                       </label>
@@ -210,7 +236,58 @@ export const EventPage = () => {
                   ))}
                 </section>
               ) : (
-                <></>
+                <>{(formik.values.masPartisipantsIndividualRanks = [])}</>
+              )}
+            </article>
+
+            <article className={Style.container}>
+              <p className={Style.item}>
+                <input
+                  type="checkbox"
+                  id="typeGroup"
+                  name="typeGroup"
+                  onChange={(e) => {
+                    setGroupRanks(!groupRanks);
+                    formik.handleChange(e);
+                  }}
+                  onBlur={formik.handleBlur}
+                  value={2}
+                  defaultChecked={false}
+                  className={Style.inputCheckbox}
+                />
+                <label
+                  htmlFor="typeGroup"
+                  className={Style.labelCheckbox({ type: 'right' })}
+                >
+                  Групповая программа
+                </label>
+              </p>
+              {groupRanks ? (
+                <section className={Style.filter}>
+                  {ranks.map((item) => (
+                    <p key={item.id} className={Style.ranks}>
+                      <input
+                        type="checkbox"
+                        id={'group ' + item.id.toString()}
+                        name="masPartisipantsGroupRanks"
+                        value={item.id}
+                        onChange={(e) => {
+                          formik.handleChange(e);
+                        }}
+                        onBlur={formik.handleBlur}
+                        className={Style.inputCheckbox}
+                      />
+                      <label
+                        htmlFor={'group ' + item.id.toString()}
+                        className={Style.labelCheckbox()}
+                      >
+                        {EnumRank[item.title as keyof typeof EnumRank]}
+                      </label>
+                    </p>
+                  ))}
+                </section>
+              ) : (
+                <>{(formik.values.masPartisipantsGroupRanks = [])}</>
               )}
             </article>
 

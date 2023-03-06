@@ -57,6 +57,9 @@ export class EventController {
     @Body() eventCreateArgs: Prisma.EventCreateArgs,
     @Res() res: Response,
   ) {
+    // TODO
+    const settingsEvent = eventCreateArgs.data.SettingsEvent;
+    console.log(settingsEvent);
     const event = await this.eventService.create(eventCreateArgs);
 
     return res.send(event);

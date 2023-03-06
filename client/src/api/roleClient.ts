@@ -5,16 +5,7 @@ import { IRoles } from '@/types';
 export class roleClient {
   static getRole = async (): Promise<IRoles | null> => {
     try {
-      const auth = JSON.parse(localStorage.getItem(`auth`) || '');
-      const result: IRoles = await api
-        .get('role/user', {
-          headers: {
-            authorization: auth.access_token,
-            refresh: auth.refresh_token,
-          },
-        })
-        .json();
-
+      const result: IRoles = await api.get('role/user', {}).json();
       return result;
     } catch (error) {
       if (error instanceof HTTPError) {

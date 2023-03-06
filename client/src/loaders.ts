@@ -1,8 +1,8 @@
 import { authClient } from './api';
-import { rankClient } from './api/rankClient';
+import { utilClient } from './api/utilClient';
 
 export async function ranksLoader() {
-  return await rankClient.getRanks();
+  return await utilClient.getRanks();
 }
 
 export async function reLoginLoader() {

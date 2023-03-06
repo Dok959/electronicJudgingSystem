@@ -33,7 +33,7 @@ export class JWTGuard implements CanActivate {
           accessToken,
         );
         if (validToken?.error && !checkUser) {
-          throw new UnauthorizedException('Ошибка чтения токена');
+          throw new UnauthorizedException('Ошибка чтения токена nen');
         }
         if (!checkUser) {
           throw new UnauthorizedException(`Пользователя не существует`);
@@ -58,7 +58,6 @@ export class JWTGuard implements CanActivate {
         }
       }
 
-      // request.token = accessToken;
       return true;
     } catch (error) {
       throw new UnauthorizedException('Ошибка чтения токена');

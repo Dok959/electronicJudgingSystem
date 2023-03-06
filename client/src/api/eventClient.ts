@@ -29,7 +29,20 @@ export class eventClient {
     try {
       const result: IEventAndSettings[] = await api
         .post('event/create', {
-          json: { event },
+          json: {
+            title: event.title,
+            startDateTime: event.startDateTime,
+            duration: event.duration,
+            SettingsEvent: [
+              {
+                typeIndividual: event.typeIndividual,
+                masPartisipantsIndividualRanks:
+                  event.masPartisipantsIndividualRanks,
+                typeGroup: event.typeGroup,
+                masPartisipantsGroupRanks: event.masPartisipantsGroupRanks,
+              },
+            ],
+          },
         })
         .json();
       return result;

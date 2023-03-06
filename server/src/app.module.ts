@@ -9,9 +9,11 @@ import { UsersModule } from './users';
 import { AuthModule } from './auth';
 import { AthleteModule } from './athletes';
 import { RoleModule } from './roles';
+import { TypeModule } from './types';
 
 @Module({
   imports: [
+    TypeModule,
     RoleModule,
     RankModule,
     SettingsModule,

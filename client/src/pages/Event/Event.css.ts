@@ -72,7 +72,7 @@ export const form = style({
   flexDirection: 'column',
   gap: 24,
   alignItems: 'center',
-  maxWidth: 230,
+  maxWidth: 327,
   width: '100%',
   position: 'relative',
 });
@@ -164,5 +164,118 @@ export const button = recipe({
 
   defaultVariants: {
     type: 'primary',
+  },
+});
+
+export const container = style({
+  display: 'grid',
+  gridTemplateColumns: 'auto',
+  gap: 16,
+  alignItems: 'baseline',
+  width: '100%',
+  justifyItems: 'center',
+});
+
+export const filter = style({
+  margin: 0,
+  display: 'grid',
+  justifyItems: 'start',
+  gridTemplateColumns: '1fr 1fr 1fr',
+  minWidth: 'auto',
+});
+
+export const item = style({
+  margin: 0,
+});
+
+export const ranks = style({
+  margin: 0,
+  padding: 8,
+});
+
+export const inputCheckbox = style({
+  selectors: {
+    '&:not(:checked), &:checked': {
+      position: 'absolute',
+      zIndex: -1,
+      opacity: 0,
+    },
+  },
+});
+
+export const labelCheckbox = recipe({
+  base: {
+    position: 'relative',
+    cursor: 'pointer',
+  },
+  variants: {
+    type: {
+      default: {
+        paddingLeft: 30,
+        selectors: {
+          [`${inputCheckbox}+&::before`]: {
+            content: '',
+            position: 'absolute',
+            left: 0,
+            width: 19,
+            height: 19,
+            border: '1px solid',
+            borderColor: vars.colors.accent.primary,
+            background: vars.colors.background.primary,
+            borderRadius: 4,
+            transition: vars.transition.all,
+          },
+          [`${inputCheckbox}:checked+&::before`]: {
+            background: vars.colors.accent.primary,
+          },
+          [`${inputCheckbox}:disabled+&::before`]: {
+            boxShadow: 'none',
+            borderColor: '#bbb',
+            backgroundColor: '#e9e9e9',
+          },
+          [`${inputCheckbox}:disabled+&`]: {
+            color: '#aaa',
+          },
+          [`${inputCheckbox}:focus+&::before`]: {
+            boxShadow: '0 0 0 6px rgba(236, 0, 140, 0.2)',
+          },
+        },
+      },
+      right: {
+        paddingRight: 30,
+        selectors: {
+          [`${inputCheckbox}+&::after`]: {
+            content: '',
+            position: 'absolute',
+            right: 0,
+            width: 19,
+            height: 19,
+            border: '1px solid',
+            borderColor: vars.colors.accent.primary,
+            background: vars.colors.background.primary,
+            borderRadius: 4,
+            transition: vars.transition.all,
+          },
+          [`${inputCheckbox}:checked+&::after`]: {
+            background: vars.colors.accent.primary,
+          },
+          [`${inputCheckbox}:disabled+&::after`]: {
+            boxShadow: 'none',
+            borderColor: '#bbb',
+            backgroundColor: '#e9e9e9',
+          },
+          [`${inputCheckbox}:disabled+&`]: {
+            color: '#aaa',
+          },
+          [`${inputCheckbox}:focus+&::after`]: {
+            boxShadow: '0 0 0 6px rgba(236, 0, 140, 0.2)',
+          },
+        },
+      },
+    },
+  },
+
+  defaultVariants: {
+    type: 'default',
   },
 });
