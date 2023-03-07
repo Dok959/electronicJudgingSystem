@@ -82,8 +82,7 @@ export class EventService {
 
   async create(eventCreateArgs: Prisma.EventCreateArgs): Promise<EventModel> {
     const data = eventCreateArgs.data;
-    console.log(data);
-    const event = await this.prisma.event.create({
+    const newEvent = await this.prisma.event.create({
       data: {
         title: data.title,
         startDateTime: data.startDateTime,
@@ -95,6 +94,8 @@ export class EventService {
         },
       },
     });
+
+    const event = this.findOne({ where: { id: newEvent.id } });
     return event;
   }
 

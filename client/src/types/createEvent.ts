@@ -1,13 +1,21 @@
-export interface ICustomSettingsEvent {
+export interface ICustomPropertyCreateEvent {
+  title: string;
+  startDateTime: Date;
+  duration: number;
   typeIndividual: number;
   masPartisipantsIndividualRanks: number[];
   typeGroup: number;
   masPartisipantsGroupRanks: number[];
 }
 
-export interface ICustomCreateEvent {
+export interface ICreateSettingsEvent {
+  typeId: number;
+  rankId: number;
+}
+
+export interface ICreateEvent {
   title: string;
   startDateTime: Date;
   duration: number;
-  SettingsEvent: ICustomSettingsEvent[];
+  SettingsEvent: ICreateSettingsEvent[];
 }

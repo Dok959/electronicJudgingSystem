@@ -6,4 +6,8 @@ export type {
   IRoles,
   ITypes,
 } from './eventsList';
-export type { ICreateEvent } from './createEvent';
+export type {
+  ICreateEvent,
+  ICreateSettingsEvent,
+  ICustomPropertyCreateEvent,
+} from './createEvent';

@@ -136,6 +136,7 @@ export const button = recipe({
     height: 60,
     display: 'flex',
     alignItems: 'center',
+    textDecoration: 'none',
     selectors: {
       '&:hover': {
         boxShadow: 'none',

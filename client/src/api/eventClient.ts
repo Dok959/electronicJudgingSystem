@@ -1,12 +1,17 @@
 import { HTTPError } from 'ky';
 import api from './kyClient';
-import { ICreateEvent, IEventAndSettings } from '@/types';
+import {
+  ICreateSettingsEvent,
+  ICustomPropertyCreateEvent,
+  IEventAndSettings,
+} from '@/types';
 
 export class eventClient {
   static getEvents = async (
     ranks: number[] = [],
     cursorInit: number = 0,
   ): Promise<IEventAndSettings[]> => {
+    console.log(ranks, cursorInit);
     try {
       const result: IEventAndSettings[] = await api
         .post('event/', {
@@ -25,23 +30,32 @@ export class eventClient {
     return [];
   };
 
-  static create = async (event: ICreateEvent): Promise<IEventAndSettings[]> => {
+  static create = async (
+    event: ICustomPropertyCreateEvent,
+  ): Promise<IEventAndSettings[]> => {
     try {
+      const masSetting: ICreateSettingsEvent[] = [];
+      event.masPartisipantsIndividualRanks.map((item: number) => {
+        return masSetting.push({
+          typeId: event.typeIndividual,
+          rankId: item,
+        });
+      });
+
+      event.masPartisipantsGroupRanks.map((item: number) => {
+        return masSetting.push({
+          typeId: event.typeGroup,
+          rankId: item,
+        });
+      });
+
       const result: IEventAndSettings[] = await api
         .post('event/create', {
           json: {
             title: event.title,
             startDateTime: event.startDateTime,
             duration: event.duration,
-            SettingsEvent: [
-              {
-                typeIndividual: event.typeIndividual,
-                masPartisipantsIndividualRanks:
-                  event.masPartisipantsIndividualRanks,
-                typeGroup: event.typeGroup,
-                masPartisipantsGroupRanks: event.masPartisipantsGroupRanks,
-              },
-            ],
+            SettingsEvent: masSetting,
           },
         })
         .json();

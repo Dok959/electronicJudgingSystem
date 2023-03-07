@@ -1,5 +1,5 @@
 import { useStore } from 'effector-react';
-import { useLocation } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { Alert, Footer, Menu } from '@/components';
 import { MainPage } from '../index';
 import { $alert } from '@/context/alert';
@@ -26,18 +26,24 @@ export const Layout: React.FC<ILayoutProps> = (props) => {
 
         {alert.alertText && <Alert props={alert} />}
 
-        <div id="create" className={Style.button}>
-          <span
-            className={Style.bar({
-              line: 'top',
-            })}
-          ></span>
-          <span
-            className={Style.bar({
-              line: 'bottom',
-            })}
-          ></span>
-        </div>
+        {location.pathname === '/event' ? (
+          <NavLink to={`${location.pathname}/create`}>
+            <div id="create" className={Style.button}>
+              <span
+                className={Style.bar({
+                  line: 'top',
+                })}
+              ></span>
+              <span
+                className={Style.bar({
+                  line: 'bottom',
+                })}
+              ></span>
+            </div>
+          </NavLink>
+        ) : (
+          <></>
+        )}
       </div>
       <Footer />
     </>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useLoaderData, useLocation } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -10,24 +10,36 @@ import * as Style from './EventsList.css';
 export const EventsList = () => {
   let ranks: IRanks[] = useLoaderData() as IRanks[];
 
-  // TODO на сервере создать createmany, updatemany, cascade delete для настроек
-  const [events, setEvents] = useState([] as IEventAndSettings[]);
+  const [events, setEvents] = useState<IEventAndSettings[]>([]);
   const [cursorInit, setCursorInit] = useState<number>(0);
+
+  // TODO
+  const loadInitData = useCallback(async () => {
+    setEvents(events.concat(await eventClient.getEvents([], cursorInit)));
+  }, [events, cursorInit]);
+
+  useEffect(() => {
+    loadInitData();
+  }, [loadInitData]);
+
+  // useEffect(() => {
+  //   function getcursorInit() {
+  //     return cursorInit;
+  //   }
+
+  //   async function loadInitData() {
+  //     setEvents(
+  //       events.concat(await eventClient.getEvents([], getcursorInit())),
+  //     );
+  //   }
+  //   loadInitData();
+  // }, [cursorInit, events, events1]);
 
   const location = useLocation();
 
   function addCursor() {
     setCursorInit(cursorInit + 2);
   }
-
-  useEffect(() => {
-    async function loadData() {
-      setEvents(await eventClient.getEvents([]));
-      addCursor();
-    }
-    loadData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const parseDateTime = (dateTime: Date, isDate: boolean) => {
     const date = new Date(dateTime);
