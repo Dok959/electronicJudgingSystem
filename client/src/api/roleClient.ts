@@ -1,11 +1,10 @@
 import { HTTPError } from 'ky';
 import api from './kyClient';
-import { IRoles } from '@/types';
 
 export class roleClient {
-  static getRole = async (): Promise<IRoles | null> => {
+  static getUserGrant = async (): Promise<boolean> => {
     try {
-      const result: IRoles = await api.get('role/user', {}).json();
+      const result: boolean = await api.get('role/user', {}).json();
       return result;
     } catch (error) {
       if (error instanceof HTTPError) {
@@ -15,6 +14,6 @@ export class roleClient {
         console.log(error.message);
       }
     }
-    return null;
+    return false;
   };
 }

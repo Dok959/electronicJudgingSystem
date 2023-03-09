@@ -7,9 +7,9 @@ export class RoleService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findOne(
-    roleFindUniqueArgs: Prisma.RoleFindUniqueArgs,
+    roleFindFirstArgs: Prisma.RoleFindFirstArgs,
   ): Promise<RoleModel | null> {
-    return await this.prisma.role.findUnique(roleFindUniqueArgs);
+    return await this.prisma.role.findFirst(roleFindFirstArgs);
   }
 
   async findAll(): Promise<RoleModel[] | null> {

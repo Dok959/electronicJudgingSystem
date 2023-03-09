@@ -7,12 +7,13 @@ import { useStore } from 'effector-react';
 
 import App from './App';
 import { AuthPage, ErrorPage, EventPage } from './pages';
-import { $auth } from './context/auth';
+import { $auth, $grant } from './context/auth';
 import { ranksLoader, reLoginLoader } from './loaders';
 import { CreateEventPage } from './pages/Event/create';
 
 const Router = () => {
   const isLoggingIn = useStore($auth);
+  const isHasRights = useStore($grant);
   reLoginLoader();
 
   const router = createBrowserRouter([
@@ -33,7 +34,7 @@ const Router = () => {
         },
         {
           path: 'event/create',
-          element: isLoggingIn ? <CreateEventPage /> : <div>gsdf</div>,
+          element: isHasRights ? <CreateEventPage /> : <div>gsdf</div>,
           loader: ranksLoader,
         },
         {

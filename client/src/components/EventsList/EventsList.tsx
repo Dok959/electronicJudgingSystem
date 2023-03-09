@@ -13,33 +13,22 @@ export const EventsList = () => {
   const [events, setEvents] = useState<IEventAndSettings[]>([]);
   const [cursorInit, setCursorInit] = useState<number>(0);
 
-  // TODO
   const loadInitData = useCallback(async () => {
-    setEvents(events.concat(await eventClient.getEvents([], cursorInit)));
-  }, [events, cursorInit]);
+    function changeCursor() {
+      setCursorInit(events[events.length - 1]?.id);
+    }
+
+    if (cursorInit === 0) {
+      setEvents(await eventClient.getEvents([]));
+    }
+    changeCursor();
+  }, [cursorInit, events]);
 
   useEffect(() => {
     loadInitData();
   }, [loadInitData]);
 
-  // useEffect(() => {
-  //   function getcursorInit() {
-  //     return cursorInit;
-  //   }
-
-  //   async function loadInitData() {
-  //     setEvents(
-  //       events.concat(await eventClient.getEvents([], getcursorInit())),
-  //     );
-  //   }
-  //   loadInitData();
-  // }, [cursorInit, events, events1]);
-
   const location = useLocation();
-
-  function addCursor() {
-    setCursorInit(cursorInit + 2);
-  }
 
   const parseDateTime = (dateTime: Date, isDate: boolean) => {
     const date = new Date(dateTime);
@@ -81,14 +70,16 @@ export const EventsList = () => {
     );
   };
 
-  const paginationHandler = async (e: any) => {
+  const paginationHandler = async (e?: any) => {
     e.preventDefault();
     const { ranks } = formik.values;
     const param = ranks.map((item) => Number(item));
-    const mas = events;
-    setEvents(mas.concat(await eventClient.getEvents(param, cursorInit)));
-    addCursor();
-    // setCursorInit(cursorInit + 2);
+    const result = await eventClient.getEvents(param, cursorInit);
+    if (result.length === 0) {
+      const button = document.getElementById('load') as HTMLElement;
+      button.style.display = 'none';
+    }
+    setEvents(events.concat(result));
   };
 
   const formik = useFormik({
@@ -101,9 +92,12 @@ export const EventsList = () => {
     onSubmit: async (values) => {
       const { ranks } = values;
       const param = ranks.map((item) => Number(item));
-      setEvents(await eventClient.getEvents(param, 0));
-      setCursorInit(2);
-      return null;
+      setEvents(await eventClient.getEvents(param));
+
+      const button = document.getElementById('load') as HTMLElement;
+      if (button !== null) {
+        button.style.display = 'block';
+      }
     },
   });
 
@@ -178,7 +172,11 @@ export const EventsList = () => {
               ))}
 
               {events.length % 2 === 0 ? (
-                <button onClick={paginationHandler} className={Style.detail}>
+                <button
+                  onClick={paginationHandler}
+                  className={Style.detail}
+                  id="load"
+                >
                   Загрузить ещё
                 </button>
               ) : (

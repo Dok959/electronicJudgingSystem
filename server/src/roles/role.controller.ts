@@ -12,6 +12,7 @@ import { Response, Request } from 'express';
 import { RoleService } from './role.service';
 import { JWTGuard } from 'src/auth/guards';
 import { AuthService } from 'src/auth';
+import { User } from '@prisma/client';
 
 @Controller('role')
 export class RoleController {
@@ -30,20 +31,22 @@ export class RoleController {
 
   @UseGuards(JWTGuard)
   @Get('user')
-  async getRole(
+  @HttpCode(HttpStatus.OK)
+  async getUserRole(
     @Req() request: Request,
     @Res() res: Response,
   ): Promise<Response> {
-    const token: string = request.headers.authorization || null;
-
-    const user = await this.authService.getUserByTokenData(token);
-
+    const user: User = JSON.parse(JSON.stringify(request.headers.user));
     const role = await this.roleService.findOne({
-      where: { id: user.roleId },
+      where: {
+        id: user.roleId,
+        title: {
+          equals: 'Администратор',
+        },
+      },
     });
 
-    res.statusCode = HttpStatus.OK;
-    return res.send(role);
+    return res.send(role === null ? false : true);
   }
 
   @UseGuards(JWTGuard)

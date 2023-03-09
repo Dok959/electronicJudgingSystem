@@ -1,9 +1,30 @@
 import { HTTPError } from 'ky';
 import api from './kyClient';
-import { setAuth } from '../context/auth';
+import { setAuth, setGrant } from '../context/auth';
+import { roleClient } from '.';
+import { SyntheticEvent } from 'react';
 
 export class authClient {
-  static login = async (email: string, password: string) => {
+  static setError = async (error: SyntheticEvent | any) => {
+    if (error instanceof HTTPError) {
+      const errorJson = await error.response.json();
+      console.log(errorJson);
+      return errorJson;
+    } else if (error instanceof Error) {
+      console.log(error.message);
+      return error;
+    }
+  };
+
+  static setAutorization = (isEntrance: boolean, role: boolean) => {
+    setAuth(isEntrance);
+    setGrant(role);
+    if (isEntrance === false) {
+      localStorage.setItem(`auth`, JSON.stringify(null));
+    }
+  };
+
+  static login = async (email: string, password: string): Promise<boolean> => {
     try {
       const result = await api
         .post('auth/login', {
@@ -11,23 +32,19 @@ export class authClient {
         })
         .json();
 
-      setAuth(true);
       localStorage.setItem(`auth`, JSON.stringify(result));
+
+      const role = await roleClient.getUserGrant();
+      this.setAutorization(true, role);
+
       return true;
     } catch (error) {
-      if (error instanceof HTTPError) {
-        const errorJson = await error.response.json();
-        console.log(errorJson);
-        return errorJson;
-      } else if (error instanceof Error) {
-        console.log(error.message);
-        return error;
-      }
+      this.setError(error);
+      return false;
     }
-    return false;
   };
 
-  static reLogin = async () => {
+  static reLogin = async (): Promise<boolean> => {
     try {
       const auth = JSON.parse(localStorage.getItem(`auth`) || '');
       const result = await api
@@ -36,19 +53,14 @@ export class authClient {
         })
         .json();
 
-      setAuth(true);
       localStorage.setItem(`auth`, JSON.stringify(result));
+      const role = await roleClient.getUserGrant();
+      this.setAutorization(true, role);
+
       return true;
     } catch (error) {
-      if (error instanceof HTTPError) {
-        const errorJson = await error.response.json();
-        console.log(errorJson);
-        return errorJson;
-      } else if (error instanceof Error) {
-        console.log(error.message);
-        return error;
-      }
+      this.setError(error);
+      return false;
     }
-    return false;
   };
 }

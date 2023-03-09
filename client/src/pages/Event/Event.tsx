@@ -1,23 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { EventsList } from '@/components';
-import { roleClient } from '@/api';
-import { IRoles } from '@/types';
+import { useStore } from 'effector-react';
+import { $grant } from '@/context/auth';
 
 export const EventPage = () => {
-  const [role, setRole] = useState<IRoles | null>(null);
-  useEffect(() => {
-    async function getRole() {
-      setRole(await roleClient.getRole());
-    }
-    getRole();
-  }, []);
+  const isHasRights = useStore($grant);
 
   useEffect(() => {
-    if (role?.title === 'Администратор') {
+    if (isHasRights) {
       const button = document.getElementById('create') as HTMLElement;
       button.style.display = 'flex';
     }
-  }, [role]);
+  }, [isHasRights]);
 
   return <EventsList />;
 };

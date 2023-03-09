@@ -19,39 +19,32 @@ export class JWTGuard implements CanActivate {
       if (!refreshToken) {
         throw new UnauthorizedException(`Поле refresh_token обязательно`);
       }
-
       if (!accessToken) {
         throw new UnauthorizedException(`Поле access_token обязательно`);
       }
 
-      const validToken = this.authService.verifyToken(accessToken);
+      const isValidAccessToken = this.authService.verifyToken(accessToken);
 
-      if (validToken?.error) {
-        const validToken = this.authService.verifyToken(refreshToken);
+      const checkUser = await this.authService.getUserByTokenData(accessToken);
+      if (!checkUser) {
+        throw new UnauthorizedException(`Пользователя не существует`);
+      }
+      request.headers.user = checkUser;
 
-        const checkUser = await this.authService.getUserByTokenData(
-          accessToken,
-        );
-        if (validToken?.error && !checkUser) {
-          throw new UnauthorizedException('Ошибка чтения токена nen');
-        }
-        if (!checkUser) {
-          throw new UnauthorizedException(`Пользователя не существует`);
-        }
+      if (isValidAccessToken?.error) {
+        const isValidRefreshToken = this.authService.verifyToken(refreshToken);
 
         const access = await this.authService.generateAccessToken(checkUser);
 
-        if (validToken?.error) {
-          if (validToken?.error === 'jwt expired') {
-            const refresh = await this.authService.generateRefreshToken(
-              checkUser.id,
-            );
-            request.headers.authorization = access.access_token;
-            request.headers.refresh = refresh.refresh_token;
-            return true;
-          } else {
-            throw new UnauthorizedException(validToken.error);
-          }
+        if (isValidRefreshToken?.error === 'jwt expired') {
+          const refresh = await this.authService.generateRefreshToken(
+            checkUser.id,
+          );
+          request.headers.authorization = access.access_token;
+          request.headers.refresh = refresh.refresh_token;
+          return true;
+        } else if (isValidRefreshToken?.error) {
+          throw new UnauthorizedException('Ошибка проверки токенов');
         } else {
           request.headers.authorization = access.access_token;
           return true;
@@ -60,7 +53,7 @@ export class JWTGuard implements CanActivate {
 
       return true;
     } catch (error) {
-      throw new UnauthorizedException('Ошибка чтения токена');
+      throw new UnauthorizedException('Ошибка проверки данных');
     }
   }
 }
