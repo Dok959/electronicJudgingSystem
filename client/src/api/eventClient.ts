@@ -5,13 +5,14 @@ import {
   ICustomPropertyCreateEvent,
   IEventAndSettings,
 } from '@/types';
+import { ILoadEventAndSettings } from '@/pages/Event/edit/dto';
+import { redirect } from 'react-router-dom';
 
 export class eventClient {
   static getEvents = async (
     ranks: number[] = [],
     cursorInit: number = 0,
   ): Promise<IEventAndSettings[]> => {
-    console.log(ranks, cursorInit);
     try {
       const result: IEventAndSettings[] = await api
         .post('event/', {
@@ -69,5 +70,25 @@ export class eventClient {
       }
     }
     return [];
+  };
+
+  static getEvent = async (
+    id: number,
+  ): Promise<ILoadEventAndSettings | null> => {
+    try {
+      const result: ILoadEventAndSettings = await api
+        .get(`event/${id}`, {})
+        .json();
+      return result;
+    } catch (error) {
+      if (error instanceof HTTPError) {
+        const errorJson = await error.response.json();
+        console.log(errorJson);
+      } else if (error instanceof Error) {
+        console.log(error.message);
+      }
+    }
+    redirect(`/event`);
+    return null;
   };
 }
