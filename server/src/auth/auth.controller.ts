@@ -6,10 +6,15 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Response, request } from 'express';
 import { Prisma } from '@prisma/client';
 import { UserService } from 'src/users';
-import { RegistrationGuard, LoginGuard, RefreshJWTGuard } from './guards';
+import {
+  RegistrationGuard,
+  LoginGuard,
+  RefreshJWTGuard,
+  JWTGuard,
+} from './guards';
 import { AuthService } from './auth.service';
 import { refreshTokenDto } from './dto';
 
@@ -20,37 +25,50 @@ export class AuthController {
     private readonly authService: AuthService,
   ) {}
 
-  @UseGuards(RefreshJWTGuard)
+  @UseGuards(JWTGuard)
   @Post('refresh')
   async refreshToken(
     @Body() clientTokens: refreshTokenDto,
     @Res() res: Response,
   ): Promise<Response> {
-    const validToken = this.authService.verifyToken(clientTokens.refresh_token);
+    console.log(clientTokens);
+    res.statusCode = HttpStatus.OK;
+    const access = request.headers.authorization;
+    const refresh = request.headers.refresh;
+    return res.send({ access, refresh });
+    // try {
+    //   console.log(clientTokens);
+    //   const validToken = this.authService.verifyToken(
+    //     clientTokens.refresh_token,
+    //   );
 
-    const user = await this.authService.getUserByTokenData(
-      clientTokens.access_token,
-    );
+    //   const user = await this.authService.getUserByTokenData(
+    //     clientTokens.access_token,
+    //   );
+    //   console.log('+');
 
-    const access = await this.authService.generateAccessToken(user);
+    //   const access = await this.authService.generateAccessToken(user);
 
-    if (validToken?.error) {
-      if (validToken?.error === 'jwt expired') {
-        const refresh = await this.authService.generateRefreshToken(user.id);
+    //   if (validToken?.error) {
+    //     if (validToken?.error === 'jwt expired') {
+    //       const refresh = await this.authService.generateRefreshToken(user.id);
 
-        res.statusCode = HttpStatus.OK;
-        return res.send({ ...access, ...refresh });
-      } else {
-        res.statusCode = HttpStatus.BAD_REQUEST;
-        return res.send({ error: validToken?.error });
-      }
-    } else {
-      res.statusCode = HttpStatus.OK;
-      return res.send({
-        ...access,
-        refresh_token: clientTokens.refresh_token,
-      });
-    }
+    //       res.statusCode = HttpStatus.OK;
+    //       return res.send({ ...access, ...refresh });
+    //     } else {
+    //       res.statusCode = HttpStatus.BAD_REQUEST;
+    //       return res.send({ error: validToken?.error });
+    //     }
+    //   } else {
+    //     res.statusCode = HttpStatus.OK;
+    //     return res.send({
+    //       ...access,
+    //       refresh_token: clientTokens.refresh_token,
+    //     });
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    // }
   }
 
   @UseGuards(LoginGuard)

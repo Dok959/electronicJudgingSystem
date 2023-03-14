@@ -16,3 +16,4 @@ export type {
   IUpdateSettingsEvent,
   ICustomPropertyUpdateEvent,
 } from './updateEvent';
+export type { ICustomPropertyCreateUser } from './createUser';

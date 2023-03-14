@@ -6,11 +6,13 @@ import {
 import { useStore } from 'effector-react';
 
 import App from './App';
-import { AuthPage, ErrorPage, EventPage } from './pages';
+import { AuthPage, ErrorPage, EventPage, HomePage } from './pages';
 import { $auth, $grant } from './context/auth';
 import { ranksLoader, reLoginLoader } from './loaders';
 import { CreateEventPage } from './pages/Event/create';
 import { dataLoader as eventLoader, EditEventPage } from './pages/Event/edit';
+import { CreateUserPage } from './pages/User/create';
+import { rolesLoader } from './pages/User/create/CreateUser';
 
 const Router = () => {
   const isLoggingIn = useStore($auth);
@@ -26,27 +28,36 @@ const Router = () => {
       children: [
         {
           path: 'login',
-          element: isLoggingIn ? <Navigate to={'/event'} /> : <AuthPage />,
+          element: isLoggingIn ? <Navigate to={'/home'} /> : <AuthPage />,
+        },
+        {
+          path: 'home',
+          element: isLoggingIn ? <HomePage /> : <Navigate to={'/'} />,
         },
         {
           path: 'event',
-          element: isLoggingIn ? <EventPage /> : <Navigate to={'/'} />,
+          element: isLoggingIn ? <EventPage /> : <Navigate to={'/home'} />,
           loader: ranksLoader,
         },
         {
           path: 'event/create',
-          element: isHasRights ? <CreateEventPage /> : <div>gsdf</div>,
+          element: isHasRights ? (
+            <CreateEventPage />
+          ) : (
+            <Navigate to={'/event'} />
+          ),
           loader: ranksLoader,
         },
         {
           path: 'event/:eventId',
-          element: isHasRights ? <EditEventPage /> : <div>печаль</div>,
+          element: isHasRights ? <EditEventPage /> : <Navigate to={'/event'} />,
           loader: eventLoader,
         },
-        // {
-        //   path: 'event/:contactId/edit',
-        //   element: <EditContact />,
-        // },
+        {
+          path: 'user/create',
+          element: isHasRights ? <CreateUserPage /> : <Navigate to={'/home'} />,
+          loader: rolesLoader,
+        },
       ],
     },
   ]);

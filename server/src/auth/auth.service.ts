@@ -13,6 +13,7 @@ export class AuthService {
 
   async getUserByTokenData(token: string): Promise<UserModel | null> {
     const parsedTokenData = this.parseJwt(token);
+    console.log(parsedTokenData);
 
     return await this.userService.findOne(parsedTokenData.user);
   }

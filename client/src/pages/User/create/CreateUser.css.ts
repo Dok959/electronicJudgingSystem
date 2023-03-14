@@ -125,32 +125,21 @@ export const button = recipe({
 });
 
 export const container = style({
-  display: 'grid',
-  gridTemplateColumns: 'auto',
+  display: 'flex',
   gap: 16,
   alignItems: 'baseline',
   width: '100%',
   justifyItems: 'center',
-});
-
-export const filter = style({
-  margin: 0,
-  display: 'grid',
-  justifyItems: 'start',
-  gridTemplateColumns: '1fr 1fr 1fr',
-  minWidth: 'auto',
+  justifyContent: 'center',
+  flexWrap: 'wrap',
+  flexDirection: 'row',
 });
 
 export const item = style({
   margin: 0,
 });
 
-export const ranks = style({
-  margin: 0,
-  padding: 8,
-});
-
-export const inputCheckbox = style({
+export const inputRadio = style({
   selectors: {
     '&:not(:checked), &:checked': {
       position: 'absolute',
@@ -160,79 +149,36 @@ export const inputCheckbox = style({
   },
 });
 
-export const labelCheckbox = recipe({
-  base: {
-    position: 'relative',
-    cursor: 'pointer',
-  },
-  variants: {
-    type: {
-      default: {
-        paddingLeft: 30,
-        selectors: {
-          [`${inputCheckbox}+&::before`]: {
-            content: '',
-            position: 'absolute',
-            left: 0,
-            width: 19,
-            height: 19,
-            border: '1px solid',
-            borderColor: vars.colors.accent.primary,
-            background: vars.colors.background.primary,
-            borderRadius: 4,
-            transition: vars.transition.all,
-          },
-          [`${inputCheckbox}:checked+&::before`]: {
-            background: vars.colors.accent.primary,
-          },
-          [`${inputCheckbox}:disabled+&::before`]: {
-            boxShadow: 'none',
-            borderColor: '#bbb',
-            backgroundColor: '#e9e9e9',
-          },
-          [`${inputCheckbox}:disabled+&`]: {
-            color: '#aaa',
-          },
-          [`${inputCheckbox}:focus+&::before`]: {
-            boxShadow: '0 0 0 6px rgba(236, 0, 140, 0.2)',
-          },
-        },
-      },
-      right: {
-        paddingRight: 30,
-        selectors: {
-          [`${inputCheckbox}+&::after`]: {
-            content: '',
-            position: 'absolute',
-            right: 0,
-            width: 19,
-            height: 19,
-            border: '1px solid',
-            borderColor: vars.colors.accent.primary,
-            background: vars.colors.background.primary,
-            borderRadius: 4,
-            transition: vars.transition.all,
-          },
-          [`${inputCheckbox}:checked+&::after`]: {
-            background: vars.colors.accent.primary,
-          },
-          [`${inputCheckbox}:disabled+&::after`]: {
-            boxShadow: 'none',
-            borderColor: '#bbb',
-            backgroundColor: '#e9e9e9',
-          },
-          [`${inputCheckbox}:disabled+&`]: {
-            color: '#aaa',
-          },
-          [`${inputCheckbox}:focus+&::after`]: {
-            boxShadow: '0 0 0 6px rgba(236, 0, 140, 0.2)',
-          },
-        },
-      },
+export const labelRadio = style({
+  position: 'relative',
+  cursor: 'pointer',
+  paddingRight: 30,
+  selectors: {
+    [`${inputRadio}+&::after`]: {
+      content: '',
+      position: 'absolute',
+      right: 0,
+      width: 19,
+      height: 19,
+      border: '1px solid',
+      borderColor: vars.colors.accent.primary,
+      background: vars.colors.background.primary,
+      borderRadius: '50%',
+      transition: vars.transition.all,
     },
-  },
-
-  defaultVariants: {
-    type: 'default',
+    [`${inputRadio}:checked+&::after`]: {
+      background: vars.colors.accent.primary,
+    },
+    [`${inputRadio}:disabled+&::after`]: {
+      boxShadow: 'none',
+      borderColor: '#bbb',
+      backgroundColor: '#e9e9e9',
+    },
+    [`${inputRadio}:disabled+&`]: {
+      color: '#aaa',
+    },
+    [`${inputRadio}:focus+&::after`]: {
+      boxShadow: '0 0 0 6px rgba(236, 0, 140, 0.2)',
+    },
   },
 });

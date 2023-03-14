@@ -1,18 +1,18 @@
-import { useEffect, useState } from 'react';
-import { EventsList } from '@/components';
-import { eventClient, roleClient, utilClient } from '@/api';
-import { IRanks, IRoles, ITypes } from '@/types';
+import { useState } from 'react';
+import { eventClient } from '@/api';
+import { IRanks } from '@/types';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Spinner } from '@/components';
 import { handleAlertMessage } from '@/utils/auth';
 import { EnumRank, alertStatus } from '@/utils/enum';
 import * as Style from './CreateEvent.css';
-import { NavLink, redirect, useLoaderData } from 'react-router-dom';
+import { NavLink, useLoaderData, useNavigate } from 'react-router-dom';
 
 export const CreateEventPage = () => {
   const [spinner, setSpinner] = useState<boolean>(false);
   const ranks: IRanks[] = useLoaderData() as IRanks[];
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
@@ -60,15 +60,15 @@ export const CreateEventPage = () => {
           Number(item),
         ),
       });
+      setSpinner(false);
       if (!result) {
-        setSpinner(false);
         handleAlertMessage({
           alertText: 'Не корректные данные',
           alertStatus: alertStatus.warning,
         });
         return null;
       }
-      // redirect(`/event`);
+      navigate('/event');
       return handleAlertMessage({
         alertText: 'Соревнование создано',
         alertStatus: alertStatus.success,
