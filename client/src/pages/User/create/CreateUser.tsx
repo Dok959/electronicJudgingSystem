@@ -8,6 +8,7 @@ import { handleAlertMessage } from '@/utils/auth';
 import { EnumRank, alertStatus } from '@/utils/enum';
 import * as Style from './CreateUser.css';
 import { NavLink, useLoaderData, useNavigate } from 'react-router-dom';
+import React from 'react';
 
 export async function rolesLoader() {
   return await roleClient.getRoles();
@@ -215,8 +216,8 @@ export const CreateUserPage = () => {
 
           {roles.length ? (
             <article className={Style.container}>
-              {roles.map((item) => (
-                <>
+              {roles.map((item, index) => (
+                <React.Fragment key={index}>
                   <input
                     type="radio"
                     id={`roleId${item.id}`}
@@ -235,7 +236,7 @@ export const CreateUserPage = () => {
                   >
                     {item.title}
                   </label>
-                </>
+                </React.Fragment>
               ))}
             </article>
           ) : (

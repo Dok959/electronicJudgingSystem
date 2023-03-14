@@ -1,7 +1,9 @@
 import {
   createBrowserRouter,
   Navigate,
+  redirect,
   RouterProvider,
+  useNavigate,
 } from 'react-router-dom';
 import { useStore } from 'effector-react';
 
@@ -19,6 +21,7 @@ const Router = () => {
   const isHasRights = useStore($grant);
   reLoginLoader();
 
+  console.log(isLoggingIn, isHasRights);
   const router = createBrowserRouter([
     {
       path: '/',
@@ -27,34 +30,34 @@ const Router = () => {
       loader: ranksLoader,
       children: [
         {
-          path: 'login',
+          path: '/login',
           element: isLoggingIn ? <Navigate to={'/home'} /> : <AuthPage />,
         },
         {
-          path: 'home',
-          element: isLoggingIn ? <HomePage /> : <Navigate to={'/'} />,
+          path: '/home',
+          element: isLoggingIn === true ? <HomePage /> : <Navigate to={'/'} />,
         },
         {
-          path: 'event',
+          path: '/event',
           element: isLoggingIn ? <EventPage /> : <Navigate to={'/home'} />,
           loader: ranksLoader,
         },
         {
-          path: 'event/create',
+          path: '/event/create',
           element: isHasRights ? (
             <CreateEventPage />
           ) : (
-            <Navigate to={'/event'} />
+            <Navigate to={'/event'} replace={true} state={true} />
           ),
           loader: ranksLoader,
         },
         {
-          path: 'event/:eventId',
+          path: '/event/:eventId',
           element: isHasRights ? <EditEventPage /> : <Navigate to={'/event'} />,
           loader: eventLoader,
         },
         {
-          path: 'user/create',
+          path: '/user/create',
           element: isHasRights ? <CreateUserPage /> : <Navigate to={'/home'} />,
           loader: rolesLoader,
         },

@@ -1,20 +1,45 @@
 import { style } from '@vanilla-extract/css';
 import { vars } from '@/theme/index';
 
-export const mainTitle = style({
+export const heading = style({
+  margin: 0,
+  fontSize: 20,
   fontFamily: vars.fonts.heading,
-  fontWeight: 600,
-  fontSize: 28,
-  lineHeight: 1.2,
   color: vars.colors.headings.primary,
-  textAlign: 'center',
-  margin: vars.space.none,
-  maxWidth: 530,
+});
 
+export const link = style({
+  fontWeight: 400,
+  color: vars.colors.text.primary,
+  fontSize: 16,
+  lineHeight: '24px',
+  textDecoration: 'none',
+  display: 'inline-block',
+  padding: '12px',
+  selectors: {
+    '&:hover': {
+      cursor: 'pointer',
+      width: 'inherit',
+    },
+    '&:after': {
+      content: ' ',
+      display: 'block',
+      color: vars.colors.accent.primary,
+      width: '0',
+      height: 2,
+      backgroundColor: vars.colors.accent.primary,
+      transition: vars.transition.width,
+    },
+    '&:hover:after': {
+      width: '100%',
+    },
+  },
   '@media': {
     'screen and (min-width: 768px)': {
-      fontSize: 40,
-      maxWidth: 730,
+      padding: 0,
+    },
+    '(prefers-reduced-motion)': {
+      transitionProperty: 'color',
     },
   },
 });

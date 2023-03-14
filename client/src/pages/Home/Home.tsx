@@ -7,18 +7,27 @@ export const HomePage = () => {
   const isHasRights = useStore($grant);
   return (
     <>
+      <h3 className={Style.heading}>Выберите действие</h3>
       {isHasRights ? (
-        <NavLink to="/event/create">Создать соревнование</NavLink>
+        <NavLink to="/event/create" className={Style.link}>
+          Создать соревнование
+        </NavLink>
       ) : (
         <></>
       )}
       {isHasRights ? (
-        <NavLink to="/user/create">Добавить пользователя</NavLink>
+        <NavLink to="/user/create" className={Style.link}>
+          Добавить пользователя
+        </NavLink>
       ) : (
         <></>
       )}
-      <NavLink to="/home">Добавить ученика</NavLink>
-      <NavLink to="/home">Профиль</NavLink>
+      <NavLink to="/home" className={Style.link}>
+        Добавить ученика
+      </NavLink>
+      <NavLink to="/home" className={Style.link}>
+        Профиль
+      </NavLink>
     </>
   );
 };
