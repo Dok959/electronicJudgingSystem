@@ -100,7 +100,27 @@ export class EventService {
   }
 
   async update(eventUpdateArgs: Prisma.EventUpdateArgs): Promise<EventModel> {
-    return await this.prisma.event.update(eventUpdateArgs);
+    const data = eventUpdateArgs as Prisma.EventUncheckedUpdateInput;
+    await this.prisma.settingsEvent.deleteMany({
+      where: { eventId: Number(data.id) },
+    });
+    const updateEvent = await this.prisma.event.update({
+      where: {
+        id: Number(data.id),
+      },
+      data: {
+        title: data.title,
+        startDateTime: data.startDateTime,
+        duration: data.duration,
+        SettingsEvent: {
+          createMany: {
+            data: data.SettingsEvent as Prisma.SettingsEventCreateManyEventInput,
+          },
+        },
+      },
+    });
+
+    return updateEvent;
   }
 
   async delete(eventDeleteArgs: Prisma.EventDeleteArgs): Promise<EventModel> {

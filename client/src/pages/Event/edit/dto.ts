@@ -27,7 +27,7 @@ export interface IRenderEventAndSettings {
   startDateTime: Date;
   duration: number;
   typeIndividual: boolean;
-  masPartisipantsIndividualRanks: number[];
+  masPartisipantsIndividualRanks: string[];
   typeGroup: boolean;
-  masPartisipantsGroupRanks: number[];
+  masPartisipantsGroupRanks: string[];
 }

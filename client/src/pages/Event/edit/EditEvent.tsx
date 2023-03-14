@@ -1,21 +1,31 @@
 import { useCallback, useEffect, useState } from 'react';
 import { eventClient, utilClient } from '@/api';
-import { IEventAndSettings, IRanks } from '@/types';
+import { IRanks } from '@/types';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Spinner } from '@/components';
 import { handleAlertMessage } from '@/utils/auth';
 import { EnumRank, alertStatus } from '@/utils/enum';
 import * as Style from './EditEvent.css';
-import { NavLink, useLoaderData } from 'react-router-dom';
+import {
+  NavLink,
+  redirect,
+  useLoaderData,
+  useNavigate,
+} from 'react-router-dom';
 import { ILoadEventAndSettings, IRenderEventAndSettings } from './dto';
 
 export async function dataLoader({ params }: any) {
-  return await eventClient.getEvent(Number(params.eventId));
+  const event = await eventClient.getEvent(Number(params.eventId));
+  if (event === null) {
+    redirect('/event');
+  }
+
+  return event;
 }
 
 export const EditEventPage = () => {
-  const initValue1: IRenderEventAndSettings = {
+  const initValue: IRenderEventAndSettings = {
     id: 1,
     title: '',
     startDateTime: new Date(),
@@ -26,60 +36,28 @@ export const EditEventPage = () => {
     masPartisipantsGroupRanks: [],
   };
   const parser = (event: ILoadEventAndSettings) => {
-    initValue1.id = event.id;
-    initValue1.title = event.title;
-    initValue1.startDateTime = event.startDateTime;
-    initValue1.duration = event.duration;
+    initValue.id = event.id;
+    initValue.title = event.title;
+    initValue.startDateTime = new Date(event.startDateTime);
+    initValue.duration = event.duration;
     event.SettingsEvent.map((item) => {
       if (item.type.id === 1) {
-        if (initValue1.typeIndividual === false) {
-          initValue1.typeIndividual = true;
+        if (initValue.typeIndividual === false) {
+          initValue.typeIndividual = true;
         }
-        initValue1.masPartisipantsIndividualRanks.push(item.rank.id);
+        initValue.masPartisipantsIndividualRanks.push(String(item.rank.id));
       }
       if (item.type.id === 2) {
-        if (initValue1.typeGroup === false) {
-          initValue1.typeGroup = true;
+        if (initValue.typeGroup === false) {
+          initValue.typeGroup = true;
         }
-        initValue1.masPartisipantsGroupRanks.push(item.rank.id);
+        initValue.masPartisipantsGroupRanks.push(String(item.rank.id));
       }
       return null;
     });
-    console.log(initValue1);
     return;
   };
   parser(useLoaderData() as ILoadEventAndSettings);
-
-  const [initValue, setInitValue] = useState<IRenderEventAndSettings | null>(
-    null,
-  );
-
-  const loadEvent = useCallback(async () => {
-    const getEvent = async () => {
-      return await eventClient.getEvent(Number(1));
-    };
-    const parser = (
-      event: ILoadEventAndSettings | null,
-    ): IRenderEventAndSettings => {
-      return {
-        id: 1,
-        title: '',
-        startDateTime: new Date(),
-        duration: 1,
-        typeIndividual: false,
-        masPartisipantsIndividualRanks: [],
-        typeGroup: false,
-        masPartisipantsGroupRanks: [],
-      };
-    };
-
-    setInitValue(parser(await getEvent()));
-  }, []);
-
-  useEffect(() => {
-    loadEvent();
-    console.log(initValue);
-  }, [initValue, loadEvent]);
 
   const [spinner, setSpinner] = useState<boolean>(false);
 
@@ -92,6 +70,8 @@ export const EditEventPage = () => {
   useEffect(() => {
     loadRanks();
   }, [loadRanks]);
+
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: { ...initValue },
@@ -111,6 +91,7 @@ export const EditEventPage = () => {
     }),
     onSubmit: async (values) => {
       const {
+        id,
         title,
         startDateTime,
         duration,
@@ -118,7 +99,33 @@ export const EditEventPage = () => {
         masPartisipantsGroupRanks,
       } = values;
       setSpinner(true);
-      return null;
+      const result = await eventClient.update({
+        id,
+        title,
+        startDateTime: new Date(startDateTime),
+        duration: Number(duration),
+        typeIndividual: 1,
+        masPartisipantsIndividualRanks: masPartisipantsIndividualRanks.map(
+          (item) => Number(item),
+        ),
+        typeGroup: 2,
+        masPartisipantsGroupRanks: masPartisipantsGroupRanks.map((item) =>
+          Number(item),
+        ),
+      });
+      setSpinner(false);
+      if (!result) {
+        handleAlertMessage({
+          alertText: 'Не корректные данные',
+          alertStatus: alertStatus.warning,
+        });
+        return null;
+      }
+      navigate('/event');
+      return handleAlertMessage({
+        alertText: 'Соревнование обновлено',
+        alertStatus: alertStatus.success,
+      });
     },
   });
 
@@ -159,11 +166,11 @@ export const EditEventPage = () => {
               name="startDateTime"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              // value={
-              //   new Date(formik.values.startDateTime)
-              //     .toISOString()
-              //     .slice(0, -10) + '00'
-              // }
+              defaultValue={
+                new Date(formik.values.startDateTime)
+                  .toISOString()
+                  .slice(0, -10) + '00'
+              }
               className={Style.input({
                 border:
                   formik.touched.startDateTime && formik.errors.startDateTime
@@ -176,7 +183,7 @@ export const EditEventPage = () => {
             />
             {formik.touched.startDateTime && formik.errors.startDateTime ? (
               <span className={Style.infoError}>
-                {/* {formik.errors.startDateTime} */}
+                <>{formik.errors.startDateTime}</>
               </span>
             ) : (
               <span className={Style.infoError} />
@@ -243,9 +250,9 @@ export const EditEventPage = () => {
                         formik.handleChange(e);
                       }}
                       onBlur={formik.handleBlur}
-                      checked={Boolean(
-                        formik.values.masPartisipantsIndividualRanks?.filter(
-                          (el) => el === item.id,
+                      defaultChecked={Boolean(
+                        formik.values.masPartisipantsIndividualRanks.filter(
+                          (el) => Number(el) === Number(item.id),
                         ).length,
                       )}
                       className={Style.inputCheckbox}
@@ -292,14 +299,14 @@ export const EditEventPage = () => {
                       type="checkbox"
                       id={'group ' + item.id.toString()}
                       name="masPartisipantsGroupRanks"
-                      value={item.id}
+                      value={Number(item.id)}
                       onChange={(e) => {
                         formik.handleChange(e);
                       }}
                       onBlur={formik.handleBlur}
-                      checked={Boolean(
-                        formik.values.masPartisipantsGroupRanks?.filter(
-                          (el) => el === item.id,
+                      defaultChecked={Boolean(
+                        formik.values.masPartisipantsGroupRanks.filter(
+                          (el) => Number(el) === Number(item.id),
                         ).length,
                       )}
                       className={Style.inputCheckbox}

@@ -31,4 +31,16 @@ export class SettingsService {
   ): Promise<SettingsModel> {
     return await this.prisma.settingsEvent.delete(settingsEventDeleteArgs);
   }
+
+  async deleteMany(
+    settingsEventDeleteManyArgs: Prisma.SettingsEventDeleteManyArgs,
+  ): Promise<BatchPayload> {
+    return await this.prisma.settingsEvent.deleteMany(
+      settingsEventDeleteManyArgs,
+    );
+  }
 }
+
+type BatchPayload = {
+  count: number;
+};

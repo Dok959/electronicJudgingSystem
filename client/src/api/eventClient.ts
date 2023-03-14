@@ -3,7 +3,9 @@ import api from './kyClient';
 import {
   ICreateSettingsEvent,
   ICustomPropertyCreateEvent,
+  ICustomPropertyUpdateEvent,
   IEventAndSettings,
+  IUpdateSettingsEvent,
 } from '@/types';
 import { ILoadEventAndSettings } from '@/pages/Event/edit/dto';
 import { redirect } from 'react-router-dom';
@@ -53,6 +55,48 @@ export class eventClient {
       const result: IEventAndSettings[] = await api
         .post('event/create', {
           json: {
+            title: event.title,
+            startDateTime: event.startDateTime,
+            duration: event.duration,
+            SettingsEvent: masSetting,
+          },
+        })
+        .json();
+      return result;
+    } catch (error) {
+      if (error instanceof HTTPError) {
+        const errorJson = await error.response.json();
+        console.log(errorJson);
+      } else if (error instanceof Error) {
+        console.log(error.message);
+      }
+    }
+    return [];
+  };
+
+  static update = async (
+    event: ICustomPropertyUpdateEvent,
+  ): Promise<IEventAndSettings[]> => {
+    try {
+      const masSetting: IUpdateSettingsEvent[] = [];
+      event.masPartisipantsIndividualRanks.map((item: number) => {
+        return masSetting.push({
+          typeId: event.typeIndividual,
+          rankId: item,
+        });
+      });
+
+      event.masPartisipantsGroupRanks.map((item: number) => {
+        return masSetting.push({
+          typeId: event.typeGroup,
+          rankId: item,
+        });
+      });
+
+      const result: IEventAndSettings[] = await api
+        .post('event/update', {
+          json: {
+            id: event.id,
             title: event.title,
             startDateTime: event.startDateTime,
             duration: event.duration,

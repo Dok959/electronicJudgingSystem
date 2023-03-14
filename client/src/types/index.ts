@@ -11,3 +11,8 @@ export type {
   ICreateSettingsEvent,
   ICustomPropertyCreateEvent,
 } from './createEvent';
+export type {
+  IUpdateEvent,
+  IUpdateSettingsEvent,
+  ICustomPropertyUpdateEvent,
+} from './updateEvent';
