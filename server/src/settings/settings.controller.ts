@@ -71,4 +71,18 @@ export class SettingsController {
 
     return res.send(settingsEvent);
   }
+
+  @UseGuards(JWTGuard, ExistingGuard)
+  @Post('deleteMany')
+  @HttpCode(HttpStatus.OK)
+  async deleteMany(
+    @Body() settingsEventDeleteArgs: Prisma.SettingsEventDeleteArgs,
+    @Res() res: Response,
+  ) {
+    const settingsEvent = await this.settingsService.deleteMany(
+      settingsEventDeleteArgs,
+    );
+
+    return res.send(settingsEvent);
+  }
 }
