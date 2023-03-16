@@ -14,6 +14,9 @@ export const Menu = () => {
     toggleMenu(false);
   }, [location]);
 
+  const setActive = ({ isActive }: any) =>
+    Style.link(isActive ? { color: 'active' } : {});
+
   return (
     <div className={Style.container}>
       <div className={Style.navbar}>
@@ -26,12 +29,7 @@ export const Menu = () => {
           {location.pathname === ('/' || '/login') ? (
             <>
               <li>
-                <NavLink
-                  to="/"
-                  className={({ isActive }) =>
-                    Style.link(isActive ? { color: 'active' } : {})
-                  }
-                >
+                <NavLink to="/" className={setActive}>
                   Главная
                 </NavLink>
               </li>
