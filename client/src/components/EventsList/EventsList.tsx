@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useLoaderData, useLocation } from 'react-router-dom';
+import { Link, useLoaderData, useLocation } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { eventClient } from '@/api';
@@ -159,9 +159,9 @@ export const EventsList = () => {
                       <div className={Style.tags}>
                         {parseTypes(item.SettingsEvent)}
                         {location.pathname === '/event' ? (
-                          <a href="/" className={Style.detail}>
+                          <Link to={`${item.id}`} className={Style.detail}>
                             Подробнее
-                          </a>
+                          </Link>
                         ) : (
                           <></>
                         )}

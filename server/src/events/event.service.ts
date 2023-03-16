@@ -14,8 +14,10 @@ export class EventService {
       include: {
         SettingsEvent: {
           select: {
-            type: { select: { title: true } },
-            rank: { select: { title: true } },
+            // type: { select: { title: true } },
+            // rank: { select: { title: true } },
+            type: true,
+            rank: true,
           },
         },
       },

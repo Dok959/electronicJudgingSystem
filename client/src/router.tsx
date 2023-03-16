@@ -10,6 +10,7 @@ import { AuthPage, ErrorPage, EventPage } from './pages';
 import { $auth, $grant } from './context/auth';
 import { ranksLoader, reLoginLoader } from './loaders';
 import { CreateEventPage } from './pages/Event/create';
+import { dataLoader as eventLoader, EditEventPage } from './pages/Event/edit';
 
 const Router = () => {
   const isLoggingIn = useStore($auth);
@@ -39,11 +40,13 @@ const Router = () => {
         },
         {
           path: 'event/:eventId',
-          element: isLoggingIn ? (
-            <div>страница мероприятия</div>
-          ) : (
-            <div>печаль</div>
-          ),
+          // element: isLoggingIn ? (
+          //   <div>страница мероприятия</div>
+          // ) : (
+          //   <div>печаль</div>
+          // ),
+          element: isHasRights ? <EditEventPage /> : <div>печаль</div>,
+          loader: eventLoader,
         },
         // {
         //   path: 'event/:contactId/edit',
