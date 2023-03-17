@@ -1,3 +1,4 @@
+export { Layout } from './Layout';
 export { Menu } from './Menu';
 export { Slider } from './Slider';
 export { Spinner } from './Spinner';

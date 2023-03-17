@@ -3,7 +3,26 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { BurgerIcon } from './Burger/Burger';
 import * as Style from './Menu.css';
 
+// children: JSX.Element;
+interface INavLinks {
+  to: string;
+  title: string;
+}
+
 export const Menu = () => {
+  const isLoggingIn = true;
+  const navLinks: INavLinks[] = isLoggingIn
+    ? [
+        { to: '/', title: 'Главная' },
+        { to: '/posts', title: 'Соревнования' },
+        { to: '/about', title: 'Судейство' },
+      ]
+    : [
+        { to: '/', title: 'Главная' },
+        { to: '/posts', title: 'Blog' },
+        { to: '/about', title: 'About' },
+      ];
+
   const [isMenuOpen, toggleMenu] = useState<boolean>(false);
   const toggleMenuMode = () => {
     toggleMenu(!isMenuOpen);
@@ -26,80 +45,15 @@ export const Menu = () => {
         <ul
           className={Style.listLinks({ isOpen: isMenuOpen ? 'open' : 'close' })}
         >
-          {location.pathname === ('/' || '/login') ? (
-            <>
-              <li>
-                <NavLink to="/" className={setActive}>
-                  Главная
+          {navLinks.map((item, index) => {
+            return (
+              <li key={index}>
+                <NavLink to={item.to} className={setActive}>
+                  {item.title}
                 </NavLink>
               </li>
-              <li className={Style.subMenu}>
-                <a href="/" className={Style.link({})}>
-                  О нас
-                </a>
-                <ul className={Style.subList}>
-                  <li className={Style.elementList}>
-                    <a href="/" className={Style.link({})}>
-                      Контакты
-                    </a>
-                  </li>
-                  <li className={Style.elementList}>
-                    <a href="/" className={Style.link({})}>
-                      Документы
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li>
-                <a href="/" className={Style.link({})}>
-                  Рейтинг
-                </a>
-              </li>
-              <li>
-                <NavLink
-                  to={'/login'}
-                  className={({ isActive }) =>
-                    Style.link(isActive ? { color: 'active' } : {})
-                  }
-                >
-                  Судейство
-                </NavLink>
-              </li>
-            </>
-          ) : (
-            <>
-              <li>
-                <NavLink
-                  to="/home"
-                  className={({ isActive }) =>
-                    Style.link(isActive ? { color: 'active' } : {})
-                  }
-                >
-                  Главная
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/event"
-                  className={({ isActive }) =>
-                    Style.link(isActive ? { color: 'active' } : {})
-                  }
-                >
-                  Соревнования
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to={'/'}
-                  className={({ isActive }) =>
-                    Style.link(isActive ? { color: 'active' } : {})
-                  }
-                >
-                  На сайт
-                </NavLink>
-              </li>
-            </>
-          )}
+            );
+          })}
         </ul>
       </>
     </div>

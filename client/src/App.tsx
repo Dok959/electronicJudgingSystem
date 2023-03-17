@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 
 import { useTheme } from './hooks';
-import { Layout } from './pages';
+// import { Layout } from './pages';
 
 const App = () => {
   const { theme } = useTheme();
@@ -9,9 +9,9 @@ const App = () => {
   document.getElementById('root')!.classList.add(theme);
 
   return (
-    <Layout>
-      <Outlet />
-    </Layout>
+    // <Layout>
+    <Outlet />
+    // </Layout>
   );
 };
 

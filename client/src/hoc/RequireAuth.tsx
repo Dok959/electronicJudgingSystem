@@ -7,8 +7,9 @@ import { $auth, $grant } from '@/context/auth';
 const RequireAuth = ({ children }: any) => {
   const location = useLocation();
   // const { user } = useAuth();
-  const isLoggingIn = useStore($auth);
+  const isLoggingIn = true; //useStore($auth);
   const isHasRights = useStore($grant);
+  console.log(isLoggingIn);
 
   if (!isLoggingIn) {
     return <Navigate to="/login" state={{ from: location }} />;
