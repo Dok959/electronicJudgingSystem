@@ -1,14 +1,25 @@
-import { useCallback, useEffect, useState } from 'react';
-import { Link, useLoaderData, useLocation } from 'react-router-dom';
+import { Suspense, useCallback, useEffect, useState } from 'react';
+import {
+  Await,
+  Link,
+  defer,
+  useLoaderData,
+  useLocation,
+} from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { eventClient } from '@/api';
+import { eventClient, utilClient } from '@/api';
 import { IEventAndSettings, ISettingsEvent, IRanks } from '@/types';
 import { EnumTypesEvent, EnumRank } from '@/utils';
 import * as Style from './EventsList.css';
 
+export interface IReturnTypes {
+  ranks: IRanks[];
+}
+
 export const EventsList = () => {
-  let ranks: IRanks[] = useLoaderData() as IRanks[];
+  // let ranks: IRanks[] = useLoaderData() as IRanks[];
+  const { ranks }: IReturnTypes = useLoaderData() as IReturnTypes;
 
   const [events, setEvents] = useState<IEventAndSettings[]>([]);
   const [cursorInit, setCursorInit] = useState<number>(0);
@@ -106,10 +117,44 @@ export const EventsList = () => {
       <section className={Style.wrapper}>
         <h3 className={Style.heading}>Соревнования</h3>
         <div className={Style.container}>
-          {ranks?.length ? (
+          <Suspense fallback={<h2>Loading...</h2>}>
+            <Await resolve={ranks}>
+              {(resolvedRanks) => (
+                // <>{console.log(resolvedRanks)}</>
+                // <>{resolvedRanks.map((item: any) => console.log(item))}</>
+                <aside className={Style.filter}>
+                  <form className={Style.form}>
+                    {resolvedRanks.map((item: any) => (
+                      <p className={Style.item} key={item.id}>
+                        <input
+                          type="checkbox"
+                          id={item.id.toString()}
+                          className={Style.input}
+                          name="ranks"
+                          value={item.id}
+                          onChange={(e) => {
+                            formik.handleChange(e);
+                            formik.submitForm();
+                          }}
+                          onBlur={formik.handleBlur}
+                        />
+                        <label
+                          htmlFor={item.id.toString()}
+                          className={Style.label}
+                        >
+                          {EnumRank[item.title as keyof typeof EnumRank]}
+                        </label>
+                      </p>
+                    ))}
+                  </form>
+                </aside>
+              )}
+            </Await>
+          </Suspense>
+          {/* {ranks?.length ? (
             <aside className={Style.filter}>
               <form className={Style.form}>
-                {ranks.map((item) => (
+                {ranks.map((item: any) => (
                   <p className={Style.item} key={item.id}>
                     <input
                       type="checkbox"
@@ -132,9 +177,9 @@ export const EventsList = () => {
             </aside>
           ) : (
             <>{null}</>
-          )}
+          )} */}
 
-          {events?.length ? (
+          {/* {events?.length ? (
             <div className={Style.content}>
               {events.map((item) => (
                 <article className={Style.event} key={item.id}>
@@ -185,9 +230,27 @@ export const EventsList = () => {
             </div>
           ) : (
             <div className={Style.content}>Соревнований нет</div>
-          )}
+          )} */}
         </div>
       </section>
     </>
   );
+};
+// https://www.youtube.com/watch?v=Nw8kCK0_T3U&list=PLiZoB8JBsdznY1XwBcBhHL9L7S_shPGVE&index=8
+// https://github.com/michey85/youtube-react-router-v6/commit/4d3903576c006ab653163b408c9df6fbdb15cd3b
+async function getRanks() {
+  // const res = await fetch('https://jsonplaceholder.typicode.com/posts');
+
+  // return res.json();
+  return await utilClient.getRanks();
+}
+
+export const ranksLoader = async () => {
+  const result = {
+    ranks: getRanks(),
+  };
+
+  console.log(result);
+
+  return defer(result);
 };

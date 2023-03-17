@@ -9,9 +9,9 @@ import {
 import { useStore } from 'effector-react';
 
 import App from './App';
-import { AuthPage, ErrorPage, EventPage } from './pages';
+import { AuthPage, ErrorPage, EventPage, MainPage } from './pages';
 import { $auth, $grant } from './context/auth';
-import { ranksLoader, reLoginLoader } from './loaders';
+// import { ranksLoader, reLoginLoader } from './loaders';
 import { CreateEventPage } from './pages/Event/create';
 import { dataLoader as eventLoader, EditEventPage } from './pages/Event/edit';
 import { RequireAuth } from './hoc/RequireAuth';
@@ -19,11 +19,38 @@ import { Aboutpage } from './pages/TestPages/Aboutpage';
 import { Blogpage } from './pages/TestPages/Blogpage';
 import { Createpost } from './pages/TestPages/Createpost';
 import { Editpost } from './pages/TestPages/Editpost';
-import { Mainpage } from './pages/TestPages/Mainpage';
+// import { Mainpage } from './pages/TestPages/Mainpage';
 import { Notfoundpage } from './pages/TestPages/Notfoundpage';
 import { Singlepage } from './pages/TestPages/Singlepage';
 import { Layout } from './components/Layout/Layout';
 import { useTheme } from './hooks';
+// import { MainPage, ranksLoader } from './pages/Main/Main';
+import { ranksLoader } from './components/EventsList/EventsList';
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/" element={<Layout />}>
+      <Route index element={<MainPage />} loader={ranksLoader} />
+      <Route path="about" element={<Aboutpage />} />
+      <Route path="posts" element={<Blogpage />} />
+      <Route path="posts/:id" element={<Singlepage />} />
+      <Route path="posts/:id/edit" element={<Editpost />} />
+      <Route
+        path="posts/new"
+        element={
+          <RequireAuth>
+            <Createpost />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="posts/new/edit"
+        element={<Navigate replace to="/posts/new" />}
+      />
+      <Route path="*" element={<Notfoundpage />} />
+    </Route>,
+  ),
+);
 
 const Router = () => {
   const { theme } = useTheme();
@@ -116,30 +143,31 @@ const Router = () => {
   // );
 
   return (
-    <>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Mainpage />} />
-          <Route path="about" element={<Aboutpage />} />
-          <Route path="posts" element={<Blogpage />} />
-          <Route path="posts/:id" element={<Singlepage />} />
-          <Route path="posts/:id/edit" element={<Editpost />} />
-          <Route
-            path="posts/new"
-            element={
-              <RequireAuth>
-                <Createpost />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="posts/new/edit"
-            element={<Navigate replace to="/posts/new" />}
-          />
-          <Route path="*" element={<Notfoundpage />} />
-        </Route>
-      </Routes>
-    </>
+    <RouterProvider router={router} />
+    // <>
+    //   <Routes>
+    //     <Route path="/" element={<Layout />}>
+    //       <Route index element={<MainPage />} />
+    //       <Route path="about" element={<Aboutpage />} />
+    //       <Route path="posts" element={<Blogpage />} />
+    //       <Route path="posts/:id" element={<Singlepage />} />
+    //       <Route path="posts/:id/edit" element={<Editpost />} />
+    //       <Route
+    //         path="posts/new"
+    //         element={
+    //           <RequireAuth>
+    //             <Createpost />
+    //           </RequireAuth>
+    //         }
+    //       />
+    //       <Route
+    //         path="posts/new/edit"
+    //         element={<Navigate replace to="/posts/new" />}
+    //       />
+    //       <Route path="*" element={<Notfoundpage />} />
+    //     </Route>
+    //   </Routes>
+    // </>
   );
 };
 

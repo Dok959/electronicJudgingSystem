@@ -27,6 +27,7 @@ export const dotSize = style({
 export const images = style({
   maxWidth: 'inherit',
   width: '100%',
+  height: '100%',
 });
 
 export const button = style({
