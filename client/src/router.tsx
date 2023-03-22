@@ -25,7 +25,7 @@ import { Singlepage } from './pages/TestPages/Singlepage';
 import { Layout } from './components/Layout/Layout';
 import { useTheme } from './hooks';
 // import { MainPage, ranksLoader } from './pages/Main/Main';
-import { ranksLoader } from './components/EventsList/EventsList';
+import { ranksLoader } from './components/EventsList';
 
 const router = createBrowserRouter(
   createRoutesFromElements(

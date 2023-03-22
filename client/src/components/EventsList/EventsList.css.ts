@@ -174,11 +174,6 @@ export const info = style({
   selectors: {
     '&+&': {
       marginTop: 0,
-      '@media': {
-        'screen and (min-width: 992px)': {
-          marginTop: 8,
-        },
-      },
     },
   },
 });

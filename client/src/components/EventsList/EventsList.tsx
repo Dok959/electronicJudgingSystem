@@ -10,7 +10,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { eventClient, utilClient } from '@/api';
 import { IEventAndSettings, ISettingsEvent, IRanks } from '@/types';
-import { EnumTypesEvent, EnumRank } from '@/utils';
+import { EnumRank } from '@/utils';
 import * as Style from './EventsList.css';
 
 export interface IReturnTypes {
@@ -18,8 +18,7 @@ export interface IReturnTypes {
 }
 
 export const EventsList = () => {
-  // let ranks: IRanks[] = useLoaderData() as IRanks[];
-  const { ranks }: IReturnTypes = useLoaderData() as IReturnTypes;
+  const { ranks } = useLoaderData() as IReturnTypes;
 
   const [events, setEvents] = useState<IEventAndSettings[]>([]);
   const [cursorInit, setCursorInit] = useState<number>(0);
@@ -50,42 +49,24 @@ export const EventsList = () => {
     }
   };
 
-  const parseRanks = (mas: ISettingsEvent[]) => {
-    let result = '';
-    mas.map(
+  const parseSettings = (mas: ISettingsEvent[], type: string) => {
+    let result = `${type}: `;
+    const typeMas = mas.filter((item) => item.type.title === type);
+    if (typeMas.length === 0) {
+      return null;
+    }
+    typeMas.map(
       (item) =>
         (result += EnumRank[item.rank.title as keyof typeof EnumRank] + ', '),
     );
     return result.slice(0, -2);
   };
 
-  const parseTypes = (mas: ISettingsEvent[]) => {
-    let isIndivigual = false,
-      isGroup = false;
-    mas.map((item) => {
-      if (
-        EnumTypesEvent['Индивидуальное'] ===
-        EnumTypesEvent[item.type.title as keyof typeof EnumTypesEvent]
-      ) {
-        return (isIndivigual = true);
-      } else {
-        return (isGroup = true);
-      }
-    });
-
-    return (
-      <>
-        {isIndivigual ? <p className={Style.tag}>Индивидуальное</p> : null}
-        {isGroup ? <p className={Style.tag}>Групповое</p> : null}
-      </>
-    );
-  };
-
   const paginationHandler = async (e?: any) => {
     e.preventDefault();
     const { ranks } = formik.values;
     const param = ranks.map((item) => Number(item));
-    const result = await eventClient.getEvents(param, cursorInit);
+    const result = await getEvents(param, cursorInit);
     if (result.length === 0) {
       const button = document.getElementById('load') as HTMLElement;
       button.style.display = 'none';
@@ -103,7 +84,7 @@ export const EventsList = () => {
     onSubmit: async (values) => {
       const { ranks } = values;
       const param = ranks.map((item) => Number(item));
-      setEvents(await eventClient.getEvents(param));
+      setEvents(await getEvents(param));
 
       const button = document.getElementById('load') as HTMLElement;
       if (button !== null) {
@@ -117,11 +98,9 @@ export const EventsList = () => {
       <section className={Style.wrapper}>
         <h3 className={Style.heading}>Соревнования</h3>
         <div className={Style.container}>
-          <Suspense fallback={<h2>Loading...</h2>}>
+          <Suspense fallback={<h2>Загрузка...</h2>}>
             <Await resolve={ranks}>
               {(resolvedRanks) => (
-                // <>{console.log(resolvedRanks)}</>
-                // <>{resolvedRanks.map((item: any) => console.log(item))}</>
                 <aside className={Style.filter}>
                   <form className={Style.form}>
                     {resolvedRanks.map((item: any) => (
@@ -151,106 +130,91 @@ export const EventsList = () => {
               )}
             </Await>
           </Suspense>
-          {/* {ranks?.length ? (
-            <aside className={Style.filter}>
-              <form className={Style.form}>
-                {ranks.map((item: any) => (
-                  <p className={Style.item} key={item.id}>
-                    <input
-                      type="checkbox"
-                      id={item.id.toString()}
-                      className={Style.input}
-                      name="ranks"
-                      value={item.id}
-                      onChange={(e) => {
-                        formik.handleChange(e);
-                        formik.submitForm();
-                      }}
-                      onBlur={formik.handleBlur}
-                    />
-                    <label htmlFor={item.id.toString()} className={Style.label}>
-                      {EnumRank[item.title as keyof typeof EnumRank]}
-                    </label>
-                  </p>
-                ))}
-              </form>
-            </aside>
-          ) : (
-            <>{null}</>
-          )} */}
 
-          {/* {events?.length ? (
-            <div className={Style.content}>
-              {events.map((item) => (
-                <article className={Style.event} key={item.id}>
-                  <h4 className={Style.eventTitle}>{item.title}</h4>
-                  <div className={Style.infoContainer}>
-                    <div className={Style.flexContainer({})}>
-                      <p className={Style.info}>
-                        Дата:{' '}
-                        <span>{parseDateTime(item.startDateTime, true)}</span>
-                      </p>
-                      <p className={Style.info}>
-                        Время:{' '}
-                        <span>{parseDateTime(item.startDateTime, false)}</span>
-                      </p>
-                    </div>
+          <Suspense fallback={<h2>Загрузка...</h2>}>
+            <Await resolve={events}>
+              {(resolvedEvents) => (
+                <div className={Style.content}>
+                  {resolvedEvents.map((item: any) => (
+                    <article className={Style.event} key={item.id}>
+                      <h4 className={Style.eventTitle}>{item.title}</h4>
+                      <div className={Style.infoContainer}>
+                        <div className={Style.flexContainer({})}>
+                          <p className={Style.info}>
+                            Дата:{' '}
+                            <span>
+                              {parseDateTime(item.startDateTime, true)}
+                            </span>
+                          </p>
+                          <p className={Style.info}>
+                            Время:{' '}
+                            <span>
+                              {parseDateTime(item.startDateTime, false)}
+                            </span>
+                          </p>
+                        </div>
 
-                    <div className={Style.flexContainer({ flex: 'wrap' })}>
-                      <p className={Style.info}>
-                        Квалификация:{' '}
-                        <span>{parseRanks(item.SettingsEvent)}</span>
-                      </p>
-                      <div className={Style.tags}>
-                        {parseTypes(item.SettingsEvent)}
-                        {location.pathname === '/event' ? (
-                          <Link to={`${item.id}`} className={Style.detail}>
-                            Подробнее
-                          </Link>
-                        ) : (
-                          <></>
-                        )}
+                        <div className={Style.flexContainer({ flex: 'wrap' })}>
+                          <p className={Style.info}>
+                            {parseSettings(
+                              item.SettingsEvent,
+                              'Индивидуальное',
+                            )}
+                          </p>
+                          <p className={Style.info}>
+                            {parseSettings(item.SettingsEvent, 'Групповое')}
+                          </p>
+                          {/* <div className={Style.tags}> */}
+                          {location.pathname === '/event' ? (
+                            <Link to={`${item.id}`} className={Style.detail}>
+                              Подробнее
+                            </Link>
+                          ) : (
+                            <></>
+                          )}
+                          {/* </div> */}
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                </article>
-              ))}
-
-              {events.length % 2 === 0 ? (
-                <button
-                  onClick={paginationHandler}
-                  className={Style.detail}
-                  id="load"
-                >
-                  Загрузить ещё
-                </button>
-              ) : (
-                <></>
+                    </article>
+                  ))}
+                  {resolvedEvents.length % 2 === 0 ? (
+                    <button
+                      onClick={paginationHandler}
+                      className={Style.detail}
+                      id="load"
+                    >
+                      Загрузить ещё
+                    </button>
+                  ) : (
+                    <></>
+                  )}
+                  {resolvedEvents.length === 0 ? (
+                    <div className={Style.content}>Соревнований нет</div>
+                  ) : (
+                    <></>
+                  )}
+                </div>
               )}
-            </div>
-          ) : (
-            <div className={Style.content}>Соревнований нет</div>
-          )} */}
+            </Await>
+          </Suspense>
         </div>
       </section>
     </>
   );
 };
-// https://www.youtube.com/watch?v=Nw8kCK0_T3U&list=PLiZoB8JBsdznY1XwBcBhHL9L7S_shPGVE&index=8
-// https://github.com/michey85/youtube-react-router-v6/commit/4d3903576c006ab653163b408c9df6fbdb15cd3b
-async function getRanks() {
-  // const res = await fetch('https://jsonplaceholder.typicode.com/posts');
 
-  // return res.json();
+async function getRanks() {
   return await utilClient.getRanks();
+}
+
+async function getEvents(ranks: number[] = [], cursorInit: number = 0) {
+  return await eventClient.getEvents(ranks, cursorInit);
 }
 
 export const ranksLoader = async () => {
   const result = {
     ranks: getRanks(),
   };
-
-  console.log(result);
 
   return defer(result);
 };

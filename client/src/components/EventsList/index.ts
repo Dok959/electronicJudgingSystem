@@ -1,1 +1,1 @@
-export { EventsList } from './EventsList';
+export { EventsList, ranksLoader } from './EventsList';

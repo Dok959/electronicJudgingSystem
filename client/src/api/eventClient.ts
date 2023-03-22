@@ -13,7 +13,6 @@ export class eventClient {
     ranks: number[] = [],
     cursorInit: number = 0,
   ): Promise<IEventAndSettings[]> => {
-    console.log(ranks, cursorInit);
     try {
       const result: IEventAndSettings[] = await api
         .post('event/', {
