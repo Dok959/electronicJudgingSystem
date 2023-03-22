@@ -1,23 +1,20 @@
 import { Suspense, useCallback, useEffect, useState } from 'react';
-import {
-  Await,
-  Link,
-  defer,
-  useLoaderData,
-  useLocation,
-} from 'react-router-dom';
+import { Await, Link, defer, useLoaderData } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { eventClient, utilClient } from '@/api';
 import { IEventAndSettings, ISettingsEvent, IRanks } from '@/types';
 import { EnumRank } from '@/utils';
 import * as Style from './EventsList.css';
+import { $grant } from '@/context/auth';
+import { useStore } from 'effector-react';
 
 export interface IReturnTypes {
   ranks: IRanks[];
 }
 
 export const EventsList = () => {
+  const isHasRights = useStore($grant);
   const { ranks } = useLoaderData() as IReturnTypes;
 
   const [events, setEvents] = useState<IEventAndSettings[]>([]);
@@ -29,7 +26,7 @@ export const EventsList = () => {
     }
 
     if (cursorInit === 0) {
-      setEvents(await getEvents([]));
+      setEvents(await getEvents([], cursorInit));
     }
     changeCursor();
   }, [cursorInit, events]);
@@ -37,8 +34,6 @@ export const EventsList = () => {
   useEffect(() => {
     loadInitData();
   }, [loadInitData]);
-
-  const location = useLocation();
 
   const parseDateTime = (dateTime: Date, isDate: boolean) => {
     const date = new Date(dateTime);
@@ -84,7 +79,8 @@ export const EventsList = () => {
     onSubmit: async (values) => {
       const { ranks } = values;
       const param = ranks.map((item) => Number(item));
-      setEvents(await getEvents(param));
+      const result = await getEvents(param, 0);
+      setEvents(result);
 
       const button = document.getElementById('load') as HTMLElement;
       if (button !== null) {
@@ -164,16 +160,20 @@ export const EventsList = () => {
                           <p className={Style.info}>
                             {parseSettings(item.SettingsEvent, 'Групповое')}
                           </p>
-                          {/* <div className={Style.tags}> */}
-                          {location.pathname === '/event' ? (
-                            <Link to={`${item.id}`} className={Style.detail}>
-                              Подробнее
-                            </Link>
-                          ) : (
-                            <></>
-                          )}
-                          {/* </div> */}
                         </div>
+                        {isHasRights ? (
+                          <div
+                            className={Style.flexContainer({ flex: 'wrap' })}
+                          >
+                            <div className={Style.tags}>
+                              <Link to={`${item.id}`} className={Style.detail}>
+                                Подробнее
+                              </Link>
+                            </div>
+                          </div>
+                        ) : (
+                          <></>
+                        )}
                       </div>
                     </article>
                   ))}

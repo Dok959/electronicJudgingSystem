@@ -4,11 +4,9 @@ import {
   Navigate,
   Route,
   RouterProvider,
-  Routes,
 } from 'react-router-dom';
 import { useStore } from 'effector-react';
 
-import App from './App';
 import { AuthPage, ErrorPage, EventPage, HomePage, MainPage } from './pages';
 import { $auth, $grant } from './context/auth';
 // import { ranksLoader, reLoginLoader } from './loaders';
@@ -26,12 +24,13 @@ import { Layout } from './components/Layout/Layout';
 import { useTheme } from './hooks';
 // import { MainPage, ranksLoader } from './pages/Main/Main';
 import { ranksLoader } from './components/EventsList';
+import { reLoginLoader } from './pages/Auth/Auth';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<Layout />}>
+    <Route path="/" element={<Layout />} errorElement={<ErrorPage />}>
       <Route index element={<MainPage />} loader={ranksLoader} />
-      <Route path="login" element={<AuthPage />} />
+      <Route path="login" element={<AuthPage />} loader={reLoginLoader} />
       <Route
         path="home"
         element={
@@ -39,6 +38,15 @@ const router = createBrowserRouter(
             <HomePage />
           </RequireAuth>
         }
+      />
+      <Route
+        path="events"
+        element={
+          <RequireAuth>
+            <EventPage />
+          </RequireAuth>
+        }
+        loader={ranksLoader}
       />
       <Route path="posts" element={<Blogpage />} />
       <Route path="posts/:id" element={<Singlepage />} />

@@ -16,7 +16,7 @@ export const Menu = () => {
   const navLinks: INavLinks[] = isLoggingIn
     ? [
         { to: '/home', title: 'Главная' },
-        { to: '/posts', title: 'Соревнования' },
+        { to: '/events', title: 'Соревнования' },
         { to: '/posts', title: 'Рейтинг' },
       ]
     : [

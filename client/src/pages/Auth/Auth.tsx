@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { defer, useLoaderData, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
@@ -7,18 +7,26 @@ import { authClient } from '@/api/authClient';
 import { Spinner } from '@/components';
 import { handleAlertMessage } from '@/utils/auth';
 import { alertStatus } from '@/utils/enum';
+import { setAuth } from '@/context/auth';
 
 import * as Style from './Auth.css';
-import { $auth } from '@/context/auth';
-import { useStore } from 'effector-react';
+
+export interface IReturnTypes {
+  login: boolean;
+}
 
 export const AuthPage = () => {
+  const { login } = useLoaderData() as IReturnTypes;
+
   const navigate = useNavigate();
-  const isLoggingIn = useStore($auth);
-  console.log(isLoggingIn);
-  if (isLoggingIn) {
-    navigate(`/home`);
-  }
+
+  useEffect(() => {
+    if (login) {
+      setAuth(true);
+      navigate('/home');
+    }
+  }, [login, navigate]);
+
   const [spinner, setSpinner] = useState<boolean>(false);
   const [visiblePassword, setVisiblePassword] = useState<boolean>(false);
 
@@ -55,8 +63,8 @@ export const AuthPage = () => {
       const { email, password } = values;
       setSpinner(true);
       const result = await authClient.login(email, password);
+      setSpinner(false);
       if (!result) {
-        setSpinner(false);
         handleAlertMessage({
           alertText: 'Не корректные данные',
           alertStatus: alertStatus.warning,
@@ -141,4 +149,16 @@ export const AuthPage = () => {
       {/* <a href="#">Забыли пароль?</a> */}
     </>
   );
+};
+
+async function login() {
+  return await authClient.reLogin();
+}
+
+export const reLoginLoader = async () => {
+  const result = {
+    login: login(),
+  };
+
+  return defer(result);
 };
