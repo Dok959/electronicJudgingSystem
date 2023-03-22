@@ -4,8 +4,7 @@ import { alertStatus } from './enum';
 
 export const handleAlertMessage = (alert: IAlert) => {
   setAlert(alert);
-  setTimeout(
-    () => setAlert({ alertText: '', alertStatus: alertStatus.default }),
-    5000,
-  );
+  setTimeout(() => {
+    setAlert({ alertText: '', alertStatus: alertStatus.default });
+  }, 5000);
 };

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { redirect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
@@ -9,8 +9,16 @@ import { handleAlertMessage } from '@/utils/auth';
 import { alertStatus } from '@/utils/enum';
 
 import * as Style from './Auth.css';
+import { $auth } from '@/context/auth';
+import { useStore } from 'effector-react';
 
 export const AuthPage = () => {
+  const navigate = useNavigate();
+  const isLoggingIn = useStore($auth);
+  console.log(isLoggingIn);
+  if (isLoggingIn) {
+    navigate(`/home`);
+  }
   const [spinner, setSpinner] = useState<boolean>(false);
   const [visiblePassword, setVisiblePassword] = useState<boolean>(false);
 
@@ -22,6 +30,7 @@ export const AuthPage = () => {
     setVisiblePassword(!visiblePassword);
   };
 
+  // END TODO: включить остаток валидационных правил
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -54,7 +63,8 @@ export const AuthPage = () => {
         });
         return null;
       }
-      redirect(`/primary`);
+
+      navigate(`/home`);
       return handleAlertMessage({
         alertText: 'Вход выполнен',
         alertStatus: alertStatus.success,

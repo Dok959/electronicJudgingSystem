@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { BurgerIcon } from './Burger/Burger';
 import * as Style from './Menu.css';
+import { $auth } from '@/context/auth';
+import { useStore } from 'effector-react';
 
 // children: JSX.Element;
 interface INavLinks {
@@ -10,17 +12,17 @@ interface INavLinks {
 }
 
 export const Menu = () => {
-  const isLoggingIn = true;
+  const isLoggingIn = useStore($auth);
   const navLinks: INavLinks[] = isLoggingIn
     ? [
-        { to: '/', title: 'Главная' },
+        { to: '/home', title: 'Главная' },
         { to: '/posts', title: 'Соревнования' },
-        { to: '/about', title: 'Судейство' },
+        { to: '/posts', title: 'Рейтинг' },
       ]
     : [
         { to: '/', title: 'Главная' },
-        { to: '/posts', title: 'Blog' },
-        { to: '/about', title: 'About' },
+        { to: '/posts', title: 'Рейтинг' },
+        { to: '/login', title: 'Судейство' },
       ];
 
   const [isMenuOpen, toggleMenu] = useState<boolean>(false);

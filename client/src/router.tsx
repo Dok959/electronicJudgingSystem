@@ -9,7 +9,7 @@ import {
 import { useStore } from 'effector-react';
 
 import App from './App';
-import { AuthPage, ErrorPage, EventPage, MainPage } from './pages';
+import { AuthPage, ErrorPage, EventPage, HomePage, MainPage } from './pages';
 import { $auth, $grant } from './context/auth';
 // import { ranksLoader, reLoginLoader } from './loaders';
 import { CreateEventPage } from './pages/Event/create';
@@ -31,7 +31,15 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
       <Route index element={<MainPage />} loader={ranksLoader} />
-      <Route path="about" element={<Aboutpage />} />
+      <Route path="login" element={<AuthPage />} />
+      <Route
+        path="home"
+        element={
+          <RequireAuth>
+            <HomePage />
+          </RequireAuth>
+        }
+      />
       <Route path="posts" element={<Blogpage />} />
       <Route path="posts/:id" element={<Singlepage />} />
       <Route path="posts/:id/edit" element={<Editpost />} />
@@ -65,17 +73,7 @@ const Router = () => {
 
   // const router1 = createBrowserRouter(
   //   createRoutesFromElements(
-  //     // <Router>
-  //     //   <Switch>
-  //     //     <Route path="/account" component={Account} />
-  //     //     <Route path="/contacts" component={Contacts} />
-  //     //     <Route path="/inbox" component={Inbox} />
-  //     //     <Route exact path="/" component={Home} />
-  //     //     <Route component={Error404} />
-  //     //   </Switch>
-  //     // </Router>,
   //     <Route
-  //       // exact
   //       path="/"
   //       element={<App />}
   //       errorElement={<ErrorPage />}
@@ -100,77 +98,7 @@ const Router = () => {
   //   ),
   // );
 
-  // const router = createBrowserRouter(
-  //   [
-  //     {
-  //       path: '/',
-  //       element: <App />,
-  //       errorElement: <ErrorPage />,
-  //       loader: ranksLoader,
-  //       children: [
-  //         {
-  //           path: 'login',
-  //           element: isLoggingIn ? <Navigate to={'/event'} /> : <AuthPage />,
-  //         },
-  //         {
-  //           path: 'event/:eventId',
-  //           element: isHasRights ? <EditEventPage /> : <div>печаль</div>,
-  //           loader: eventLoader,
-  //         },
-  //         {
-  //           path: 'event/create',
-  //           element: isHasRights ? <CreateEventPage /> : <div>gsdf</div>,
-  //           loader: ranksLoader,
-  //         },
-  //         // {
-  //         //   path: 'event',
-  //         //   element: isLoggingIn ? <EventPage /> : <Navigate to={'/'} />,
-  //         //   loader: ranksLoader,
-  //         // },
-  //         // {
-  //         //   path: 'event/:contactId/edit',
-  //         //   element: <EditContact />,
-  //         // },
-  //         {
-  //           path: 'event',
-  //           element: isLoggingIn ? <EventPage /> : <Navigate to={'/'} />,
-  //           loader: ranksLoader,
-  //         },
-  //       ],
-  //     },
-  //   ],
-  //   { basename: '/' },
-  // );
-
-  return (
-    <RouterProvider router={router} />
-    // <>
-    //   <Routes>
-    //     <Route path="/" element={<Layout />}>
-    //       <Route index element={<MainPage />} />
-    //       <Route path="about" element={<Aboutpage />} />
-    //       <Route path="posts" element={<Blogpage />} />
-    //       <Route path="posts/:id" element={<Singlepage />} />
-    //       <Route path="posts/:id/edit" element={<Editpost />} />
-    //       <Route
-    //         path="posts/new"
-    //         element={
-    //           <RequireAuth>
-    //             <Createpost />
-    //           </RequireAuth>
-    //         }
-    //       />
-    //       <Route
-    //         path="posts/new/edit"
-    //         element={<Navigate replace to="/posts/new" />}
-    //       />
-    //       <Route path="*" element={<Notfoundpage />} />
-    //     </Route>
-    //   </Routes>
-    // </>
-  );
+  return <RouterProvider router={router} />;
 };
-
-/* https://www.youtube.com/watch?v=wZ1P3QM9_p8&list=PLiZoB8JBsdznY1XwBcBhHL9L7S_shPGVE&index=4 */
 
 export default Router;

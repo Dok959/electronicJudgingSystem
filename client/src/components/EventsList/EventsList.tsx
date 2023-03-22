@@ -29,7 +29,7 @@ export const EventsList = () => {
     }
 
     if (cursorInit === 0) {
-      setEvents(await eventClient.getEvents([]));
+      setEvents(await getEvents([]));
     }
     changeCursor();
   }, [cursorInit, events]);
@@ -98,7 +98,7 @@ export const EventsList = () => {
       <section className={Style.wrapper}>
         <h3 className={Style.heading}>Соревнования</h3>
         <div className={Style.container}>
-          <Suspense fallback={<h2>Загрузка...</h2>}>
+          <Suspense fallback={<h3 className={Style.heading}>Загрузка...</h3>}>
             <Await resolve={ranks}>
               {(resolvedRanks) => (
                 <aside className={Style.filter}>
@@ -131,7 +131,7 @@ export const EventsList = () => {
             </Await>
           </Suspense>
 
-          <Suspense fallback={<h2>Загрузка...</h2>}>
+          <Suspense fallback={<h3 className={Style.heading}>Загрузка...</h3>}>
             <Await resolve={events}>
               {(resolvedEvents) => (
                 <div className={Style.content}>
@@ -177,7 +177,8 @@ export const EventsList = () => {
                       </div>
                     </article>
                   ))}
-                  {resolvedEvents.length % 2 === 0 ? (
+                  {resolvedEvents.length > 0 &&
+                  resolvedEvents.length % 2 === 0 ? (
                     <button
                       onClick={paginationHandler}
                       className={Style.detail}
