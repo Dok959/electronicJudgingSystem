@@ -1,5 +1,5 @@
-import * as Style from './Home.css';
+// import * as Style from './Home.css';
 
 export const HomePage = () => {
-  return <div>ghbdtn</div>;
+  return <div>Страница находится в разработке</div>;
 };

@@ -5,26 +5,15 @@ import {
   Route,
   RouterProvider,
 } from 'react-router-dom';
-import { useStore } from 'effector-react';
-
 import { AuthPage, ErrorPage, EventPage, HomePage, MainPage } from './pages';
-import { $auth, $grant } from './context/auth';
-// import { ranksLoader, reLoginLoader } from './loaders';
 import {
   CreateEventPage,
   ranksLoaderForCreateEvent,
 } from './pages/Event/create';
 import { EditEventPage, eventLoader } from './pages/Event/edit';
-import { Aboutpage } from './pages/TestPages/Aboutpage';
-import { Blogpage } from './pages/TestPages/Blogpage';
-import { Createpost } from './pages/TestPages/Createpost';
-import { Editpost } from './pages/TestPages/Editpost';
-// import { Mainpage } from './pages/TestPages/Mainpage';
 import { Notfoundpage } from './pages/TestPages/Notfoundpage';
-import { Singlepage } from './pages/TestPages/Singlepage';
 import { Layout } from './components/Layout/Layout';
 import { useTheme } from './hooks';
-// import { MainPage, ranksLoader } from './pages/Main/Main';
 import { ranksLoader } from './components/EventsList';
 import { reLoginLoader } from './pages/Auth';
 import { RequireAuth, RequireRights } from './hoc';

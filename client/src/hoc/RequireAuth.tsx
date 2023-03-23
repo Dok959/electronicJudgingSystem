@@ -1,11 +1,8 @@
 import { useLocation, Navigate } from 'react-router-dom';
 import { useStore } from 'effector-react';
-import { $auth, $grant } from '@/context/auth';
-import { authClient } from '@/api';
+import { $auth } from '@/context/auth';
 
-// JSX.Element
 const RequireAuth = ({ children }: any) => {
-  reLoginLoader();
   const location = useLocation();
   const isLoggingIn = useStore($auth);
 
@@ -17,7 +14,3 @@ const RequireAuth = ({ children }: any) => {
 };
 
 export { RequireAuth };
-
-export async function reLoginLoader() {
-  await authClient.reLogin();
-}

@@ -1,21 +1,13 @@
-import { Suspense, useEffect, useState } from 'react';
-import { EventsList } from '@/components';
-import { eventClient, roleClient, utilClient } from '@/api';
-import { IRanks, IRoles, ITypes } from '@/types';
+import { Suspense, useState } from 'react';
+import { eventClient, utilClient } from '@/api';
+import { IRanks } from '@/types';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Spinner } from '@/components';
 import { handleAlertMessage } from '@/utils/auth';
 import { EnumRank, alertStatus } from '@/utils/enum';
 import * as Style from './CreateEvent.css';
-import {
-  Await,
-  NavLink,
-  defer,
-  redirect,
-  useLoaderData,
-  useNavigate,
-} from 'react-router-dom';
+import { Await, NavLink, defer, useLoaderData } from 'react-router-dom';
 
 export interface IReturnTypes {
   ranks: IRanks[];
