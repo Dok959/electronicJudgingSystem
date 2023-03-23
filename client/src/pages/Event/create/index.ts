@@ -1,1 +1,1 @@
-export { CreateEventPage } from './CreateEvent';
+export { CreateEventPage, ranksLoaderForCreateEvent } from './CreateEvent';

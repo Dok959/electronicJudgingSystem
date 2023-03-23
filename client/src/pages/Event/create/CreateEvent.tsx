@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { EventsList } from '@/components';
 import { eventClient, roleClient, utilClient } from '@/api';
 import { IRanks, IRoles, ITypes } from '@/types';
@@ -8,13 +8,23 @@ import { Spinner } from '@/components';
 import { handleAlertMessage } from '@/utils/auth';
 import { EnumRank, alertStatus } from '@/utils/enum';
 import * as Style from './CreateEvent.css';
-import { NavLink, redirect, useLoaderData } from 'react-router-dom';
+import {
+  Await,
+  NavLink,
+  defer,
+  redirect,
+  useLoaderData,
+  useNavigate,
+} from 'react-router-dom';
+
+export interface IReturnTypes {
+  ranks: IRanks[];
+}
 
 export const CreateEventPage = () => {
-  // TODO редирект по роли
+  const { ranks } = useLoaderData() as IReturnTypes;
 
   const [spinner, setSpinner] = useState<boolean>(false);
-  const ranks: IRanks[] = useLoaderData() as IRanks[];
 
   const formik = useFormik({
     initialValues: {
@@ -161,104 +171,116 @@ export const CreateEventPage = () => {
             )}
           </label>
 
-          <article className={Style.container}>
-            <p className={Style.item}>
-              <input
-                type="checkbox"
-                id="typeIndividual"
-                name="typeIndividual"
-                onChange={(e) => {
-                  formik.handleChange(e);
-                }}
-                onBlur={formik.handleBlur}
-                checked={formik.values.typeIndividual}
-                className={Style.inputCheckbox}
-              />
-              <label
-                htmlFor="typeIndividual"
-                className={Style.labelCheckbox({ type: 'right' })}
-              >
-                Индивидуальная программа
-              </label>
-            </p>
-
-            {formik.values.typeIndividual ? (
-              <section className={Style.filter}>
-                {ranks.map((item) => (
-                  <p key={item.id} className={Style.ranks}>
+          <Suspense fallback={<h3 className={Style.heading}>Загрузка...</h3>}>
+            <Await resolve={ranks}>
+              {(resolvedRanks) => (
+                <article className={Style.container}>
+                  <p className={Style.item}>
                     <input
                       type="checkbox"
-                      id={'individual ' + item.id.toString()}
-                      name="masPartisipantsIndividualRanks"
-                      value={item.id}
+                      id="typeIndividual"
+                      name="typeIndividual"
                       onChange={(e) => {
                         formik.handleChange(e);
                       }}
                       onBlur={formik.handleBlur}
+                      checked={formik.values.typeIndividual}
                       className={Style.inputCheckbox}
                     />
                     <label
-                      htmlFor={'individual ' + item.id.toString()}
-                      className={Style.labelCheckbox()}
+                      htmlFor="typeIndividual"
+                      className={Style.labelCheckbox({ type: 'right' })}
                     >
-                      {EnumRank[item.title as keyof typeof EnumRank]}
+                      Индивидуальная программа
                     </label>
                   </p>
-                ))}
-              </section>
-            ) : (
-              (formik.values.masPartisipantsIndividualRanks = [])
-            )}
-          </article>
 
-          <article className={Style.container}>
-            <p className={Style.item}>
-              <input
-                type="checkbox"
-                id="typeGroup"
-                name="typeGroup"
-                onChange={(e) => {
-                  formik.handleChange(e);
-                }}
-                onBlur={formik.handleBlur}
-                checked={formik.values.typeGroup}
-                className={Style.inputCheckbox}
-              />
-              <label
-                htmlFor="typeGroup"
-                className={Style.labelCheckbox({ type: 'right' })}
-              >
-                Групповая программа
-              </label>
-            </p>
-            {formik.values.typeGroup ? (
-              <section className={Style.filter}>
-                {ranks.map((item) => (
-                  <p key={item.id} className={Style.ranks}>
+                  {formik.values.typeIndividual ? (
+                    <section className={Style.filter}>
+                      {resolvedRanks.map((item: IRanks) => (
+                        <p key={item.id} className={Style.ranks}>
+                          <input
+                            type="checkbox"
+                            id={'individual ' + item.id.toString()}
+                            name="masPartisipantsIndividualRanks"
+                            value={item.id}
+                            onChange={(e) => {
+                              formik.handleChange(e);
+                            }}
+                            onBlur={formik.handleBlur}
+                            className={Style.inputCheckbox}
+                          />
+                          <label
+                            htmlFor={'individual ' + item.id.toString()}
+                            className={Style.labelCheckbox()}
+                          >
+                            {EnumRank[item.title as keyof typeof EnumRank]}
+                          </label>
+                        </p>
+                      ))}
+                    </section>
+                  ) : (
+                    (formik.values.masPartisipantsIndividualRanks = [])
+                  )}
+                </article>
+              )}
+            </Await>
+          </Suspense>
+
+          <Suspense fallback={<h3 className={Style.heading}>Загрузка...</h3>}>
+            <Await resolve={ranks}>
+              {(resolvedRanks) => (
+                <article className={Style.container}>
+                  <p className={Style.item}>
                     <input
                       type="checkbox"
-                      id={'group ' + item.id.toString()}
-                      name="masPartisipantsGroupRanks"
-                      value={item.id}
+                      id="typeGroup"
+                      name="typeGroup"
                       onChange={(e) => {
                         formik.handleChange(e);
                       }}
                       onBlur={formik.handleBlur}
+                      checked={formik.values.typeGroup}
                       className={Style.inputCheckbox}
                     />
                     <label
-                      htmlFor={'group ' + item.id.toString()}
-                      className={Style.labelCheckbox()}
+                      htmlFor="typeGroup"
+                      className={Style.labelCheckbox({ type: 'right' })}
                     >
-                      {EnumRank[item.title as keyof typeof EnumRank]}
+                      Групповая программа
                     </label>
                   </p>
-                ))}
-              </section>
-            ) : (
-              <>{(formik.values.masPartisipantsGroupRanks = [])}</>
-            )}
-          </article>
+                  {formik.values.typeGroup ? (
+                    <section className={Style.filter}>
+                      {resolvedRanks.map((item: IRanks) => (
+                        <p key={item.id} className={Style.ranks}>
+                          <input
+                            type="checkbox"
+                            id={'group ' + item.id.toString()}
+                            name="masPartisipantsGroupRanks"
+                            value={item.id}
+                            onChange={(e) => {
+                              formik.handleChange(e);
+                            }}
+                            onBlur={formik.handleBlur}
+                            className={Style.inputCheckbox}
+                          />
+                          <label
+                            htmlFor={'group ' + item.id.toString()}
+                            className={Style.labelCheckbox()}
+                          >
+                            {EnumRank[item.title as keyof typeof EnumRank]}
+                          </label>
+                        </p>
+                      ))}
+                    </section>
+                  ) : (
+                    (formik.values.masPartisipantsGroupRanks = [])
+                  )}
+                </article>
+              )}
+            </Await>
+          </Suspense>
 
           <button type="submit" className={Style.button({})}>
             {spinner ? <Spinner top={0} left={0} /> : 'Создать'}
@@ -271,4 +293,16 @@ export const CreateEventPage = () => {
       </section>
     </>
   );
+};
+
+async function getRanks() {
+  return await utilClient.getRanks();
+}
+
+export const ranksLoaderForCreateEvent = async () => {
+  const result = {
+    ranks: getRanks(),
+  };
+
+  return defer(result);
 };

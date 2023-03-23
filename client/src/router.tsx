@@ -10,9 +10,11 @@ import { useStore } from 'effector-react';
 import { AuthPage, ErrorPage, EventPage, HomePage, MainPage } from './pages';
 import { $auth, $grant } from './context/auth';
 // import { ranksLoader, reLoginLoader } from './loaders';
-import { CreateEventPage } from './pages/Event/create';
+import {
+  CreateEventPage,
+  ranksLoaderForCreateEvent,
+} from './pages/Event/create';
 import { EditEventPage, eventLoader } from './pages/Event/edit';
-import { RequireAuth } from './hoc/RequireAuth';
 import { Aboutpage } from './pages/TestPages/Aboutpage';
 import { Blogpage } from './pages/TestPages/Blogpage';
 import { Createpost } from './pages/TestPages/Createpost';
@@ -25,6 +27,7 @@ import { useTheme } from './hooks';
 // import { MainPage, ranksLoader } from './pages/Main/Main';
 import { ranksLoader } from './components/EventsList';
 import { reLoginLoader } from './pages/Auth';
+import { RequireAuth, RequireRights } from './hoc';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -61,21 +64,19 @@ const router = createBrowserRouter(
         }
         loader={eventLoader}
       />
-      {/* <Route path="posts" element={<Blogpage />} />
-      <Route path="posts/:id" element={<Singlepage />} />
-      <Route path="posts/:id/edit" element={<Editpost />} />
       <Route
-        path="posts/new"
+        path="events/new/"
         element={
-          <RequireAuth>
-            <Createpost />
-          </RequireAuth>
+          <RequireRights>
+            <CreateEventPage />
+          </RequireRights>
         }
+        loader={ranksLoaderForCreateEvent}
       />
       <Route
-        path="posts/new/edit"
-        element={<Navigate replace to="/posts/new" />}
-      /> */}
+        path="events/new/edit"
+        element={<Navigate replace to="/events/new" />}
+      />
       <Route path="*" element={<Notfoundpage />} />
     </Route>,
   ),
@@ -85,39 +86,6 @@ const Router = () => {
   const { theme } = useTheme();
 
   document.getElementById('root')!.classList.add(theme);
-
-  // reLoginLoader();
-  // const isLoggingIn = useStore($auth);
-  // const isHasRights = useStore($grant);
-
-  // console.log(isLoggingIn, isHasRights);
-
-  // const router1 = createBrowserRouter(
-  //   createRoutesFromElements(
-  //     <Route
-  //       path="/"
-  //       element={<App />}
-  //       errorElement={<ErrorPage />}
-  //       loader={ranksLoader}
-  //     >
-  //       <Route
-  //         path="event/:eventId(\d*)"
-  //         element={isHasRights ? <EditEventPage /> : <div>печаль</div>}
-  //         loader={eventLoader}
-  //       />
-  //       <Route
-  //         path="event/create"
-  //         element={isHasRights ? <CreateEventPage /> : <div>gsdf</div>}
-  //         loader={ranksLoader}
-  //       />
-  //       <Route
-  //         path="/event"
-  //         element={isLoggingIn ? <EventPage /> : <Navigate to={'/'} />}
-  //         loader={ranksLoader}
-  //       />
-  //     </Route>,
-  //   ),
-  // );
 
   return <RouterProvider router={router} />;
 };
