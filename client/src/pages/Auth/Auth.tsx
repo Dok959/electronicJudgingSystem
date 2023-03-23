@@ -23,7 +23,8 @@ export const AuthPage = () => {
   useEffect(() => {
     if (login) {
       setAuth(true);
-      navigate('/home');
+      navigate(-1);
+      // navigate('/home');
     }
   }, [login, navigate]);
 

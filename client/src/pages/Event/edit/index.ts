@@ -1,1 +1,1 @@
-export { dataLoader, EditEventPage } from './EditEvent';
+export { EditEventPage, eventLoader } from './EditEvent';

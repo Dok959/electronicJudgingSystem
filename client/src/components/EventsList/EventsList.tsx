@@ -166,7 +166,10 @@ export const EventsList = () => {
                             className={Style.flexContainer({ flex: 'wrap' })}
                           >
                             <div className={Style.tags}>
-                              <Link to={`${item.id}`} className={Style.detail}>
+                              <Link
+                                to={`${item.id}/edit`}
+                                className={Style.detail}
+                              >
                                 Подробнее
                               </Link>
                             </div>

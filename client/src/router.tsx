@@ -11,7 +11,7 @@ import { AuthPage, ErrorPage, EventPage, HomePage, MainPage } from './pages';
 import { $auth, $grant } from './context/auth';
 // import { ranksLoader, reLoginLoader } from './loaders';
 import { CreateEventPage } from './pages/Event/create';
-import { dataLoader as eventLoader, EditEventPage } from './pages/Event/edit';
+import { EditEventPage, eventLoader } from './pages/Event/edit';
 import { RequireAuth } from './hoc/RequireAuth';
 import { Aboutpage } from './pages/TestPages/Aboutpage';
 import { Blogpage } from './pages/TestPages/Blogpage';
@@ -24,7 +24,7 @@ import { Layout } from './components/Layout/Layout';
 import { useTheme } from './hooks';
 // import { MainPage, ranksLoader } from './pages/Main/Main';
 import { ranksLoader } from './components/EventsList';
-import { reLoginLoader } from './pages/Auth/Auth';
+import { reLoginLoader } from './pages/Auth';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -48,7 +48,20 @@ const router = createBrowserRouter(
         }
         loader={ranksLoader}
       />
-      <Route path="posts" element={<Blogpage />} />
+      <Route
+        path="events/:id"
+        element={<Navigate replace to={'/events/:id/edit'} />}
+      />
+      <Route
+        path="events/:id/edit"
+        element={
+          <RequireAuth>
+            <EditEventPage />
+          </RequireAuth>
+        }
+        loader={eventLoader}
+      />
+      {/* <Route path="posts" element={<Blogpage />} />
       <Route path="posts/:id" element={<Singlepage />} />
       <Route path="posts/:id/edit" element={<Editpost />} />
       <Route
@@ -62,7 +75,7 @@ const router = createBrowserRouter(
       <Route
         path="posts/new/edit"
         element={<Navigate replace to="/posts/new" />}
-      />
+      /> */}
       <Route path="*" element={<Notfoundpage />} />
     </Route>,
   ),

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+import { useStore } from 'effector-react';
+import { $auth } from '@/context/auth';
 import { BurgerIcon } from './Burger/Burger';
 import * as Style from './Menu.css';
-import { $auth } from '@/context/auth';
-import { useStore } from 'effector-react';
 
 // children: JSX.Element;
 interface INavLinks {
