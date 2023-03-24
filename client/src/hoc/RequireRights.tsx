@@ -1,17 +1,31 @@
-import { useLocation, Navigate } from 'react-router-dom';
-import { useStore } from 'effector-react';
-import { $auth, $grant } from '@/context/auth';
+import { $grant, fetchAuthFx } from '@/context/auth';
+import { createComponent } from 'effector-react';
+import { useEffect } from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
 
-const RequireRights = ({ children }: any) => {
+const Grant = createComponent($grant, (props: any, state) => {
+  const { children } = props;
+
+  console.log(props);
+  useEffect(() => {
+    fetchAuthFx();
+  }, []);
+
   const location = useLocation();
-  const isLoggingIn = useStore($auth);
-  const isHasRights = useStore($grant);
 
-  if (!isHasRights && !isLoggingIn) {
-    return <Navigate to="/home" state={{ from: location }} />;
-  }
+  return (
+    <div>
+      <>
+        {$grant ? (
+          children
+        ) : (
+          <Navigate to="/login" state={{ from: location }} />
+        )}
+      </>
+    </div>
+  );
+});
 
-  return children;
+export const RequireRights = ({ children }: any) => {
+  return <Grant>{children}</Grant>;
 };
-
-export { RequireRights };

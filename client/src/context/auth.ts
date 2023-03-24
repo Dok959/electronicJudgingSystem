@@ -3,25 +3,22 @@ import { createDomain } from 'effector';
 
 const auth = createDomain();
 
+export const fetchAuthFx = auth.createEffect(async () => {
+  return await authClient.reLogin();
+});
+
 export const setAuth = auth.createEvent<boolean>();
 export const resetAuth = auth.createEvent();
 
-export const fetchAuthFromStorageFx = auth.createEffect({
-  async handler() {
-    return await authClient.reLogin();
-  },
-});
-
-fetchAuthFromStorageFx.doneData.watch((result) => {
+fetchAuthFx.doneData.watch((result) => {
   setAuth(result);
 });
 
 export const $auth = auth
   .createStore<boolean>(false)
-  .on(setAuth, (_, value) => value)
+  .on(fetchAuthFx.doneData, (_state, value) => value)
+  .on(setAuth, (_state, value) => value)
   .reset(resetAuth);
-
-fetchAuthFromStorageFx();
 
 export const setGrant = auth.createEvent<boolean>();
 export const resetGrant = auth.createEvent();
@@ -30,3 +27,5 @@ export const $grant = auth
   .createStore<boolean>(false)
   .on(setGrant, (_, value) => value)
   .reset(resetGrant);
+
+fetchAuthFx();

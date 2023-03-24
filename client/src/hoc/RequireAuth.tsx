@@ -1,16 +1,27 @@
-import { useLocation, Navigate } from 'react-router-dom';
-import { useStore } from 'effector-react';
-import { $auth } from '@/context/auth';
+import { $auth, fetchAuthFx } from '@/context/auth';
+import { createComponent } from 'effector-react';
+import { useEffect } from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
 
-const RequireAuth = ({ children }: any) => {
+const Auth = createComponent($auth, (props: any, state) => {
+  const { children } = props;
+
+  console.log(props);
+  useEffect(() => {
+    fetchAuthFx();
+  }, []);
+
   const location = useLocation();
-  const isLoggingIn = useStore($auth);
 
-  if (!isLoggingIn) {
-    return <Navigate to="/login" state={{ from: location }} />;
-  }
+  return (
+    <div>
+      <>
+        {$auth ? children : <Navigate to="/login" state={{ from: location }} />}
+      </>
+    </div>
+  );
+});
 
-  return children;
+export const RequireAuth = ({ children }: any) => {
+  return <Auth>{children}</Auth>;
 };
-
-export { RequireAuth };

@@ -16,11 +16,14 @@ import { Layout } from './components/Layout/Layout';
 import { useTheme } from './hooks';
 import { ranksLoader } from './components/EventsList';
 import { reLoginLoader } from './pages/Auth';
-import { RequireAuth, RequireRights } from './hoc';
+import {
+  RequireAuthOld,
+  RequireRightsOld,
+  RequireAuth,
+  RequireRights,
+} from './hoc';
 import EffectorList from './pages/TestPages/EffectorList';
 // import RequireAuthNew from './hoc/RequireAuthNew';
-import { RequireAuthNew } from './hoc/Test';
-import RequireAuthOld from './hoc/RequireAuthNew';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -74,20 +77,12 @@ const router = createBrowserRouter(
       <Route
         path="testNew"
         element={
-          <RequireAuthNew>
+          <RequireAuth>
             <CreateEventPage />
             {/* <EffectorList /> */}
-          </RequireAuthNew>
+          </RequireAuth>
         }
         loader={ranksLoaderForCreateEvent}
-      />
-      <Route
-        path="testHoc"
-        element={
-          <RequireAuthOld>
-            <EffectorList />
-          </RequireAuthOld>
-        }
       />
       <Route path="*" element={<Notfoundpage />} />
     </Route>,

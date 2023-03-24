@@ -7,7 +7,7 @@ import {
   fetchBeersFx,
   selectBeer,
 } from '../../context/test';
-import { $auth, fetchAuthFx } from '@/context/authNew';
+import { $auth, fetchAuthFx } from '@/context/auth';
 
 const Loading = () => {
   const isLoading = useStore(fetchBeersFx.pending);
