@@ -17,6 +17,10 @@ import { useTheme } from './hooks';
 import { ranksLoader } from './components/EventsList';
 import { reLoginLoader } from './pages/Auth';
 import { RequireAuth, RequireRights } from './hoc';
+import EffectorList from './pages/TestPages/EffectorList';
+// import RequireAuthNew from './hoc/RequireAuthNew';
+import { RequireAuthNew } from './hoc/Test';
+import RequireAuthOld from './hoc/RequireAuthNew';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -66,10 +70,31 @@ const router = createBrowserRouter(
         path="events/new/edit"
         element={<Navigate replace to="/events/new" />}
       />
+      <Route path="test" element={<EffectorList />} />
+      <Route
+        path="testNew"
+        element={
+          <RequireAuthNew>
+            <CreateEventPage />
+            {/* <EffectorList /> */}
+          </RequireAuthNew>
+        }
+        loader={ranksLoaderForCreateEvent}
+      />
+      <Route
+        path="testHoc"
+        element={
+          <RequireAuthOld>
+            <EffectorList />
+          </RequireAuthOld>
+        }
+      />
       <Route path="*" element={<Notfoundpage />} />
     </Route>,
   ),
 );
+// https://richey.codes/posts/using-effector-for-api-calls-with-react/
+// https://habr.com/ru/company/domclick/blog/532016/
 
 const Router = () => {
   const { theme } = useTheme();
