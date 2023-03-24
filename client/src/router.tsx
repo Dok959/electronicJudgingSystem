@@ -5,25 +5,24 @@ import {
   Route,
   RouterProvider,
 } from 'react-router-dom';
-import { AuthPage, ErrorPage, EventPage, HomePage, MainPage } from './pages';
+import {
+  AuthPage,
+  ErrorPage,
+  EventPage,
+  HomePage,
+  MainPage,
+  NotFoundPage,
+} from './pages';
 import {
   CreateEventPage,
   ranksLoaderForCreateEvent,
 } from './pages/Event/create';
 import { EditEventPage, eventLoader } from './pages/Event/edit';
-import { Notfoundpage } from './pages/TestPages/Notfoundpage';
 import { Layout } from './components/Layout/Layout';
 import { useTheme } from './hooks';
 import { ranksLoader } from './components/EventsList';
 import { reLoginLoader } from './pages/Auth';
-import {
-  RequireAuthOld,
-  RequireRightsOld,
-  RequireAuth,
-  RequireRights,
-} from './hoc';
-import EffectorList from './pages/TestPages/EffectorList';
-// import RequireAuthNew from './hoc/RequireAuthNew';
+import { RequireAuth, RequireRights } from './hoc';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -73,23 +72,10 @@ const router = createBrowserRouter(
         path="events/new/edit"
         element={<Navigate replace to="/events/new" />}
       />
-      <Route path="test" element={<EffectorList />} />
-      <Route
-        path="testNew"
-        element={
-          <RequireAuth>
-            <CreateEventPage />
-            {/* <EffectorList /> */}
-          </RequireAuth>
-        }
-        loader={ranksLoaderForCreateEvent}
-      />
-      <Route path="*" element={<Notfoundpage />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Route>,
   ),
 );
-// https://richey.codes/posts/using-effector-for-api-calls-with-react/
-// https://habr.com/ru/company/domclick/blog/532016/
 
 const Router = () => {
   const { theme } = useTheme();
