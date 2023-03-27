@@ -24,6 +24,7 @@ export interface IReturnTypes {
   login: boolean;
 }
 
+// TODO
 const AuthContent = () => {
   const login = useAsyncValue() as IReturnTypes;
   const isLoggingIn: boolean = useStore($auth);

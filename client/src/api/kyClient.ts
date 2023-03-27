@@ -1,8 +1,16 @@
 import ky from 'ky';
+import { IHeadersAuthDto } from './headers.dto';
 
 // On https://my-site.com
 
-const auth = JSON.parse(localStorage.getItem(`auth`) || '');
+// const auth = JSON.parse(localStorage.getItem(`auth`) || '');
+let auth: IHeadersAuthDto = {};
+try {
+  auth = JSON.parse(localStorage.getItem(`auth`) || '');
+} catch (error) {
+  auth.access_token = '';
+  auth.refresh_token = '';
+}
 
 const api = ky.create({
   prefixUrl: process.env.REACT_APP_SERVER_URL,

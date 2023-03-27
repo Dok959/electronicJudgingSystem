@@ -23,6 +23,7 @@ import { useTheme } from './hooks';
 import { ranksLoader } from './components/EventsList';
 import { reLoginLoader } from './pages/Auth';
 import { RequireAuth, RequireRights } from './hoc';
+import { CreateUserPage } from './pages/User/create';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -71,6 +72,15 @@ const router = createBrowserRouter(
       <Route
         path="events/new/edit"
         element={<Navigate replace to="/events/new" />}
+      />
+      <Route
+        path="users/new/"
+        element={
+          <RequireRights>
+            <CreateUserPage />
+          </RequireRights>
+        }
+        loader={ranksLoaderForCreateEvent}
       />
       <Route path="*" element={<NotFoundPage />} />
     </Route>,
