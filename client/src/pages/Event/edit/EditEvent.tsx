@@ -8,6 +8,7 @@ import { handleAlertMessage } from '@/utils/auth';
 import { EnumRank, alertStatus } from '@/utils/enum';
 import * as Style from './EditEvent.css';
 import {
+
   Await,
   NavLink,
   defer,
@@ -82,6 +83,132 @@ const Event = () => {
       <h5>dasdas</h5>
       {/* <section className={Style.wrapper}>
         <>{console.log(formik.values)}</>
+
+  NavLink,
+  redirect,
+  useLoaderData,
+  useNavigate,
+} from 'react-router-dom';
+import { ILoadEventAndSettings, IRenderEventAndSettings } from './dto';
+
+export async function dataLoader({ params }: any) {
+  const event = await eventClient.getEvent(Number(params.eventId));
+  if (event === null) {
+    redirect('/event');
+  }
+
+  return event;
+}
+
+export const EditEventPage = () => {
+  const initValue: IRenderEventAndSettings = {
+    id: 1,
+    title: '',
+    startDateTime: new Date(),
+    duration: 1,
+    typeIndividual: false,
+    masPartisipantsIndividualRanks: [],
+    typeGroup: false,
+    masPartisipantsGroupRanks: [],
+  };
+  const parser = (event: ILoadEventAndSettings) => {
+    initValue.id = event.id;
+    initValue.title = event.title;
+    initValue.startDateTime = new Date(event.startDateTime);
+    initValue.duration = event.duration;
+    event.SettingsEvent.map((item) => {
+      if (item.type.id === 1) {
+        if (initValue.typeIndividual === false) {
+          initValue.typeIndividual = true;
+        }
+        initValue.masPartisipantsIndividualRanks.push(String(item.rank.id));
+      }
+      if (item.type.id === 2) {
+        if (initValue.typeGroup === false) {
+          initValue.typeGroup = true;
+        }
+        initValue.masPartisipantsGroupRanks.push(String(item.rank.id));
+      }
+      return null;
+    });
+    return;
+  };
+  parser(useLoaderData() as ILoadEventAndSettings);
+
+  const [spinner, setSpinner] = useState<boolean>(false);
+
+  const [ranks, setRanks] = useState<IRanks[]>([]);
+
+  const loadRanks = useCallback(async () => {
+    setRanks(await utilClient.getRanks());
+  }, []);
+
+  useEffect(() => {
+    loadRanks();
+  }, [loadRanks]);
+
+  const navigate = useNavigate();
+
+  const formik = useFormik({
+    initialValues: { ...initValue },
+    validationSchema: Yup.object({
+      title: Yup.string()
+        .trim()
+        .required('Обязательно')
+        .min(3, 'Укажите корректное название'),
+      startDateTime: Yup.date()
+        .required('Обязательно')
+        .default(() => new Date())
+        .min(
+          new Date(new Date().toISOString().slice(0, -10) + '00'),
+          'Дата или время не могут быть прошедшими',
+        ),
+      duration: Yup.number().default(1).min(1),
+    }),
+    onSubmit: async (values) => {
+      const {
+        id,
+        title,
+        startDateTime,
+        duration,
+        masPartisipantsIndividualRanks,
+        masPartisipantsGroupRanks,
+      } = values;
+      setSpinner(true);
+      const result = await eventClient.update({
+        id,
+        title,
+        startDateTime: new Date(startDateTime),
+        duration: Number(duration),
+        typeIndividual: 1,
+        masPartisipantsIndividualRanks: masPartisipantsIndividualRanks.map(
+          (item) => Number(item),
+        ),
+        typeGroup: 2,
+        masPartisipantsGroupRanks: masPartisipantsGroupRanks.map((item) =>
+          Number(item),
+        ),
+      });
+      setSpinner(false);
+      if (!result) {
+        handleAlertMessage({
+          alertText: 'Не корректные данные',
+          alertStatus: alertStatus.warning,
+        });
+        return null;
+      }
+      navigate('/event');
+      return handleAlertMessage({
+        alertText: 'Соревнование обновлено',
+        alertStatus: alertStatus.success,
+      });
+    },
+  });
+
+  return (
+    <>
+      <section className={Style.wrapper}>
+
         <h3 className={Style.heading}>Обновить мероприятие</h3>
         <form onSubmit={formik.handleSubmit} className={Style.form}>
           <label className={Style.label}>
@@ -116,11 +243,11 @@ const Event = () => {
               name="startDateTime"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              // value={
-              //   new Date(formik.values.startDateTime)
-              //     .toISOString()
-              //     .slice(0, -10) + '00'
-              // }
+              defaultValue={
+                new Date(formik.values.startDateTime)
+                  .toISOString()
+                  .slice(0, -10) + '00'
+              }
               className={Style.input({
                 border:
                   formik.touched.startDateTime && formik.errors.startDateTime
@@ -132,6 +259,7 @@ const Event = () => {
               })}
             />
             {formik.touched.startDateTime && formik.errors.startDateTime ? (
+
               <span className={Style.infoError}></span>
             ) : (
               <span className={Style.infoError} />
@@ -241,17 +369,20 @@ const Event = () => {
             </p>
             {formik.values.typeGroup ? (
               <section className={Style.filter}>
+
                 {ranks.map((item: any) => (
                   <p key={item.id} className={Style.ranks}>
                     <input
                       type="checkbox"
                       id={'group ' + item.id.toString()}
                       name="masPartisipantsGroupRanks"
+
                       value={item.id}
                       onChange={(e) => {
                         formik.handleChange(e);
                       }}
                       onBlur={formik.handleBlur}
+                      
                       checked={Boolean(
                         formik.values.masPartisipantsGroupRanks?.filter(
                           (el) => el === item.id,
@@ -281,6 +412,7 @@ const Event = () => {
         <NavLink to="/event" className={Style.button({ type: 'secondary' })}>
           Отмена
         </NavLink>
+
       </section> */}
     </>
   );

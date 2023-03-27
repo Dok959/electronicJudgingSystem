@@ -1,5 +1,7 @@
+
 import { Suspense, useCallback, useEffect, useState } from 'react';
-import { Await, Link, defer, useLoaderData } from 'react-router-dom';
+import { Await, Link, defer, useLoaderData, useLocation } from 'react-router-dom';
+
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { eventClient, utilClient } from '@/api';
@@ -174,10 +176,14 @@ export const EventsList = () => {
                               </Link>
                             </div>
                           </div>
-                        ) : (
-                          <></>
-                        )}
-                      </div>
+                    </div>
+
+                    <div className={Style.flexContainer({ flex: 'wrap' })}>
+                      <p className={Style.info}>
+                        Квалификация:{' '}
+                        <span>{parseRanks(item.SettingsEvent)}</span>
+                      </p>
+                     
                     </article>
                   ))}
                   {resolvedEvents.length > 0 &&

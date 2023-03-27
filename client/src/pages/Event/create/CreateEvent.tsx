@@ -7,7 +7,8 @@ import { Spinner } from '@/components';
 import { handleAlertMessage } from '@/utils/auth';
 import { EnumRank, alertStatus } from '@/utils/enum';
 import * as Style from './CreateEvent.css';
-import { Await, NavLink, defer, useLoaderData } from 'react-router-dom';
+
+import { Await, NavLink, defer, useLoaderData, useNavigate } from 'react-router-dom';
 
 export interface IReturnTypes {
   ranks: IRanks[];
@@ -64,15 +65,15 @@ export const CreateEventPage = () => {
           Number(item),
         ),
       });
+      setSpinner(false);
       if (!result) {
-        setSpinner(false);
         handleAlertMessage({
           alertText: 'Не корректные данные',
           alertStatus: alertStatus.warning,
         });
         return null;
       }
-      // redirect(`/event`);
+      navigate('/event');
       return handleAlertMessage({
         alertText: 'Соревнование создано',
         alertStatus: alertStatus.success,

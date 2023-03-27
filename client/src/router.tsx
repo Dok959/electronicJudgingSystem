@@ -4,6 +4,7 @@ import {
   Navigate,
   Route,
   RouterProvider,
+  useNavigate,
 } from 'react-router-dom';
 import {
   AuthPage,
