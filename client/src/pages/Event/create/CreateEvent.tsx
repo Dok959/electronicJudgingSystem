@@ -1,13 +1,19 @@
 import { Suspense, useState } from 'react';
-import { eventClient, utilClient } from '@/api';
-import { IRanks } from '@/types';
+import {
+  Await,
+  NavLink,
+  defer,
+  useLoaderData,
+  useNavigate,
+} from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { eventClient, utilClient } from '@/api';
+import { IRanks } from '@/types';
 import { Spinner } from '@/components';
 import { handleAlertMessage } from '@/utils/auth';
 import { EnumRank, alertStatus } from '@/utils/enum';
 import * as Style from './CreateEvent.css';
-import { Await, NavLink, defer, useLoaderData } from 'react-router-dom';
 
 export interface IReturnTypes {
   ranks: IRanks[];
@@ -15,6 +21,7 @@ export interface IReturnTypes {
 
 export const CreateEventPage = () => {
   const { ranks } = useLoaderData() as IReturnTypes;
+  const navigate = useNavigate();
 
   const [spinner, setSpinner] = useState<boolean>(false);
 
@@ -64,15 +71,15 @@ export const CreateEventPage = () => {
           Number(item),
         ),
       });
+      setSpinner(false);
       if (!result) {
-        setSpinner(false);
         handleAlertMessage({
           alertText: 'Не корректные данные',
           alertStatus: alertStatus.warning,
         });
         return null;
       }
-      // redirect(`/event`);
+      navigate('/event');
       return handleAlertMessage({
         alertText: 'Соревнование создано',
         alertStatus: alertStatus.success,
@@ -113,7 +120,7 @@ export const CreateEventPage = () => {
             Дата и время
             <input
               type="datetime-local"
-              min={new Date().toISOString().slice(0, -10) + '00'}
+              min={new Date().toISOString().slice(0, -8)}
               name="startDateTime"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}

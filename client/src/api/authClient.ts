@@ -1,8 +1,7 @@
+import { SyntheticEvent } from 'react';
 import { HTTPError } from 'ky';
 import api from './kyClient';
 import { setAuth, setGrant } from '../context/auth';
-import { roleClient } from '.';
-import { SyntheticEvent } from 'react';
 
 export class authClient {
   static setError = async (error: SyntheticEvent | any) => {
@@ -34,7 +33,7 @@ export class authClient {
 
       localStorage.setItem(`auth`, JSON.stringify(result));
 
-      const role = await roleClient.getUserGrant();
+      const role = await this.getUserGrant();
       this.setAutorization(true, role);
 
       return true;
@@ -55,7 +54,7 @@ export class authClient {
       console.log('---');
 
       localStorage.setItem(`auth`, JSON.stringify(result));
-      const role = await roleClient.getUserGrant();
+      const role = await this.getUserGrant();
       this.setAutorization(true, role);
 
       return true;
@@ -63,5 +62,20 @@ export class authClient {
       this.setError(error);
       return false;
     }
+  };
+
+  static getUserGrant = async (): Promise<boolean> => {
+    try {
+      const result: boolean = await api.get('role/user', {}).json();
+      return result;
+    } catch (error) {
+      if (error instanceof HTTPError) {
+        const errorJson = await error.response.json();
+        console.log(errorJson);
+      } else if (error instanceof Error) {
+        console.log(error.message);
+      }
+    }
+    return false;
   };
 }

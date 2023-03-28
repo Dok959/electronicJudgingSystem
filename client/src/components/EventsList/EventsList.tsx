@@ -3,7 +3,8 @@ import { Await, Link, defer, useLoaderData } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { eventClient, utilClient } from '@/api';
-import { IEventAndSettings, ISettingsEvent, IRanks } from '@/types';
+import { IRanks } from '@/types';
+import { ISelectEvent, ISelectSettingsEvent } from '@/types/event';
 import { EnumRank } from '@/utils';
 import * as Style from './EventsList.css';
 import { $grant } from '@/context/auth';
@@ -17,7 +18,7 @@ export const EventsList = () => {
   const isHasRights = useStore($grant);
   const { ranks } = useLoaderData() as IReturnTypes;
 
-  const [events, setEvents] = useState<IEventAndSettings[]>([]);
+  const [events, setEvents] = useState<ISelectEvent[]>([]);
   const [cursorInit, setCursorInit] = useState<number>(0);
 
   const loadInitData = useCallback(async () => {
@@ -44,7 +45,7 @@ export const EventsList = () => {
     }
   };
 
-  const parseSettings = (mas: ISettingsEvent[], type: string) => {
+  const parseSettings = (mas: ISelectSettingsEvent[], type: string) => {
     let result = `${type}: `;
     const typeMas = mas.filter((item) => item.type.title === type);
     if (typeMas.length === 0) {

@@ -1,12 +1,4 @@
-export interface IRanks {
-  id: number;
-  title: string;
-}
-
-export interface ITypes {
-  id: number;
-  title: string;
-}
+import { IRanks, ITypes } from '@/types/api';
 
 export interface ILoadSettingsEvent {
   type: ITypes;
@@ -24,7 +16,7 @@ export interface ILoadEventAndSettings {
 export interface IRenderEventAndSettings {
   id: number;
   title: string;
-  startDateTime: Date;
+  startDateTime: string;
   duration: number;
   typeIndividual: boolean;
   masPartisipantsIndividualRanks: number[];

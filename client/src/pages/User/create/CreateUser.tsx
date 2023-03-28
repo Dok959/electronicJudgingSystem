@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { eventClient, roleClient } from '@/api';
+import { eventClient } from '@/api';
 import { IRanks, IRoles } from '@/types';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';

@@ -1,24 +1,24 @@
 import { HTTPError } from 'ky';
+import { redirect } from 'react-router-dom';
 import api from './kyClient';
 import {
   ICreateSettingsEvent,
   ICustomPropertyCreateEvent,
-  IEventAndSettings,
-} from '@/types';
+  ISelectEvent,
+} from '@/types/event';
 import { ILoadEventAndSettings } from '@/pages/Event/edit/dto';
-import { redirect } from 'react-router-dom';
 import {
   ICustomPropertyUpdateEvent,
   IUpdateSettingsEvent,
-} from '@/types/updateEvents';
+} from '@/types/event/updateEvent';
 
 export class eventClient {
   static getEvents = async (
     ranks: number[] = [],
     cursorInit: number = 0,
-  ): Promise<IEventAndSettings[]> => {
+  ): Promise<ISelectEvent[]> => {
     try {
-      const result: IEventAndSettings[] = await api
+      const result: ISelectEvent[] = await api
         .post('event/', {
           json: { masRanksId: ranks, cursorInit: cursorInit },
         })
@@ -37,7 +37,7 @@ export class eventClient {
 
   static create = async (
     event: ICustomPropertyCreateEvent,
-  ): Promise<IEventAndSettings[]> => {
+  ): Promise<ISelectEvent[]> => {
     try {
       const masSetting: ICreateSettingsEvent[] = [];
       event.masPartisipantsIndividualRanks.map((item: number) => {
@@ -54,7 +54,7 @@ export class eventClient {
         });
       });
 
-      const result: IEventAndSettings[] = await api
+      const result: ISelectEvent[] = await api
         .post('event/create', {
           json: {
             title: event.title,
@@ -78,7 +78,7 @@ export class eventClient {
 
   static update = async (
     event: ICustomPropertyUpdateEvent,
-  ): Promise<IEventAndSettings[]> => {
+  ): Promise<ISelectEvent[]> => {
     try {
       const masSetting: IUpdateSettingsEvent[] = [];
       event.masPartisipantsIndividualRanks.map((item: number) => {
@@ -95,7 +95,7 @@ export class eventClient {
         });
       });
 
-      const result: IEventAndSettings[] = await api
+      const result: ISelectEvent[] = await api
         .post('event/update', {
           json: {
             id: event.id,

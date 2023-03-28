@@ -1,6 +1,6 @@
 import { HTTPError } from 'ky';
 import api from './kyClient';
-import { IRanks, ITypes } from '@/types';
+import { IRanks, IRoles, ITypes } from '@/types';
 
 export class utilClient {
   static getRanks = async (): Promise<IRanks[]> => {
@@ -21,6 +21,21 @@ export class utilClient {
   static getTypes = async (): Promise<ITypes[]> => {
     try {
       const result: ITypes[] = await api.get(`types/`, {}).json();
+      return result;
+    } catch (error) {
+      if (error instanceof HTTPError) {
+        const errorJson = await error.response.json();
+        console.log(errorJson);
+      } else if (error instanceof Error) {
+        console.log(error.message);
+      }
+    }
+    return [];
+  };
+
+  static getRoles = async (): Promise<IRoles[]> => {
+    try {
+      const result: IRoles[] = await api.get('role/', {}).json();
       return result;
     } catch (error) {
       if (error instanceof HTTPError) {
