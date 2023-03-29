@@ -4,16 +4,18 @@ import { ICustomPropertyCreateUser } from '@/types/user/';
 // import { ICustomPropertyCreateUser } from '@/types';
 
 export class userClient {
-  static createUser = async (user: ICustomPropertyCreateUser) => {
-    console.log(user);
+  static createUser = async (data: ICustomPropertyCreateUser) => {
+    console.log(data);
     try {
       const result: boolean = await api
-        .post('user/create', {
-          json: { user },
+        .post('auth/registration', {
+          json: { data },
         })
         .json();
+      console.log(result);
       return result;
     } catch (error) {
+      console.log(error);
       if (error instanceof HTTPError) {
         const errorJson = await error.response.json();
         console.log(errorJson);

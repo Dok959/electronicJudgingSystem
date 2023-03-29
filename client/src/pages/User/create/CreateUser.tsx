@@ -31,6 +31,7 @@ export interface IReturnTypes {
   roles: IRoles[];
 }
 
+// END TODO: включить остаток валидационных правил
 export const CreateUserPage = () => {
   const { roles } = useLoaderData() as IReturnTypes;
 
@@ -44,7 +45,7 @@ export const CreateUserPage = () => {
       patronymic: '',
       email: '',
       password: '',
-      roleId: 0,
+      roleId: 1,
     },
     validationSchema: Yup.object({
       sirname: Yup.string()
@@ -73,19 +74,17 @@ export const CreateUserPage = () => {
     onSubmit: async (values: ICustomPropertyCreateUser) => {
       values.roleId = Number(values.roleId);
       setSpinner(true);
-      const result = await userClient.createUser(values);
-      setSpinner(false);
-      if (!result) {
-        handleAlertMessage({
-          alertText: 'Не корректные данные',
-          alertStatus: alertStatus.warning,
+      if (await userClient.createUser(values)) {
+        navigate('/users');
+        return handleAlertMessage({
+          alertText: 'Пользователь добавлен',
+          alertStatus: alertStatus.success,
         });
-        return null;
       }
-      navigate('/users');
+      setSpinner(false);
       return handleAlertMessage({
-        alertText: 'Пользователь добавлен',
-        alertStatus: alertStatus.success,
+        alertText: 'Не корректные данные',
+        alertStatus: alertStatus.warning,
       });
     },
   });
@@ -218,7 +217,6 @@ export const CreateUserPage = () => {
             )}
           </label>
 
-          {/* TODO */}
           <Suspense fallback={<h3 className={Style.heading}>Загрузка...</h3>}>
             <Await resolve={roles}>
               {(resolvedRoles) => (
