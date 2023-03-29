@@ -1,29 +1,45 @@
-import { useState } from 'react';
-import { eventClient } from '@/api';
-import { IRanks, IRoles } from '@/types';
+import { Suspense, useState, Fragment } from 'react';
+import {
+  Await,
+  NavLink,
+  defer,
+  useLoaderData,
+  useNavigate,
+} from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { utilClient, userClient } from '@/api';
+import { IRoles } from '@/types';
 import { Spinner } from '@/components';
 import { handleAlertMessage } from '@/utils/auth';
-import { EnumRank, alertStatus } from '@/utils/enum';
+import { alertStatus } from '@/utils/enum';
 import * as Style from './CreateUser.css';
-import { NavLink, useLoaderData, useNavigate } from 'react-router-dom';
-import React from 'react';
+import { ICustomPropertyCreateUser } from '@/types/user';
 
-export async function rolesLoader() {
-  // return await roleClient.getRoles();
-  return;
+export async function rolesLoaderForCreateUser() {
+  const result = {
+    roles: getRoles(),
+  };
+
+  return defer(result);
+}
+async function getRoles() {
+  return await utilClient.getRoles();
+}
+
+export interface IReturnTypes {
+  roles: IRoles[];
 }
 
 export const CreateUserPage = () => {
-  const roles: IRoles[] = useLoaderData() as IRoles[];
+  const { roles } = useLoaderData() as IReturnTypes;
 
   const [spinner, setSpinner] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
-      surname: '',
+      sirname: '',
       name: '',
       patronymic: '',
       email: '',
@@ -31,7 +47,7 @@ export const CreateUserPage = () => {
       roleId: 0,
     },
     validationSchema: Yup.object({
-      surname: Yup.string()
+      sirname: Yup.string()
         .trim()
         .required('Обязательно')
         .min(3, 'Укажите корректную фамилию'),
@@ -54,36 +70,23 @@ export const CreateUserPage = () => {
         .min(3, 'Минимум 3 знака')
         .max(15, 'Максимум 15 знаков'),
     }),
-    onSubmit: async (values) => {
-      console.log(values);
-      // const { title, startDateTime, duration } = values;
+    onSubmit: async (values: ICustomPropertyCreateUser) => {
+      values.roleId = Number(values.roleId);
       setSpinner(true);
-      // const result = await eventClient.create({
-      //   title,
-      //   startDateTime: new Date(startDateTime),
-      //   duration: Number(duration),
-      //   typeIndividual: 1,
-      //   masPartisipantsIndividualRanks: masPartisipantsIndividualRanks.map(
-      //     (item) => Number(item),
-      //   ),
-      //   typeGroup: 2,
-      //   masPartisipantsGroupRanks: masPartisipantsGroupRanks.map((item) =>
-      //     Number(item),
-      //   ),
-      // });
-      // setSpinner(false);
-      // if (!result) {
-      //   handleAlertMessage({
-      //     alertText: 'Не корректные данные',
-      //     alertStatus: alertStatus.warning,
-      //   });
-      //   return null;
-      // }
-      // navigate('/event');
-      // return handleAlertMessage({
-      //   alertText: 'Соревнование создано',
-      //   alertStatus: alertStatus.success,
-      // });
+      const result = await userClient.createUser(values);
+      setSpinner(false);
+      if (!result) {
+        handleAlertMessage({
+          alertText: 'Не корректные данные',
+          alertStatus: alertStatus.warning,
+        });
+        return null;
+      }
+      navigate('/users');
+      return handleAlertMessage({
+        alertText: 'Пользователь добавлен',
+        alertStatus: alertStatus.success,
+      });
     },
   });
 
@@ -96,21 +99,21 @@ export const CreateUserPage = () => {
             Фамилия
             <input
               type="text"
-              name="surname"
+              name="sirname"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              value={formik.values.surname}
+              value={formik.values.sirname}
               className={Style.input({
                 border:
-                  formik.touched.surname && formik.errors.surname
+                  formik.touched.sirname && formik.errors.sirname
                     ? 'error'
-                    : formik.touched.surname && formik.values.surname !== ''
+                    : formik.touched.sirname && formik.values.sirname !== ''
                     ? 'success'
                     : 'default',
               })}
             />
-            {formik.touched.surname && formik.errors.surname ? (
-              <span className={Style.infoError}>{formik.errors.surname}</span>
+            {formik.touched.sirname && formik.errors.sirname ? (
+              <span className={Style.infoError}>{formik.errors.sirname}</span>
             ) : (
               <span className={Style.infoError} />
             )}
@@ -215,66 +218,40 @@ export const CreateUserPage = () => {
             )}
           </label>
 
-          {roles.length ? (
-            <article className={Style.container}>
-              {roles.map((item, index) => (
-                <React.Fragment key={index}>
-                  <input
-                    type="radio"
-                    id={`roleId${item.id}`}
-                    name="roleId"
-                    onChange={(e) => {
-                      formik.handleChange(e);
-                    }}
-                    onBlur={formik.handleBlur}
-                    defaultChecked={true}
-                    value={item.id}
-                    className={Style.inputRadio}
-                  />
-                  <label
-                    htmlFor={`roleId${item.id}`}
-                    className={Style.labelRadio}
-                  >
-                    {item.title}
-                  </label>
-                </React.Fragment>
-              ))}
-            </article>
-          ) : (
-            <></>
-          )}
-          {/* <input
-              type="radio"
-              id="roleIdUser"
-              name="roleId"
-              onChange={(e) => {
-                formik.handleChange(e);
-              }}
-              onBlur={formik.handleBlur}
-              defaultChecked={true}
-              value={roles.}
-              className={Style.inputRadio}
-            />
-            <label htmlFor="roleIdUser" className={Style.labelRadio}>
-              Пользователь
-            </label>
-
-            <input
-              type="radio"
-              id="roleIdAdmin"
-              name="roleId"
-              onChange={(e) => {
-                formik.handleChange(e);
-              }}
-              onBlur={formik.handleBlur}
-              defaultChecked={false}
-              value={1}
-              className={Style.inputRadio}
-            />
-            <label htmlFor="roleIdAdmin" className={Style.labelRadio}>
-              Администратор
-            </label>
-          </article> */}
+          {/* TODO */}
+          <Suspense fallback={<h3 className={Style.heading}>Загрузка...</h3>}>
+            <Await resolve={roles}>
+              {(resolvedRoles) => (
+                <article className={Style.container}>
+                  {resolvedRoles.map((item: IRoles, index: number) => (
+                    <Fragment key={index}>
+                      <input
+                        type="radio"
+                        id={`roleId${item.id}`}
+                        name="roleId"
+                        onChange={(e) => {
+                          formik.values.roleId = item.id;
+                          formik.handleChange(e);
+                        }}
+                        onBlur={formik.handleBlur}
+                        defaultChecked={
+                          item.title === 'Пользователь' ? true : false
+                        }
+                        value={item.id}
+                        className={Style.inputRadio}
+                      />
+                      <label
+                        htmlFor={`roleId${item.id}`}
+                        className={Style.labelRadio}
+                      >
+                        {item.title}
+                      </label>
+                    </Fragment>
+                  ))}
+                </article>
+              )}
+            </Await>
+          </Suspense>
 
           <button type="submit" className={Style.button({})}>
             {spinner ? <Spinner top={0} left={0} /> : 'Создать'}

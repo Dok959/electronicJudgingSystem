@@ -1,14 +1,15 @@
 import { HTTPError } from 'ky';
 import api from './kyClient';
-import { ICustomPropertyCreateUser } from '@/types/createUser';
+import { ICustomPropertyCreateUser } from '@/types/user/';
 // import { ICustomPropertyCreateUser } from '@/types';
 
 export class userClient {
   static createUser = async (user: ICustomPropertyCreateUser) => {
+    console.log(user);
     try {
       const result: boolean = await api
         .post('user/create', {
-          json: { ...user },
+          json: { user },
         })
         .json();
       return result;

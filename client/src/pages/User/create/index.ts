@@ -1,1 +1,1 @@
-export { CreateUserPage } from './CreateUser';
+export { CreateUserPage, rolesLoaderForCreateUser } from './CreateUser';

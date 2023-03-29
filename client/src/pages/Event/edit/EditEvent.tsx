@@ -26,7 +26,6 @@ export interface IRenderProps {
   ranks: IRanks[];
 }
 
-// TODO
 const Event = (props: IRenderProps) => {
   const event = useAsyncValue() as IRenderEventAndSettings;
   const ranks: IRanks[] = props.ranks;
@@ -80,7 +79,7 @@ const Event = (props: IRenderProps) => {
         });
         return null;
       }
-      navigate('/event');
+      navigate('/events');
       return handleAlertMessage({
         alertText: 'Соревнование создано',
         alertStatus: alertStatus.success,

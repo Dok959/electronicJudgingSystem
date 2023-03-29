@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  HttpCode,
   HttpStatus,
   Post,
   Res,
@@ -9,7 +10,12 @@ import {
 import { Response } from 'express';
 import { Prisma } from '@prisma/client';
 import { UserService } from 'src/users';
-import { RegistrationGuard, LoginGuard, RefreshJWTGuard } from './guards';
+import {
+  RegistrationGuard,
+  LoginGuard,
+  RefreshJWTGuard,
+  JWTGuard,
+} from './guards';
 import { AuthService } from './auth.service';
 import { refreshTokenDto } from './dto';
 
@@ -144,9 +150,25 @@ export class AuthController {
     @Body() userCreateArgs: Prisma.UserCreateArgs,
     @Res() res: Response,
   ): Promise<Response> {
-    await this.userService.registration(userCreateArgs);
+    console.log(userCreateArgs);
+    // await this.userService.create(userCreateArgs);
+    // await this.userService.registration(userCreateInput);
 
     res.statusCode = HttpStatus.CREATED;
     return res.send('Пользователь создан');
   }
+
+  // @UseGuards(JWTGuard)
+  // @Post('create')
+  // @HttpCode(HttpStatus.CREATED)
+  // async create(
+  //   @Body() userCreateArgs: Prisma.UserCreateArgs,
+  //   @Res() res: Response,
+  // ) {
+  //   console.log(userCreateArgs);
+  //   // await this.userService.create(userCreateArgs);
+
+  //   res.statusCode = HttpStatus.CREATED;
+  //   return res.send('Пользователь создан');
+  // }
 }

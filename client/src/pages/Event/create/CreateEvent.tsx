@@ -79,7 +79,7 @@ export const CreateEventPage = () => {
         });
         return null;
       }
-      navigate('/event');
+      navigate('/events');
       return handleAlertMessage({
         alertText: 'Соревнование создано',
         alertStatus: alertStatus.success,

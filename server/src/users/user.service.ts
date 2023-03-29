@@ -11,14 +11,22 @@ export class UserService {
   }
 
   async registration(
-    userCreateArgs: Prisma.UserCreateArgs,
+    userCreateInput: Prisma.UserCreateInput,
   ): Promise<User | null> {
-    return this.prisma.user.create(userCreateArgs);
+    console.log(userCreateInput);
+    return this.prisma.user.create({
+      data: userCreateInput,
+    });
   }
 
   async findOne(userWhereInput: Prisma.UserWhereInput): Promise<User | null> {
     return this.prisma.user.findFirst({
       where: userWhereInput,
     });
+  }
+
+  async create(userCreateArgs: Prisma.UserCreateArgs): Promise<User | null> {
+    console.log(userCreateArgs);
+    return this.prisma.user.create(userCreateArgs);
   }
 }

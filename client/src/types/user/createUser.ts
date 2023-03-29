@@ -1,5 +1,5 @@
 export interface ICustomPropertyCreateUser {
-  surname: string;
+  sirname: string;
   name: string;
   patronymic?: string;
   email: string;
