@@ -21,4 +21,17 @@ export class UserService {
       where: userWhereInput,
     });
   }
+
+  async findAll(): Promise<User[] | null> {
+    return this.prisma.user.findMany({
+      include: {
+        role: true,
+      },
+      where: {
+        id: {
+          not: 1,
+        },
+      },
+    });
+  }
 }

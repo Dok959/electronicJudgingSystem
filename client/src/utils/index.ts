@@ -1,1 +1,1 @@
-export { EnumRank, EnumTypesEvent } from './enum';
+export { EnumRank, EnumTypesEvent, EnumRole } from './enum';

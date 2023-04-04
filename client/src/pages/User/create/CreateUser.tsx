@@ -89,6 +89,16 @@ export const CreateUserPage = () => {
     },
   });
 
+  const [visiblePassword, setVisiblePassword] = useState<boolean>(false);
+
+  const handlerTogglePassword = () => {
+    const password = document.querySelector('#password');
+    const type =
+      password?.getAttribute('type') === 'password' ? 'text' : 'password';
+    password?.setAttribute('type', type);
+    setVisiblePassword(!visiblePassword);
+  };
+
   return (
     <>
       <section className={Style.wrapper}>
@@ -196,6 +206,7 @@ export const CreateUserPage = () => {
           <label className={Style.label}>
             Пароль
             <input
+              id="password"
               type="password"
               name="password"
               onChange={formik.handleChange}
@@ -216,6 +227,14 @@ export const CreateUserPage = () => {
               <span className={Style.infoError} />
             )}
           </label>
+
+          <div id="togglePassword" onClick={handlerTogglePassword}>
+            {visiblePassword ? (
+              <img src="/images/CloseEye.svg" className={Style.eye} alt="" />
+            ) : (
+              <img src="/images/OpenEye.svg" className={Style.eye} alt="" />
+            )}
+          </div>
 
           <Suspense fallback={<h3 className={Style.heading}>Загрузка...</h3>}>
             <Await resolve={roles}>

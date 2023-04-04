@@ -5,3 +5,4 @@ export { Spinner } from './Spinner';
 export { Alert } from './Alert';
 export { Footer } from './Footer';
 export { EventsList } from './EventsList';
+export { UsersList } from './UsersList';

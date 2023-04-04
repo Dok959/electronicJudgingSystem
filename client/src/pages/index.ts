@@ -4,3 +4,4 @@ export { ErrorPage } from './Error';
 export { HomePage } from './Home';
 export { EventPage } from './Event';
 export { NotFoundPage } from './NotFound';
+export { UserPage } from './User';

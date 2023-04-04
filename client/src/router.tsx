@@ -12,6 +12,7 @@ import {
   HomePage,
   MainPage,
   NotFoundPage,
+  UserPage,
 } from './pages';
 import {
   CreateEventPage,
@@ -24,6 +25,7 @@ import { ranksLoader } from './components/EventsList';
 import { reLoginLoader } from './pages/Auth';
 import { RequireAuth, RequireRights } from './hoc';
 import { CreateUserPage, rolesLoaderForCreateUser } from './pages/User/create';
+import { usersLoader } from './components/UsersList';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -77,13 +79,10 @@ const router = createBrowserRouter(
         path="users"
         element={
           <RequireRights>
-            <>
-              {/* <div>dasd</div> */}
-              <Navigate replace to={'/users/new'} />
-            </>
+            <UserPage />
           </RequireRights>
         }
-        loader={ranksLoader}
+        loader={usersLoader}
       />
       <Route
         path="users/new/"

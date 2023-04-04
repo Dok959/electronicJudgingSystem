@@ -182,3 +182,11 @@ export const labelRadio = style({
     },
   },
 });
+
+export const eye = style({
+  position: 'absolute',
+  bottom: 171,
+  right: -24,
+  width: 16,
+  cursor: 'pointer',
+});

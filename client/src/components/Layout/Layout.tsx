@@ -19,7 +19,7 @@ const Layout = () => {
 
         {alert.alertText && <Alert props={alert} />}
 
-        {location.pathname === '/events' ? (
+        {location.pathname === '/events' || location.pathname === '/users' ? (
           <NavLink to={`${location.pathname}/new/`}>
             <div id="create" className={Style.button}>
               <span
