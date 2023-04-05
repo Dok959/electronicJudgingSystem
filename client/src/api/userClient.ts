@@ -26,14 +26,20 @@ export class userClient {
     return false;
   };
 
-  static getUsers = async (): Promise<ISelectUser[] | null> => {
+  // cursor, skip
+  static getUsers = async (args: any = {}): Promise<ISelectUser[] | null> => {
     try {
       const result: ISelectUser[] = await api
         .get('user', {
           // json: {  },
+          headers: {
+            ...args,
+            // cursor: cursor,
+            // skip: skip,
+          },
         })
         .json();
-      console.log(result);
+
       return result;
     } catch (error) {
       console.log(error);

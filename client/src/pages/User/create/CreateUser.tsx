@@ -275,7 +275,7 @@ export const CreateUserPage = () => {
           </button>
         </form>
 
-        <NavLink to="/home" className={Style.button({ type: 'secondary' })}>
+        <NavLink to="/users" className={Style.button({ type: 'secondary' })}>
           Отмена
         </NavLink>
       </section>

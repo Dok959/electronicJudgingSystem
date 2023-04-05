@@ -5,7 +5,6 @@ import { $grant } from '@/context/auth';
 
 export const UserPage = () => {
   const isHasRights = useStore($grant);
-  console.log(isHasRights);
 
   useEffect(() => {
     if (isHasRights) {

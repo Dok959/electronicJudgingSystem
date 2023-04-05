@@ -26,6 +26,9 @@ export interface IReturnTypes {
   users: ISelectUser[];
 }
 
+// cursor: cursor,
+// skip: skip,
+
 export const UsersList = () => {
   const isHasRights = useStore($grant);
   const { users } = useLoaderData() as IReturnTypes;

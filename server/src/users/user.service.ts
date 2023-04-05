@@ -22,16 +22,35 @@ export class UserService {
     });
   }
 
-  async findAll(): Promise<User[] | null> {
-    return this.prisma.user.findMany({
-      include: {
-        role: true,
-      },
-      where: {
-        id: {
-          not: 1,
-        },
-      },
-    });
+  // TODO
+  // id: number
+  async findAll(
+    userFindManyArgs: Prisma.UserFindManyArgs,
+  ): Promise<User[] | null> {
+    return this.prisma.user.findMany(
+      userFindManyArgs,
+      // {
+      // take: 2,
+      // // cursor: no, //{ id: cursorInit },
+      // include: {
+      //   role: true,
+      // },
+      // where: {
+      //   id: {
+      //     not: id,
+      //   },
+      // },
+      // }
+    );
+  }
+
+  async getUserByTokenData(token: string): Promise<User | null> {
+    const parsedTokenData = this.parseJwt(token);
+
+    return await this.findOne(parsedTokenData.user);
+  }
+
+  parseJwt(token: string) {
+    return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
   }
 }
