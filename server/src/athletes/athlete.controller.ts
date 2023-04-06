@@ -11,12 +11,14 @@ import {
   Patch,
   Param,
   Delete,
+  Headers,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { Prisma } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { AthleteService } from './athlete.service';
 import { AuthService } from 'src/auth/auth.service';
 import { JWTGuard } from 'src/auth/guards';
+import { FilterGuard, HeadersGuard } from './guards';
 
 @Controller('athlete')
 export class AthleteController {
@@ -47,10 +49,15 @@ export class AthleteController {
     });
   }
 
-  @UseGuards(JWTGuard)
-  @Post()
+  @UseGuards(JWTGuard, HeadersGuard)
+  @Post('create')
   @HttpCode(HttpStatus.OK)
-  async createAthlete(@Body() AthleteCreateInput: Prisma.AthleteCreateInput) {
+  async createAthlete(
+    @Headers('user') user: User,
+    @Body() AthleteCreateInput: Prisma.AthleteCreateInput,
+  ) {
+    console.log(user);
+    console.log(AthleteCreateInput);
     // const token = req.token;
     // const user = await this.authService.getUserByTokenData(token);
 
@@ -59,18 +66,25 @@ export class AthleteController {
     });
   }
 
-  @UseGuards(JWTGuard)
+  // TODO
+  // @Headers('user') user: User,
+  //   @Headers('filter') filter: { cursor: any; skip: number },
+  @UseGuards(JWTGuard, HeadersGuard, FilterGuard)
   @Get()
   @HttpCode(HttpStatus.OK)
-  async getAllAthletes(@Req() req: any, @Res() res: Response) {
-    const token = req.token;
+  async getAllAthletes(
+    @Headers('user') user: User,
+    @Req() req: any,
+    @Res() res: Response,
+  ) {
+    // const token = req.token;
 
-    const user = await this.authService.getUserByTokenData(token);
+    // const user = await this.authService.getUserByTokenData(token);
     const athletes = await this.athleteService.findAll();
-    const filtredAthletes = athletes.filter(
-      (athlete) => athlete.trainerId === user.id,
-    );
+    // const filtredAthletes = athletes.filter(
+    //   (athlete) => athlete.trainerId === user.id,
+    // );
 
-    return res.send(filtredAthletes);
+    return res.send(athletes);
   }
 }

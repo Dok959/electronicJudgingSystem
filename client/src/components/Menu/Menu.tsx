@@ -18,6 +18,7 @@ export const Menu = () => {
         { to: '/home', title: 'Главная' },
         { to: '/events', title: 'Соревнования' },
         { to: '/users', title: 'Пользователи' },
+        { to: '/athletes', title: 'Ученики' },
         { to: '/posts', title: 'Рейтинг' },
       ]
     : [

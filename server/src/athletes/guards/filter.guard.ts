@@ -1,0 +1,26 @@
+import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Observable } from 'rxjs';
+
+@Injectable()
+export class FilterGuard implements CanActivate {
+  canActivate(
+    context: ExecutionContext,
+  ): boolean | Promise<boolean> | Observable<boolean> {
+    const request = context.switchToHttp().getRequest();
+
+    const cursor = request.headers.cursor || null;
+    const skip = request.headers.skip || null;
+
+    if (cursor === null && skip === null) {
+      request.headers.filter = {};
+      return true;
+    }
+
+    request.headers.filter = {
+      cursor: { id: Number(cursor) },
+      skip: Number(skip),
+    };
+
+    return true;
+  }
+}

@@ -25,6 +25,11 @@ import { ranksLoader } from './components/EventsList';
 import { reLoginLoader } from './pages/Auth';
 import { RequireAuth, RequireRights } from './hoc';
 import { CreateUserPage, rolesLoaderForCreateUser } from './pages/User/create';
+import { AthletesPage } from './pages/Athlete';
+import {
+  CreateAthletePage,
+  ranksLoaderForCreateAthlete,
+} from './pages/Athlete/create';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -90,6 +95,23 @@ const router = createBrowserRouter(
           </RequireRights>
         }
         loader={rolesLoaderForCreateUser}
+      />
+      <Route
+        path="athletes"
+        element={
+          <RequireAuth>
+            <AthletesPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="athletes/new/"
+        element={
+          <RequireAuth>
+            <CreateAthletePage />
+          </RequireAuth>
+        }
+        loader={ranksLoaderForCreateAthlete}
       />
       <Route path="*" element={<NotFoundPage />} />
     </Route>,

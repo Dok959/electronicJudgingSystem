@@ -3,7 +3,7 @@ import { Await, Link } from 'react-router-dom';
 import { userClient } from '@/api';
 import { $grant } from '@/context/auth';
 import { useStore } from 'effector-react';
-import * as Style from './UsersList.css';
+import * as Style from './AthletesList.css';
 import { ISelectUser } from '@/types/user';
 
 async function getUsers(args = {}) {
@@ -11,7 +11,7 @@ async function getUsers(args = {}) {
 }
 
 // TODO создать возможность редактирования пользователя
-export const UsersList = () => {
+export const AthletesList = () => {
   const isHasRights = useStore($grant);
 
   const [users, setUsers] = useState<ISelectUser[]>([]);

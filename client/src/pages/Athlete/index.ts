@@ -1,0 +1,1 @@
+export { AthletesPage } from './Athlete';
