@@ -22,26 +22,10 @@ export class UserService {
     });
   }
 
-  // TODO
-  // id: number
   async findAll(
     userFindManyArgs: Prisma.UserFindManyArgs,
   ): Promise<User[] | null> {
-    return this.prisma.user.findMany(
-      userFindManyArgs,
-      // {
-      // take: 2,
-      // // cursor: no, //{ id: cursorInit },
-      // include: {
-      //   role: true,
-      // },
-      // where: {
-      //   id: {
-      //     not: id,
-      //   },
-      // },
-      // }
-    );
+    return this.prisma.user.findMany(userFindManyArgs);
   }
 
   async getUserByTokenData(token: string): Promise<User | null> {

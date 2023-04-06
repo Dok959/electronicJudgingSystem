@@ -1,7 +1,6 @@
 import { HTTPError } from 'ky';
 import api from './kyClient';
 import { ICustomPropertyCreateUser, ISelectUser } from '@/types/user/';
-// import { ICustomPropertyCreateUser } from '@/types';
 
 export class userClient {
   static createUser = async (data: ICustomPropertyCreateUser) => {
@@ -26,16 +25,12 @@ export class userClient {
     return false;
   };
 
-  // cursor, skip
-  static getUsers = async (args: any = {}): Promise<ISelectUser[] | null> => {
+  static getUsers = async (args: any = {}): Promise<ISelectUser[]> => {
     try {
       const result: ISelectUser[] = await api
         .get('user', {
-          // json: {  },
           headers: {
             ...args,
-            // cursor: cursor,
-            // skip: skip,
           },
         })
         .json();
@@ -49,7 +44,7 @@ export class userClient {
       } else if (error instanceof Error) {
         console.log(error.message);
       }
-      return null;
+      return [];
     }
   };
 }

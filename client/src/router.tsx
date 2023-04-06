@@ -25,7 +25,6 @@ import { ranksLoader } from './components/EventsList';
 import { reLoginLoader } from './pages/Auth';
 import { RequireAuth, RequireRights } from './hoc';
 import { CreateUserPage, rolesLoaderForCreateUser } from './pages/User/create';
-import { usersLoader } from './components/UsersList';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -82,7 +81,6 @@ const router = createBrowserRouter(
             <UserPage />
           </RequireRights>
         }
-        loader={usersLoader}
       />
       <Route
         path="users/new/"

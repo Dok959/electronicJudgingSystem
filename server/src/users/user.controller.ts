@@ -24,8 +24,6 @@ export class UserController {
     @Headers('filter') filter: { cursor: any; skip: number },
     @Res() res: Response,
   ) {
-    console.log(filter);
-
     const userFindManyArgs: Prisma.UserFindManyArgs = {
       take: 2,
       include: {
