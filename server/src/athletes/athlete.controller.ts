@@ -52,38 +52,34 @@ export class AthleteController {
   @UseGuards(JWTGuard, HeadersGuard)
   @Post('create')
   @HttpCode(HttpStatus.OK)
-  async createAthlete(
+  async create(
     @Headers('user') user: User,
-    @Body() AthleteCreateInput: Prisma.AthleteCreateInput,
+    @Body() athleteCreateArgs: Prisma.AthleteCreateArgs,
   ) {
-    console.log(user);
-    console.log(AthleteCreateInput);
-    // const token = req.token;
-    // const user = await this.authService.getUserByTokenData(token);
-
-    return await this.athleteService.create({
-      data: AthleteCreateInput,
-    });
+    athleteCreateArgs.data.trainerId = user.id;
+    return await this.athleteService.create(athleteCreateArgs);
   }
 
-  // TODO
-  // @Headers('user') user: User,
-  //   @Headers('filter') filter: { cursor: any; skip: number },
   @UseGuards(JWTGuard, HeadersGuard, FilterGuard)
   @Get()
   @HttpCode(HttpStatus.OK)
-  async getAllAthletes(
+  async getAll(
     @Headers('user') user: User,
-    @Req() req: any,
+    @Headers('filter') filter: { cursor: any; skip: number },
     @Res() res: Response,
   ) {
-    // const token = req.token;
+    const athleteFindManyArgs: Prisma.AthleteFindManyArgs = {
+      take: 2,
+      include: {
+        rank: true,
+      },
+      where: {
+        trainerId: Number(user.id),
+      },
+      ...filter,
+    };
 
-    // const user = await this.authService.getUserByTokenData(token);
-    const athletes = await this.athleteService.findAll();
-    // const filtredAthletes = athletes.filter(
-    //   (athlete) => athlete.trainerId === user.id,
-    // );
+    const athletes = await this.athleteService.findAll(athleteFindManyArgs);
 
     return res.send(athletes);
   }

@@ -1,4 +1,4 @@
-import { Suspense, useState, Fragment } from 'react';
+import { Suspense, useState } from 'react';
 import {
   Await,
   NavLink,
@@ -14,7 +14,6 @@ import { Spinner } from '@/components';
 import { handleAlertMessage } from '@/utils/auth';
 import { EnumRank, alertStatus } from '@/utils/enum';
 import * as Style from './CreateAthlete.css';
-import { ICustomPropertyCreateUser } from '@/types/user';
 
 export async function ranksLoaderForCreateAthlete() {
   const result = {
@@ -60,21 +59,28 @@ export const CreateAthletePage = () => {
         .max(new Date().toISOString(), 'Дата или время не могут быть будущими'),
     }),
     onSubmit: async (values) => {
-      // values.roleId = Number(values.roleId);
+      const { sirname, name, patronymic, dateOfBirth, rankId } = values;
       setSpinner(true);
-      const athlete = await athleteClient.createAthlete(values);
-      // if (await userClient.createUser(values)) {
-      //   navigate('/users');
-      //   return handleAlertMessage({
-      //     alertText: 'Пользователь добавлен',
-      //     alertStatus: alertStatus.success,
-      //   });
-      // }
+      const athlete = await athleteClient.createAthlete({
+        sirname,
+        name,
+        patronymic,
+        dateOfBirth: new Date(dateOfBirth),
+        rankId: Number(rankId),
+        trainerId: 0,
+      });
+      if (athlete) {
+        navigate('/athletes');
+        return handleAlertMessage({
+          alertText: 'Ученик добавлен',
+          alertStatus: alertStatus.success,
+        });
+      }
       setSpinner(false);
-      // return handleAlertMessage({
-      //   alertText: 'Не корректные данные',
-      //   alertStatus: alertStatus.warning,
-      // });
+      return handleAlertMessage({
+        alertText: 'Не корректные данные',
+        alertStatus: alertStatus.warning,
+      });
     },
   });
 
@@ -159,7 +165,7 @@ export const CreateAthletePage = () => {
           </label>
 
           <label className={Style.label}>
-            Дата и время
+            Дата рождения
             <input
               type="date"
               max={new Date().toISOString().slice(0, -14)}

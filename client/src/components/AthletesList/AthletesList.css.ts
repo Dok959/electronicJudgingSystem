@@ -46,7 +46,7 @@ export const content = style({
   alignItems: 'center',
 });
 
-export const user = style({
+export const athletes = style({
   display: 'flex',
   flexDirection: 'column',
   width: '100%',

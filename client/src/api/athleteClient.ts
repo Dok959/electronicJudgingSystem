@@ -1,6 +1,6 @@
 import { HTTPError } from 'ky';
 import api from './kyClient';
-import { ICustomPropertyCreateAthlete } from '@/types/athlete';
+import { ICustomPropertyCreateAthlete, ISelectAthlete } from '@/types/athlete';
 
 export class athleteClient {
   static createAthlete = async (data: ICustomPropertyCreateAthlete) => {
@@ -25,10 +25,9 @@ export class athleteClient {
     return false;
   };
 
-  // : Promise<ISelectUser[]>
-  static getAthletes = async (args: any = {}): Promise<[]> => {
+  static getAthletes = async (args: any = {}): Promise<ISelectAthlete[]> => {
     try {
-      const result: [] = await api
+      const result: ISelectAthlete[] = await api
         .get('athlete', {
           headers: {
             ...args,

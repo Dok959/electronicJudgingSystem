@@ -40,25 +40,11 @@ export class AthleteService {
     });
   }
 
-  // TODO проверки на существование вынести в guards
+  // TODO добавить проверки на существование
   async create(
     athleteCreateArgs: Prisma.AthleteCreateArgs,
   ): Promise<Athlete | null> {
-    // const existingAthlete = await this.findOne({
-    //   name: athleteCreateInput.data.name,
-    //   sirname: athleteCreateInput.data.sirname,
-    //   patronymic: athleteCreateInput.data.patronymic,
-    //   dateOfBirth: athleteCreateInput.data.dateOfBirth,
-    //   rankId: athleteCreateInput.data.rank,
-    // });
-
-    // if (existingAthlete) {
-    //   return null;
-    // }
-
-    return this.prisma.athlete.create({
-      ...athleteCreateArgs,
-    });
+    return this.prisma.athlete.create(athleteCreateArgs);
   }
 
   async findOne(
@@ -69,7 +55,9 @@ export class AthleteService {
     });
   }
 
-  async findAll(): Promise<Athlete[]> {
-    return this.prisma.athlete.findMany();
+  async findAll(
+    athleteFindManyArgs: Prisma.AthleteFindManyArgs,
+  ): Promise<Athlete[]> {
+    return this.prisma.athlete.findMany(athleteFindManyArgs);
   }
 }

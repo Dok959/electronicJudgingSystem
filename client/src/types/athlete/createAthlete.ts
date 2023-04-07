@@ -2,7 +2,7 @@ export interface ICustomPropertyCreateAthlete {
   sirname: string;
   name: string;
   patronymic?: string;
-  dateOfBirth: string;
-  // trainerId: number;
+  dateOfBirth: Date;
+  trainerId: number;
   rankId: number;
 }
