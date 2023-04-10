@@ -89,7 +89,6 @@ const Event = (props: IRenderProps) => {
 
   return (
     <section className={Style.wrapper}>
-      <>{console.log(formik.values)}</>
       <h3 className={Style.heading}>Обновить мероприятие</h3>
       <form onSubmit={formik.handleSubmit} className={Style.form}>
         <label className={Style.label}>

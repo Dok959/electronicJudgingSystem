@@ -3,6 +3,7 @@ import { vars } from '@/theme';
 
 export const wrapper = style({
   width: '100%',
+  maxWidth: 400,
   margin: 0,
   display: 'flex',
   flexDirection: 'column',

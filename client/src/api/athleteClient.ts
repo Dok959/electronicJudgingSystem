@@ -4,14 +4,12 @@ import { ICustomPropertyCreateAthlete, ISelectAthlete } from '@/types/athlete';
 
 export class athleteClient {
   static createAthlete = async (data: ICustomPropertyCreateAthlete) => {
-    console.log(data);
     try {
       const result: boolean = await api
         .post('athlete/create', {
           json: { data },
         })
         .json();
-      console.log(result);
       return result;
     } catch (error) {
       console.log(error);

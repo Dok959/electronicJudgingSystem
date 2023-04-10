@@ -4,16 +4,12 @@ import { vars } from '@/theme';
 
 export const wrapper = style({
   width: '100%',
+  maxWidth: 400,
   margin: 0,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  gap: 8,
-  '@media': {
-    'screen and (min-width: 768px)': {
-      gap: 16,
-    },
-  },
+  gap: 16,
 });
 
 export const heading = style({
@@ -21,45 +17,6 @@ export const heading = style({
   fontSize: 20,
   fontFamily: vars.fonts.heading,
   color: vars.colors.headings.primary,
-});
-
-export const container = style({
-  display: 'grid',
-  gridTemplateColumns: 'auto',
-  gap: 16,
-  alignItems: 'baseline',
-  width: '100%',
-  justifyItems: 'center',
-  '@media': {
-    'screen and (min-width: 768px)': {
-      gridTemplateColumns: '1fr 2fr',
-      display: 'grid',
-    },
-  },
-});
-
-export const filter = style({
-  margin: 0,
-  display: 'grid',
-  justifyItems: 'start',
-  gridTemplateColumns: '1fr 1fr 1fr',
-  minWidth: '313px',
-  '@media': {
-    'screen and (min-width: 768px)': {
-      gridTemplateColumns: 'auto',
-      minWidth: 'auto',
-    },
-  },
-});
-
-export const form = style({
-  display: 'contents',
-  width: 'fit-content',
-});
-
-export const item = style({
-  margin: 0,
-  padding: 8,
 });
 
 export const input = style({
@@ -114,31 +71,18 @@ export const content = style({
   alignItems: 'center',
 });
 
-export const event = style({
-  display: 'flex',
-  flexDirection: 'column',
-  width: '100%',
-  gap: 8,
-});
-
-export const eventTitle = style({
-  textDecoration: 'none',
-  cursor: 'pointer',
+export const title = style({
   fontSize: 18,
   fontFamily: vars.fonts.heading,
   color: vars.colors.headings.primary,
   margin: 0,
 });
 
-export const infoContainer = style({
-  display: 'grid',
-  gridTemplateColumns: 'auto',
-  gap: 12,
-  '@media': {
-    'screen and (min-width: 992px)': {
-      gridTemplateColumns: '1fr 3fr',
-    },
-  },
+export const subTitle = style({
+  fontSize: 16,
+  fontFamily: vars.fonts.heading,
+  color: vars.colors.headings.primary,
+  margin: 0,
 });
 
 export const flexContainer = recipe({
@@ -157,6 +101,11 @@ export const flexContainer = recipe({
     flex: {
       default: {
         flexDirection: 'row',
+        '@media': {
+          'screen and (min-width: 992px)': {
+            flexDirection: 'row',
+          },
+        },
       },
       wrap: {
         flexDirection: 'column',
@@ -180,19 +129,24 @@ export const info = style({
   },
 });
 
-export const tags = style({
+export const judges = style({
   display: 'flex',
-  fontSize: 14,
   gap: 8,
-  flexWrap: 'wrap',
+  flexDirection: 'column',
+  alignItems: 'center',
 });
 
-export const tag = style({
-  background: vars.colors.background.secondary,
-  margin: 0,
-  fontWeight: 300,
-  padding: 8,
-  borderRadius: vars.borderRadius.default,
+export const judgesHeader = style({
+  display: 'flex',
+  gap: 8,
+  flexDirection: 'column',
+  alignItems: 'center',
+  '@media': {
+    'screen and (min-width: 576px)': {
+      gap: 12,
+      flexDirection: 'row',
+    },
+  },
 });
 
 export const detail = style({
@@ -211,4 +165,11 @@ export const detail = style({
       outlineColor: 'rgba(236, 0, 140, 0.2)',
     },
   },
+});
+
+export const judgesList = style({
+  display: 'flex',
+  gap: 8,
+  flexDirection: 'column',
+  alignItems: 'center',
 });

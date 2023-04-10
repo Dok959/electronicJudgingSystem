@@ -14,11 +14,9 @@ const Auth = createComponent($auth, (props: any, state) => {
   const location = useLocation();
 
   return (
-    <div>
-      <>
-        {$auth ? children : <Navigate to="/login" state={{ from: location }} />}
-      </>
-    </div>
+    <>
+      {$auth ? children : <Navigate to="/login" state={{ from: location }} />}
+    </>
   );
 });
 

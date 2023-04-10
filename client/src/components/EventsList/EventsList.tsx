@@ -134,7 +134,9 @@ export const EventsList = () => {
                 <div className={Style.content}>
                   {resolvedEvents.map((item: any) => (
                     <article className={Style.event} key={item.id}>
-                      <h4 className={Style.eventTitle}>{item.title}</h4>
+                      <Link to={`${item.id}`} className={Style.eventTitle}>
+                        <h4 className={Style.eventTitle}>{item.title}</h4>
+                      </Link>
                       <div className={Style.infoContainer}>
                         <div className={Style.flexContainer({})}>
                           <p className={Style.info}>

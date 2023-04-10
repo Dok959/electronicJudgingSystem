@@ -14,11 +14,9 @@ const Grant = createComponent($grant, (props: any, state) => {
   const location = useLocation();
 
   return (
-    <div>
-      <>
-        {$grant ? children : <Navigate to="/home" state={{ from: location }} />}
-      </>
-    </div>
+    <>
+      {$grant ? children : <Navigate to="/home" state={{ from: location }} />}
+    </>
   );
 });
 

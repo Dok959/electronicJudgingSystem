@@ -9,3 +9,4 @@ export type {
   ICustomPropertyUpdateEvent,
 } from './updateEvent';
 export type { ISelectEvent, ISelectSettingsEvent } from './selectEvent';
+export type { ICustomPropertySelectedEvent } from './selectedEvent';

@@ -30,6 +30,7 @@ import {
   CreateAthletePage,
   ranksLoaderForCreateAthlete,
 } from './pages/Athlete/create';
+import { InfoEventPage, loaderInfoEvent } from './pages/Event/info';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -55,7 +56,12 @@ const router = createBrowserRouter(
       />
       <Route
         path="events/:id"
-        element={<Navigate replace to={'/events/:id/edit'} />}
+        element={
+          <RequireAuth>
+            <InfoEventPage />
+          </RequireAuth>
+        }
+        loader={loaderInfoEvent}
       />
       <Route
         path="events/:id/edit"
