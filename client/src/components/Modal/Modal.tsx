@@ -2,18 +2,18 @@ import { IAlertProps } from '@/types';
 import { alertStatus } from '@/utils/enum';
 import { handleAlertMessage } from '@/utils/auth';
 import * as Style from './Modal.css';
+import { handleModal } from '@/utils/modal';
 
 export const Modal = ({ props }: any) => {
   const clickHandler = () => {
-    handleAlertMessage({ alertText: '', alertStatus: alertStatus.default });
+    handleModal({
+      masRows: [],
+    });
   };
 
+  console.log(props);
   return (
-    <div
-      className={Style.alert({
-        border: props.alertStatus ?? alertStatus.default,
-      })}
-    >
+    <div className={Style.window}>
       <div>
         <p className={Style.text}>{props.alertText}</p>
         <select name="" id="">

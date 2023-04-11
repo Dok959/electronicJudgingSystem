@@ -168,8 +168,20 @@ export const detail = style({
 });
 
 export const judgesList = style({
-  display: 'flex',
+  display: 'grid',
   gap: 8,
   flexDirection: 'column',
   alignItems: 'center',
+  margin: 0,
+  padding: 0,
+  listStyle: 'none',
+  gridTemplateColumns: '1fr',
+  '@media': {
+    'screen and (min-width: 576px)': {
+      gridTemplateColumns: '1fr 1fr',
+    },
+    'screen and (min-width: 992px)': {
+      gridTemplateColumns: '1fr 1fr 1fr',
+    },
+  },
 });

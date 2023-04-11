@@ -7,11 +7,14 @@ import {
   useParams,
 } from 'react-router-dom';
 import * as Style from './InfoEvent.css';
-import { Suspense } from 'react';
+import { Suspense, useCallback, useEffect, useState } from 'react';
 import { EnumRank } from '@/utils';
 import { IRanks } from '@/types';
 import { $grant } from '@/context/auth';
 import { useStore } from 'effector-react';
+import { ISelectUser } from '@/types/user';
+import { Modal } from '@/components/Modal';
+import { handleModal } from '@/utils/modal';
 
 export async function loaderInfoEvent({ params }: LoaderFunctionArgs) {
   const eventId = Number(params.id);
@@ -48,8 +51,14 @@ interface IReturnTypes {
   event: ICustomPropertySelectedEvent;
 }
 
+async function getRegisteredJudges(id: number) {
+  const judges = await judgeClient.getAllRegisteredJudge(id);
+  console.log(judges);
+  return judges;
+}
+
 async function getJudges(id: number) {
-  const judges = await judgeClient.getAllJudge(id);
+  const judges = await judgeClient.getAllOnRegisteredJudge(id);
   console.log(judges);
   return judges;
 }
@@ -82,8 +91,22 @@ export const InfoEventPage = () => {
     console.log(id);
     const judges = await getJudges(Number(id));
     console.log('+');
-    return;
+    return handleModal({
+      masRows: judges,
+    });
   }
+
+  const [judges, setJudges] = useState<ISelectUser[]>([]);
+
+  const loadJudgesData = useCallback(async () => {
+    if (judges.length === 0) {
+      setJudges(await getRegisteredJudges(Number(id)));
+    }
+  }, [judges]);
+
+  useEffect(() => {
+    loadJudgesData();
+  }, [loadJudgesData]);
 
   return (
     <section className={Style.wrapper}>
@@ -138,11 +161,21 @@ export const InfoEventPage = () => {
                       <></>
                     )}
                   </div>
-                  <div className={Style.judgesList}>
-                    <ul>
-                      <li>имя</li>
-                    </ul>
-                  </div>
+                  <ul className={Style.judgesList}>
+                    <Await resolve={judges}>
+                      {(resolvedJudges) => (
+                        <>
+                          {resolvedJudges.map(
+                            (item: ISelectUser, index: number) => (
+                              <li key={index}>{`${item.sirname} ${item.name} ${
+                                item.patronymic ? item.patronymic : ''
+                              }`}</li>
+                            ),
+                          )}
+                        </>
+                      )}
+                    </Await>
+                  </ul>
                 </div>
               </div>
             </>

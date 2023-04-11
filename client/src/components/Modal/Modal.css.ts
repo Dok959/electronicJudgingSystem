@@ -2,6 +2,13 @@ import { style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 import { vars } from '@/theme';
 
+export const window = style({
+  position: 'absolute',
+  background: '#056',
+  width: 300,
+  height: 300,
+});
+
 export const alert = recipe({
   base: {
     position: 'absolute',

@@ -1,3 +1,4 @@
+import { JudgeModule } from './judges/judge.module';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -13,6 +14,7 @@ import { TypeModule } from './types';
 
 @Module({
   imports: [
+    JudgeModule,
     TypeModule,
     RoleModule,
     RankModule,

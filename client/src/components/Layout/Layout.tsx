@@ -1,11 +1,13 @@
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useStore } from 'effector-react';
 import { $alert } from '@/context/alert';
-import { Alert, Footer, Menu } from '..';
+import { Alert, Footer, Menu, Modal } from '..';
 import * as Style from './Layout.css';
+import { $modal } from '@/context/modal';
 
 const Layout = () => {
   const alert = useStore($alert);
+  const modal = useStore($modal);
   const location = useLocation();
 
   return (
@@ -18,6 +20,8 @@ const Layout = () => {
         </main>
 
         {alert.alertText && <Alert props={alert} />}
+
+        {modal.masRows.length > 0 && <Modal props={modal} />}
 
         {location.pathname === '/events' ||
         location.pathname === '/users' ||
