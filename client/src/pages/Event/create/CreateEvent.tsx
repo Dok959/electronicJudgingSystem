@@ -47,7 +47,9 @@ export const CreateEventPage = () => {
           new Date(new Date().toISOString().slice(0, -10) + '00'),
           'Дата или время не могут быть прошедшими',
         ),
-      duration: Yup.number().default(1).min(1),
+      duration: Yup.number()
+        .default(1)
+        .min(1, 'Длительность не может быть меньше 1 дня'),
     }),
     onSubmit: async (values) => {
       const {
@@ -286,7 +288,7 @@ export const CreateEventPage = () => {
           </button>
         </form>
 
-        <NavLink to="/event" className={Style.button({ type: 'secondary' })}>
+        <NavLink to="/events" className={Style.button({ type: 'secondary' })}>
           Отмена
         </NavLink>
       </section>

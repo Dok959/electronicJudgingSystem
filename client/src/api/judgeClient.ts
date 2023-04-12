@@ -1,6 +1,5 @@
 import { HTTPError } from 'ky';
 import api from './kyClient';
-import { ICustomPropertyCreateAthlete, ISelectAthlete } from '@/types/athlete';
 import { ISelectUser } from '@/types/user';
 
 export class judgeClient {
@@ -51,6 +50,29 @@ export class judgeClient {
         console.log(error.message);
       }
       return [];
+    }
+  };
+
+  static insertJudges = async (data: any): Promise<boolean> => {
+    try {
+      await api
+        .post('judge/insert', {
+          json: {
+            data,
+          },
+        })
+        .json();
+
+      return true;
+    } catch (error) {
+      console.log(error);
+      if (error instanceof HTTPError) {
+        const errorJson = await error.response.json();
+        console.log(errorJson);
+      } else if (error instanceof Error) {
+        console.log(error.message);
+      }
+      return false;
     }
   };
 }

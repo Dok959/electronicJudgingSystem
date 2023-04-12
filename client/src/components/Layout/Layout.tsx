@@ -12,6 +12,8 @@ const Layout = () => {
 
   return (
     <>
+      {modal.masRows.length > 0 && <Modal props={modal} />}
+
       <Menu />
 
       <div className={Style.wrapper}>
@@ -20,8 +22,6 @@ const Layout = () => {
         </main>
 
         {alert.alertText && <Alert props={alert} />}
-
-        {modal.masRows.length > 0 && <Modal props={modal} />}
 
         {location.pathname === '/events' ||
         location.pathname === '/users' ||

@@ -47,7 +47,9 @@ const Event = (props: IRenderProps) => {
           new Date().toISOString(),
           'Дата или время не могут быть прошедшими',
         ),
-      duration: Yup.number().default(1).min(1),
+      duration: Yup.number()
+        .default(1)
+        .min(1, 'Длительность не может быть меньше 1 дня'),
     }),
     onSubmit: async (values) => {
       const {
@@ -58,7 +60,8 @@ const Event = (props: IRenderProps) => {
         masPartisipantsGroupRanks,
       } = values;
       setSpinner(true);
-      const result = await eventClient.create({
+      const result = await eventClient.update({
+        id: event.id,
         title,
         startDateTime: new Date(startDateTime),
         duration: Number(duration),
@@ -81,7 +84,7 @@ const Event = (props: IRenderProps) => {
       }
       navigate('/events');
       return handleAlertMessage({
-        alertText: 'Соревнование создано',
+        alertText: 'Соревнование обновлено',
         alertStatus: alertStatus.success,
       });
     },
@@ -207,7 +210,7 @@ const Event = (props: IRenderProps) => {
                               formik.handleChange(e);
                             }}
                             onBlur={formik.handleBlur}
-                            checked={Boolean(
+                            defaultChecked={Boolean(
                               formik.values.masPartisipantsIndividualRanks?.filter(
                                 (el) => el === item.id,
                               ).length,
@@ -271,7 +274,7 @@ const Event = (props: IRenderProps) => {
                               formik.handleChange(e);
                             }}
                             onBlur={formik.handleBlur}
-                            checked={Boolean(
+                            defaultChecked={Boolean(
                               formik.values.masPartisipantsGroupRanks?.filter(
                                 (el) => el === item.id,
                               ).length,
@@ -301,7 +304,7 @@ const Event = (props: IRenderProps) => {
         </button>
       </form>
 
-      <NavLink to="/event" className={Style.button({ type: 'secondary' })}>
+      <NavLink to="/events" className={Style.button({ type: 'secondary' })}>
         Отмена
       </NavLink>
     </section>

@@ -1,6 +1,15 @@
-import { Controller, Get, HttpCode, HttpStatus, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Res,
+} from '@nestjs/common';
 import { JudgeService } from './judge.service';
 import { Response } from 'express';
+import { Prisma } from '@prisma/client';
 
 @Controller('judge')
 export class JudgeController {
@@ -20,5 +29,16 @@ export class JudgeController {
     const judges = await this.judgeService.getAllRegistered(1);
 
     return res.send(judges);
+  }
+
+  @Post('insert')
+  @HttpCode(HttpStatus.OK)
+  async insert(
+    @Body() JudgeCreateManyArgs: Prisma.JudgeCreateManyArgs,
+    @Res() res: Response,
+  ) {
+    const result = await this.judgeService.insert(JudgeCreateManyArgs);
+
+    return res.send(result);
   }
 }

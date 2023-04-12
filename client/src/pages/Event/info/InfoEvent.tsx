@@ -13,8 +13,8 @@ import { IRanks } from '@/types';
 import { $grant } from '@/context/auth';
 import { useStore } from 'effector-react';
 import { ISelectUser } from '@/types/user';
-import { Modal } from '@/components/Modal';
 import { handleModal } from '@/utils/modal';
+import { $modal } from '@/context/modal';
 
 export async function loaderInfoEvent({ params }: LoaderFunctionArgs) {
   const eventId = Number(params.id);
@@ -53,13 +53,11 @@ interface IReturnTypes {
 
 async function getRegisteredJudges(id: number) {
   const judges = await judgeClient.getAllRegisteredJudge(id);
-  console.log(judges);
   return judges;
 }
 
 async function getJudges(id: number) {
   const judges = await judgeClient.getAllOnRegisteredJudge(id);
-  console.log(judges);
   return judges;
 }
 
@@ -88,25 +86,29 @@ export const InfoEventPage = () => {
 
   async function JudgesHandler(e: any) {
     e.preventDefault();
-    console.log(id);
     const judges = await getJudges(Number(id));
-    console.log('+');
     return handleModal({
       masRows: judges,
     });
   }
 
+  const modalClose = useStore($modal);
+
   const [judges, setJudges] = useState<ISelectUser[]>([]);
 
   const loadJudgesData = useCallback(async () => {
-    if (judges.length === 0) {
-      setJudges(await getRegisteredJudges(Number(id)));
-    }
-  }, [judges]);
+    setJudges(await getRegisteredJudges(Number(id)));
+  }, [id]);
 
   useEffect(() => {
     loadJudgesData();
   }, [loadJudgesData]);
+
+  useEffect(() => {
+    if (modalClose.masRows.length === 0) {
+      loadJudgesData();
+    }
+  }, [loadJudgesData, modalClose.masRows.length]);
 
   return (
     <section className={Style.wrapper}>

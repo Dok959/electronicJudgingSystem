@@ -4,7 +4,7 @@ import { vars } from '@/theme';
 
 export const wrapper = style({
   width: '100%',
-  maxWidth: 400,
+  // maxWidth: 400,
   margin: 0,
   display: 'flex',
   flexDirection: 'column',
@@ -134,6 +134,7 @@ export const judges = style({
   gap: 8,
   flexDirection: 'column',
   alignItems: 'center',
+  width: '60%',
 });
 
 export const judgesHeader = style({
@@ -175,13 +176,7 @@ export const judgesList = style({
   margin: 0,
   padding: 0,
   listStyle: 'none',
-  gridTemplateColumns: '1fr',
-  '@media': {
-    'screen and (min-width: 576px)': {
-      gridTemplateColumns: '1fr 1fr',
-    },
-    'screen and (min-width: 992px)': {
-      gridTemplateColumns: '1fr 1fr 1fr',
-    },
-  },
+  justifyItems: 'center',
+  width: '100%',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
 });

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Judge, User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
@@ -28,5 +28,10 @@ export class JudgeService {
     });
 
     return judges.map((item) => item.user);
+  }
+
+  async insert(judgeCreateArgs: Prisma.JudgeCreateManyArgs): Promise<boolean> {
+    const result = await this.prisma.judge.createMany(judgeCreateArgs);
+    return result ? true : false;
   }
 }
