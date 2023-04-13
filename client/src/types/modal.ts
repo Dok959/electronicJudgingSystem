@@ -1,5 +1,7 @@
+import { ISelectAthlete } from './athlete';
 import { ISelectUser } from './user';
 
 export interface IModal {
-  masRows: ISelectUser[];
+  masRows: ISelectUser[] | ISelectAthlete[];
+  type: 'judges' | 'partisipants' | '';
 }

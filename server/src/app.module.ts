@@ -1,3 +1,4 @@
+import { PartisipantModule } from './partisipants/partisipant.module';
 import { JudgeModule } from './judges/judge.module';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
@@ -14,6 +15,7 @@ import { TypeModule } from './types';
 
 @Module({
   imports: [
+    PartisipantModule,
     JudgeModule,
     TypeModule,
     RoleModule,

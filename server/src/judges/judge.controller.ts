@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Post,
   Res,
+  Headers,
 } from '@nestjs/common';
 import { JudgeService } from './judge.service';
 import { Response } from 'express';
@@ -17,16 +18,22 @@ export class JudgeController {
 
   @Get('onRegistered')
   @HttpCode(HttpStatus.OK)
-  async getAllOnRegistered(@Res() res: Response) {
-    const judges = await this.judgeService.getAllOnRegistered(1);
+  async getAllOnRegistered(
+    @Headers('eventId') eventId: string,
+    @Res() res: Response,
+  ) {
+    const judges = await this.judgeService.getAllOnRegistered(Number(eventId));
 
     return res.send(judges);
   }
 
   @Get('registered')
   @HttpCode(HttpStatus.OK)
-  async getAllRegistered(@Res() res: Response) {
-    const judges = await this.judgeService.getAllRegistered(1);
+  async getAllRegistered(
+    @Headers('eventId') eventId: string,
+    @Res() res: Response,
+  ) {
+    const judges = await this.judgeService.getAllRegistered(Number(eventId));
 
     return res.send(judges);
   }

@@ -5,26 +5,27 @@ import { handleAlertMessage } from '@/utils/auth';
 import { handleModal } from '@/utils/modal';
 import { ISelectUser } from '@/types/user';
 import { Spinner } from '..';
-import { judgeClient } from '@/api';
+import { judgeClient, partisipantClient } from '@/api';
 import { alertStatus } from '@/utils/enum';
 import * as Style from './Modal.css';
+import { ISelectAthlete } from '@/types/athlete';
+import { IModal } from '@/types';
 
 export interface IProps {
-  props: {
-    masRows: ISelectUser[];
-  };
+  props: IModal;
 }
 
 export const Modal = ({ props }: IProps) => {
   const { id } = useParams();
 
-  const { masRows } = props;
+  const { masRows, type } = props;
 
   const [spinner, setSpinner] = useState<boolean>(false);
 
   const clickHandler = () => {
     handleModal({
       masRows: [],
+      type: '',
     });
   };
 
@@ -35,11 +36,23 @@ export const Modal = ({ props }: IProps) => {
     onSubmit: async (values) => {
       setSpinner(true);
       const { elements } = values;
-      const usersId = elements.map((item) => Number(item));
-      const data = usersId.map((item) => {
-        return { eventId: Number(id), userId: item };
-      });
-      const result = await judgeClient.insertJudges(data);
+      let result: boolean;
+      if (type === 'judges') {
+        const usersId = elements.map((item) => Number(item));
+        const data = usersId.map((item) => {
+          return { eventId: Number(id), userId: item };
+        });
+        console.log(data);
+        result = await judgeClient.insertJudges(data);
+      } else {
+        const athleteId = elements.map((item) => Number(item));
+        const data = athleteId.map((item) => {
+          return { settingsEvent: { eventId: Number(id) }, athleteId: item };
+        });
+        console.log(data);
+        result = false;
+        // result = await partisipantClient.insertPartisipants(data);
+      }
       setSpinner(false);
       if (result) {
         clickHandler();
@@ -60,7 +73,7 @@ export const Modal = ({ props }: IProps) => {
       <div className={Style.window}>
         <form onSubmit={formik.handleSubmit} className={Style.form}>
           <div className={Style.content}>
-            {masRows.map((item: ISelectUser) => (
+            {masRows.map((item: any) => (
               <p key={item.id}>
                 <input
                   type="checkbox"

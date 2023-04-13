@@ -1,4 +1,4 @@
-import { eventClient, judgeClient } from '@/api';
+import { eventClient, judgeClient, partisipantClient } from '@/api';
 import { ICustomPropertySelectedEvent } from '@/types/event';
 import {
   useLoaderData,
@@ -15,6 +15,7 @@ import { useStore } from 'effector-react';
 import { ISelectUser } from '@/types/user';
 import { handleModal } from '@/utils/modal';
 import { $modal } from '@/context/modal';
+import { IPartisipants, ISelectAthlete } from '@/types/athlete';
 
 export async function loaderInfoEvent({ params }: LoaderFunctionArgs) {
   const eventId = Number(params.id);
@@ -52,13 +53,27 @@ interface IReturnTypes {
 }
 
 async function getRegisteredJudges(id: number) {
-  const judges = await judgeClient.getAllRegisteredJudge(id);
+  const judges = await judgeClient.getAllRegisteredJudge({ eventId: id });
   return judges;
 }
 
 async function getJudges(id: number) {
-  const judges = await judgeClient.getAllOnRegisteredJudge(id);
+  const judges = await judgeClient.getAllOnRegisteredJudge({ eventId: id });
   return judges;
+}
+
+async function getRegisteredPartisipants(id: number) {
+  const partisipants = await partisipantClient.getAllRegisteredPartisipants({
+    eventId: id,
+  });
+  return partisipants;
+}
+
+async function getPartisipants(id: number) {
+  const partisipants = await partisipantClient.getAllOnRegisteredPartisipants({
+    eventId: id,
+  });
+  return partisipants;
 }
 
 export const InfoEventPage = () => {
@@ -89,20 +104,37 @@ export const InfoEventPage = () => {
     const judges = await getJudges(Number(id));
     return handleModal({
       masRows: judges,
+      type: 'judges',
+    });
+  }
+
+  async function PartisipantsHandler(e: any) {
+    e.preventDefault();
+    const partisipants = await getPartisipants(Number(id));
+    console.log(partisipants);
+    return handleModal({
+      masRows: partisipants,
+      type: 'partisipants',
     });
   }
 
   const modalClose = useStore($modal);
 
   const [judges, setJudges] = useState<ISelectUser[]>([]);
+  const [partisipants, setPartisipants] = useState<IPartisipants[]>([]);
 
   const loadJudgesData = useCallback(async () => {
     setJudges(await getRegisteredJudges(Number(id)));
   }, [id]);
 
+  const loadPartisipantsData = useCallback(async () => {
+    setPartisipants(await getRegisteredPartisipants(Number(id)));
+  }, [id]);
+
   useEffect(() => {
     loadJudgesData();
-  }, [loadJudgesData]);
+    loadPartisipantsData();
+  }, [loadJudgesData, loadPartisipantsData]);
 
   useEffect(() => {
     if (modalClose.masRows.length === 0) {
@@ -168,6 +200,37 @@ export const InfoEventPage = () => {
                       {(resolvedJudges) => (
                         <>
                           {resolvedJudges.map(
+                            (item: ISelectUser, index: number) => (
+                              <li key={index}>{`${item.sirname} ${item.name} ${
+                                item.patronymic ? item.patronymic : ''
+                              }`}</li>
+                            ),
+                          )}
+                        </>
+                      )}
+                    </Await>
+                  </ul>
+                </div>
+
+                <div className={Style.judges}>
+                  <div className={Style.judgesHeader}>
+                    <h5 className={Style.subTitle}>Участники</h5>
+                    {isHasRights ? (
+                      <button
+                        className={Style.detail}
+                        onClick={PartisipantsHandler}
+                      >
+                        Добавить
+                      </button>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
+                  <ul className={Style.judgesList}>
+                    <Await resolve={partisipants}>
+                      {(resolvedPartisipants) => (
+                        <>
+                          {resolvedPartisipants.map(
                             (item: ISelectUser, index: number) => (
                               <li key={index}>{`${item.sirname} ${item.name} ${
                                 item.patronymic ? item.patronymic : ''

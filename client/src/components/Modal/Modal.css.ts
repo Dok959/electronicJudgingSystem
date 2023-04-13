@@ -88,7 +88,7 @@ export const form = style({
 
 export const content = style({
   width: '100%',
-  overflowY: 'scroll',
+  overflowY: 'auto',
   height: 'inherit',
   maxHeight: 300,
   paddingLeft: 10,
