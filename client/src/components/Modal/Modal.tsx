@@ -3,12 +3,11 @@ import { useParams } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { handleAlertMessage } from '@/utils/auth';
 import { handleModal } from '@/utils/modal';
-import { ISelectUser } from '@/types/user';
 import { Spinner } from '..';
 import { judgeClient, partisipantClient } from '@/api';
 import { alertStatus } from '@/utils/enum';
 import * as Style from './Modal.css';
-import { IPartisipants, ISelectAthlete } from '@/types/athlete';
+import { IPartisipants } from '@/types/athlete';
 import { IModal } from '@/types';
 
 export interface IProps {
@@ -46,12 +45,20 @@ export const Modal = ({ props }: IProps) => {
         result = await judgeClient.insertJudges(data);
       } else {
         const athleteId = elements.map((item) => Number(item));
-        const data = athleteId.map((item) => {
-          return { settingsEvent: { eventId: Number(id) }, athleteId: item };
+        const data = athleteId.map((id) => {
+          const el = (masRows as IPartisipants[]).find(
+            (item: IPartisipants) => {
+              return item.athlete.id === id ? item : null;
+            },
+          );
+          return el
+            ? {
+                settingsEventId: el.settingsEvent.id,
+                athleteId: el.athlete.id,
+              }
+            : null;
         });
-        console.log(data);
-        result = false;
-        // result = await partisipantClient.insertPartisipants(data);
+        result = await partisipantClient.insertPartisipants(data);
       }
       setSpinner(false);
       if (result) {

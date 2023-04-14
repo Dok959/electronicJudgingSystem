@@ -1,6 +1,6 @@
 import { HTTPError } from 'ky';
 import api from './kyClient';
-import { IPartisipants, ISelectAthlete } from '@/types/athlete';
+import { IPartisipants } from '@/types/athlete';
 
 export class partisipantClient {
   static getAllRegisteredPartisipants = async (
@@ -28,7 +28,6 @@ export class partisipantClient {
     }
   };
 
-  // TODO
   static getAllOnRegisteredPartisipants = async (
     args: any = {},
   ): Promise<IPartisipants[]> => {

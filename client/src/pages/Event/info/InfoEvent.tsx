@@ -15,7 +15,7 @@ import { useStore } from 'effector-react';
 import { ISelectUser } from '@/types/user';
 import { handleModal } from '@/utils/modal';
 import { $modal } from '@/context/modal';
-import { IPartisipants, ISelectAthlete } from '@/types/athlete';
+import { IPartisipants } from '@/types/athlete';
 
 export async function loaderInfoEvent({ params }: LoaderFunctionArgs) {
   const eventId = Number(params.id);
@@ -143,8 +143,9 @@ export const InfoEventPage = () => {
   useEffect(() => {
     if (modalClose.masRows.length === 0) {
       loadJudgesData();
+      loadPartisipantsData();
     }
-  }, [loadJudgesData, modalClose.masRows.length]);
+  }, [loadJudgesData, loadPartisipantsData, modalClose.masRows.length]);
 
   return (
     <section className={Style.wrapper}>
