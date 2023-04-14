@@ -31,7 +31,7 @@ export class partisipantClient {
   // TODO
   static getAllOnRegisteredPartisipants = async (
     args: any = {},
-  ): Promise<ISelectAthlete[]> => {
+  ): Promise<IPartisipants[]> => {
     try {
       const result: [] = await api
         .get('partisipant/onRegistered', {

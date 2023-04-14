@@ -52,16 +52,19 @@ interface IReturnTypes {
   event: ICustomPropertySelectedEvent;
 }
 
+// Зарегистрированные
 async function getRegisteredJudges(id: number) {
   const judges = await judgeClient.getAllRegisteredJudge({ eventId: id });
   return judges;
 }
 
+// Не зарегистрированные
 async function getJudges(id: number) {
   const judges = await judgeClient.getAllOnRegisteredJudge({ eventId: id });
   return judges;
 }
 
+// Зарегистрированные
 async function getRegisteredPartisipants(id: number) {
   const partisipants = await partisipantClient.getAllRegisteredPartisipants({
     eventId: id,
@@ -69,6 +72,7 @@ async function getRegisteredPartisipants(id: number) {
   return partisipants;
 }
 
+// Не зарегистрированные
 async function getPartisipants(id: number) {
   const partisipants = await partisipantClient.getAllOnRegisteredPartisipants({
     eventId: id,
@@ -231,9 +235,13 @@ export const InfoEventPage = () => {
                       {(resolvedPartisipants) => (
                         <>
                           {resolvedPartisipants.map(
-                            (item: ISelectUser, index: number) => (
-                              <li key={index}>{`${item.sirname} ${item.name} ${
-                                item.patronymic ? item.patronymic : ''
+                            (item: IPartisipants, index: number) => (
+                              <li key={index}>{`${item.athlete.sirname} ${
+                                item.athlete.name
+                              } ${
+                                item.athlete.patronymic
+                                  ? item.athlete.patronymic
+                                  : ''
                               }`}</li>
                             ),
                           )}

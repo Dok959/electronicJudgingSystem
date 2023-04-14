@@ -8,7 +8,7 @@ import { Spinner } from '..';
 import { judgeClient, partisipantClient } from '@/api';
 import { alertStatus } from '@/utils/enum';
 import * as Style from './Modal.css';
-import { ISelectAthlete } from '@/types/athlete';
+import { IPartisipants, ISelectAthlete } from '@/types/athlete';
 import { IModal } from '@/types';
 
 export interface IProps {
@@ -73,30 +73,64 @@ export const Modal = ({ props }: IProps) => {
       <div className={Style.window}>
         <form onSubmit={formik.handleSubmit} className={Style.form}>
           <div className={Style.content}>
-            {masRows.map((item: any) => (
-              <p key={item.id}>
-                <input
-                  type="checkbox"
-                  id={item.id.toString()}
-                  className={Style.input}
-                  name="elements"
-                  value={item.id}
-                  onChange={(e) => {
-                    formik.handleChange(e);
-                    const elementId = String(item.id);
-                    formik.values.elements.includes(elementId)
-                      ? formik.values.elements.filter((el) => el !== elementId)
-                      : formik.values.elements.push(elementId);
-                  }}
-                  onBlur={formik.handleBlur}
-                />
-                <label htmlFor={item.id.toString()} className={Style.label}>{`${
-                  item.sirname
-                } ${item.name} ${
-                  item.patronymic ? item.patronymic : ''
-                }`}</label>
-              </p>
-            ))}
+            {type === 'judges'
+              ? masRows.map((item: any) => (
+                  <p key={item.id}>
+                    <input
+                      type="checkbox"
+                      id={item.id.toString()}
+                      className={Style.input}
+                      name="elements"
+                      value={item.id}
+                      onChange={(e) => {
+                        formik.handleChange(e);
+                        const elementId = String(item.id);
+                        formik.values.elements.includes(elementId)
+                          ? formik.values.elements.filter(
+                              (el) => el !== elementId,
+                            )
+                          : formik.values.elements.push(elementId);
+                      }}
+                      onBlur={formik.handleBlur}
+                    />
+                    <label
+                      htmlFor={item.id.toString()}
+                      className={Style.label}
+                    >{`${item.sirname} ${item.name} ${
+                      item.patronymic ? item.patronymic : ''
+                    }`}</label>
+                  </p>
+                ))
+              : null}
+            {type === 'partisipants'
+              ? masRows.map((item: any) => (
+                  <p key={item.athlete.id}>
+                    <input
+                      type="checkbox"
+                      id={item.athlete.id.toString()}
+                      className={Style.input}
+                      name="elements"
+                      value={item.athlete.id}
+                      onChange={(e) => {
+                        formik.handleChange(e);
+                        const elementId = String(item.athlete.id);
+                        formik.values.elements.includes(elementId)
+                          ? formik.values.elements.filter(
+                              (el) => el !== elementId,
+                            )
+                          : formik.values.elements.push(elementId);
+                      }}
+                      onBlur={formik.handleBlur}
+                    />
+                    <label
+                      htmlFor={item.athlete.id.toString()}
+                      className={Style.label}
+                    >{`${item.athlete.sirname} ${item.athlete.name} ${
+                      item.athlete.patronymic ? item.athlete.patronymic : ''
+                    }`}</label>
+                  </p>
+                ))
+              : null}
           </div>
 
           <button type="submit" className={Style.button}>

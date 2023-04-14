@@ -20,19 +20,29 @@ export class PartisipantService {
     return partisipants;
   }
 
-  async getAllOnRegistered(id: number): Promise<Athlete[]> {
+  async getAllOnRegistered(id: number): Promise<IPartisipants[]> {
     const athletes = await this.prisma.athlete.findMany();
 
+    const settingsEvent = await this.prisma.settingsEvent.findMany({
+      where: { eventId: id },
+    });
+
     const partisipants = await this.prisma.partisipantsIndividual.findMany({
-      where: { settingsEvent: { eventId: { not: id } } },
+      where: { settingsEvent: { eventId: id } },
       select: { athlete: true },
     });
 
     const masIdPartisipants = partisipants.map((item) => item.athlete.id);
 
-    const difference = athletes.filter(
-      (user) => !masIdPartisipants.includes(user.id),
-    );
+    const difference = athletes
+      .filter((user) => !masIdPartisipants.includes(user.id))
+      .map((user) => {
+        const el = settingsEvent.find((settings) => {
+          return settings.rankId === user.rankId ? settings : null;
+        });
+        if (el) return { athlete: user, settingsEvent: el };
+      })
+      .filter((item) => item !== undefined);
 
     return difference;
   }
