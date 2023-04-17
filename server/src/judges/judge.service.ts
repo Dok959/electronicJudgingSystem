@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, User } from '@prisma/client';
+import { Prisma, User, Event } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class JudgeService {
@@ -33,5 +34,30 @@ export class JudgeService {
   async insert(judgeCreateArgs: Prisma.JudgeCreateManyArgs): Promise<boolean> {
     const result = await this.prisma.judge.createMany(judgeCreateArgs);
     return result ? true : false;
+  }
+
+  async start(id: number): Promise<{ event: Event | null }> {
+    const events = await this.prisma.judge.findMany({
+      where: { userId: id },
+      orderBy: {
+        event: {
+          startDateTime: 'asc',
+        },
+      },
+      select: {
+        event: true,
+      },
+    });
+
+    const result = events
+      .filter((item) => {
+        const now = dayjs();
+        const dateStart = dayjs(item.event.startDateTime);
+        const difference = dateStart.diff(now, 'h');
+        difference / 3600 < 6 ? item.event : null;
+      })
+      .find((item) => item);
+
+    return result;
   }
 }

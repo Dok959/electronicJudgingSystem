@@ -12,6 +12,7 @@ import {
   HomePage,
   MainPage,
   NotFoundPage,
+  Places,
   UserPage,
 } from './pages';
 import {
@@ -31,6 +32,7 @@ import {
   ranksLoaderForCreateAthlete,
 } from './pages/Athlete/create';
 import { InfoEventPage, loaderInfoEvent } from './pages/Event/info';
+import { eventJudgeLoader } from './pages/Judging';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -115,6 +117,25 @@ const router = createBrowserRouter(
         element={
           <RequireAuth>
             <CreateAthletePage />
+          </RequireAuth>
+        }
+        loader={ranksLoaderForCreateAthlete}
+      />
+      <Route
+        path="places"
+        element={
+          <RequireAuth>
+            <Places />
+          </RequireAuth>
+        }
+        loader={eventJudgeLoader}
+      />
+      {/* TODO */}
+      <Route
+        path="judging"
+        element={
+          <RequireAuth>
+            <Places />
           </RequireAuth>
         }
         loader={ranksLoaderForCreateAthlete}

@@ -6,8 +6,8 @@ export const ErrorPage = () => {
 
   return (
     <div id="error-page">
-      <h1>Oops!</h1>
-      <p>Sorry, an unexpected error has occurred.</p>
+      <h1>Что-то пошло не так</h1>
+      <p>Извините произошла ошибка, повторите попытку позднее</p>
       <p>
         <i>{error.status}</i>
         <br />
