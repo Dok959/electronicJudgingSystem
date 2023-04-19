@@ -29,7 +29,7 @@ export const EventPage = () => {
 
   return (
     <>
-      {isJudge ? <ButtonStart /> : <></>}
+      {isJudge ? <ButtonStart eventId={isJudge.id} /> : <></>}
       <EventsList />
     </>
   );

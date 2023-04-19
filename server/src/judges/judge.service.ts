@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, User, Event } from '@prisma/client';
+import { Prisma, User, Event, Place, PlacesEvent } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import * as dayjs from 'dayjs';
 
@@ -49,15 +49,37 @@ export class JudgeService {
       },
     });
 
-    const result = events
-      .filter((item) => {
-        const now = dayjs();
-        const dateStart = dayjs(item.event.startDateTime);
-        const difference = dateStart.diff(now, 'h');
-        difference / 3600 < 6 ? item.event : null;
-      })
-      .find((item) => item);
+    const result = events.find((item) => {
+      const now = dayjs();
+      const dateStart = dayjs(item.event.startDateTime);
+      let difference = dateStart.diff(now, 'h');
+      if (difference / 3600 < 6) {
+        return item.event;
+      }
+      const dateEnd = dateStart.add(item.event.duration);
+      difference = dateEnd.diff(now, 'h');
+      if (dateStart < now && difference / 3600 > 0) {
+        return item.event;
+      }
+    });
+    // .find((item) => item);
 
     return result;
+  }
+
+  async getPlaces(): Promise<Place[]> {
+    const places = await this.prisma.place.findMany();
+    return places;
+  }
+
+  async getBusyPlaces(eventId: number): Promise<PlacesEvent[]> {
+    const places = await this.prisma.placesEvent.findMany({
+      where: {
+        judge: {
+          eventId: eventId,
+        },
+      },
+    });
+    return places;
   }
 }

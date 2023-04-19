@@ -6,7 +6,6 @@ import { Navigate, useLocation } from 'react-router-dom';
 const Grant = createComponent($grant, (props: any, state) => {
   const { children } = props;
 
-  console.log(props);
   useEffect(() => {
     fetchAuthFx();
   }, []);

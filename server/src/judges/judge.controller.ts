@@ -12,7 +12,8 @@ import {
 import { JudgeService } from './judge.service';
 import { Response } from 'express';
 import { Prisma, User } from '@prisma/client';
-import { HeadersGuard } from 'src/users/guards';
+import { HeadersGuard as UserGuard } from 'src/users/guards';
+import { HeadersGuard as EventGuard } from './guards';
 
 @Controller('judge')
 export class JudgeController {
@@ -51,11 +52,28 @@ export class JudgeController {
     return res.send(result);
   }
 
-  @UseGuards(HeadersGuard)
+  @UseGuards(UserGuard)
   @Get('start')
   @HttpCode(HttpStatus.OK)
   async start(@Headers('user') user: User, @Res() res: Response) {
     const result = await this.judgeService.start(Number(user.id));
+
+    return res.send(result);
+  }
+
+  @Get('places')
+  @HttpCode(HttpStatus.OK)
+  async places(@Res() res: Response) {
+    const result = await this.judgeService.getPlaces();
+
+    return res.send(result);
+  }
+
+  @UseGuards(EventGuard)
+  @Get('busy')
+  @HttpCode(HttpStatus.OK)
+  async busyPlaces(@Headers('eventId') eventId: string, @Res() res: Response) {
+    const result = await this.judgeService.getBusyPlaces(Number(eventId));
 
     return res.send(result);
   }

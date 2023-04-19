@@ -12,3 +12,8 @@ export interface IRoles {
   id: number;
   title: string;
 }
+
+export interface IPlaces {
+  id: number;
+  title: string;
+}

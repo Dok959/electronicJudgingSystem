@@ -122,7 +122,7 @@ const router = createBrowserRouter(
         loader={ranksLoaderForCreateAthlete}
       />
       <Route
-        path="places"
+        path="events/:id/places"
         element={
           <RequireAuth>
             <Places />

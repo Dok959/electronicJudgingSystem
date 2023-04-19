@@ -51,7 +51,6 @@ export class authClient {
           json: { ...auth },
         })
         .json();
-      console.log('---');
 
       localStorage.setItem(`auth`, JSON.stringify(result));
       const role = await this.getUserGrant();

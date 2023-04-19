@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { roles, ranks, items, types } from '../data';
+import { roles, ranks, items, types, places } from '../data';
 
 const prisma = new PrismaClient();
 
@@ -15,6 +15,9 @@ async function main() {
   });
   await prisma.typesEvent.createMany({
     data: types,
+  });
+  await prisma.place.createMany({
+    data: places,
   });
 
   const adminRole = await prisma.role.findFirst({

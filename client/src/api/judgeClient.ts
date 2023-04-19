@@ -2,6 +2,8 @@ import { HTTPError } from 'ky';
 import api from './kyClient';
 import { ISelectUser } from '@/types/user';
 import { ISelectEvent } from '@/types/event';
+import { IPlaces } from '@/types';
+import { IPlacesEvent } from '@/types/judging';
 
 export class judgeClient {
   static getAllOnRegisteredJudge = async (
@@ -79,9 +81,11 @@ export class judgeClient {
 
   static getJudge = async (): Promise<ISelectEvent | null> => {
     try {
-      const result: ISelectEvent = await api.get('judge/start', {}).json();
+      const result: { event: ISelectEvent | null } = await api
+        .get('judge/start', {})
+        .json();
       console.log(result);
-      return result;
+      return result ? result.event : null;
     } catch (error) {
       console.log(error);
       if (error instanceof HTTPError) {
@@ -91,6 +95,44 @@ export class judgeClient {
         console.log(error.message);
       }
       return null;
+    }
+  };
+
+  static getPlaces = async (): Promise<IPlaces[]> => {
+    try {
+      const result: IPlaces[] = await api.get('judge/places', {}).json();
+      return result;
+    } catch (error) {
+      console.log(error);
+      if (error instanceof HTTPError) {
+        const errorJson = await error.response.json();
+        console.log(errorJson);
+      } else if (error instanceof Error) {
+        console.log(error.message);
+      }
+      return [];
+    }
+  };
+
+  static getBusyPlaces = async (eventId: string): Promise<IPlacesEvent[]> => {
+    try {
+      const result: IPlacesEvent[] = await api
+        .get('judge/busy', {
+          headers: {
+            eventId: eventId,
+          },
+        })
+        .json();
+      return result;
+    } catch (error) {
+      console.log(error);
+      if (error instanceof HTTPError) {
+        const errorJson = await error.response.json();
+        console.log(errorJson);
+      } else if (error instanceof Error) {
+        console.log(error.message);
+      }
+      return [];
     }
   };
 }

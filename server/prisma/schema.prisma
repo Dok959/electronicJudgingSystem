@@ -64,6 +64,7 @@ model Item {
   title             String
   RaitingIndividual RaitingIndividual[]
   RaitingGroup      RaitingGroup[]
+  Score             Score[]
 
   @@map("items")
 }
@@ -80,12 +81,14 @@ model Event {
 }
 
 model Judge {
-  event   Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  eventId Int
-  user    User  @relation(fields: [userId], references: [id])
-  userId  Int
+  id          Int           @id @default(autoincrement())
+  event       Event         @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId     Int
+  user        User          @relation(fields: [userId], references: [id])
+  userId      Int
+  PlacesEvent PlacesEvent[]
+  Score       Score[]
 
-  @@id([eventId, userId])
   @@map("judges")
 }
 
@@ -119,6 +122,7 @@ model PartisipantsIndividual {
   athlete           Athlete             @relation(fields: [athleteId], references: [id])
   athleteId         Int
   RaitingIndividual RaitingIndividual[]
+  Score             Score[]
 
   @@map("partisipantsIndividual")
 }
@@ -175,4 +179,35 @@ model RaitingGroup {
   score Int
 
   @@map("raitingGroup")
+}
+
+model PlacesEvent {
+  id      Int   @id @default(autoincrement())
+  judge   Judge @relation(fields: [judgeId], references: [id])
+  judgeId Int
+  place   Place @relation(fields: [placeId], references: [id])
+  placeId Int
+
+  @@map("placesEvent")
+}
+
+model Place {
+  id          Int           @id @default(autoincrement())
+  title       String
+  PlacesEvent PlacesEvent[]
+
+  @@map("places")
+}
+
+model Score {
+  id            Int                    @id @default(autoincrement())
+  judge         Judge                  @relation(fields: [judgeId], references: [id])
+  judgeId       Int
+  partisipant   PartisipantsIndividual @relation(fields: [partisipantId], references: [id], onDelete: Cascade)
+  partisipantId Int
+  item          Item                   @relation(fields: [itemId], references: [id])
+  itemId        Int
+  score         Float                  @db.DoublePrecision()
+
+  @@map("score")
 }
