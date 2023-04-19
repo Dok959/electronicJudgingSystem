@@ -67,11 +67,13 @@ export class JudgeService {
     return result;
   }
 
+  // Список мест
   async getPlaces(): Promise<Place[]> {
     const places = await this.prisma.place.findMany();
     return places;
   }
 
+  // Список занятых мест
   async getBusyPlaces(eventId: number): Promise<PlacesEvent[]> {
     const places = await this.prisma.placesEvent.findMany({
       where: {
@@ -81,5 +83,20 @@ export class JudgeService {
       },
     });
     return places;
+  }
+
+  // Занять место
+  async setPlace(data: Prisma.PlacesEventCreateArgs): Promise<PlacesEvent> {
+    const place = await this.prisma.placesEvent.create(data);
+    return place;
+  }
+
+  // Получитьь идентификатор судьи
+  async getJudge(eventId: number, userId: number): Promise<number> {
+    const judge = await this.prisma.judge.findFirst({
+      where: { eventId: eventId, userId: userId },
+      select: { id: true },
+    });
+    return judge.id;
   }
 }

@@ -1,11 +1,12 @@
+import { Suspense } from 'react';
+import { useStore } from 'effector-react';
+import { useFormik } from 'formik';
 import { judgeClient } from '@/api';
 import { $grant } from '@/context/auth';
 import { ISelectEvent } from '@/types/event';
-import { useStore } from 'effector-react';
-import { Suspense, useCallback, useEffect, useState } from 'react';
-import * as Style from './Places.css';
 import {
   Await,
+  LoaderFunctionArgs,
   Navigate,
   defer,
   useAsyncValue,
@@ -13,8 +14,8 @@ import {
   useNavigate,
 } from 'react-router-dom';
 import { IPlaces } from '@/types';
-import { useFormik } from 'formik';
 import { IPlacesEvent } from '@/types/judging';
+import * as Style from './Places.css';
 
 export interface IReturnTypes {
   event: ISelectEvent | null;
@@ -28,13 +29,20 @@ export const Places = () => {
 
   const isHasRights = useStore($grant);
 
+  if (event === null) {
+    navigate('/events');
+  }
+
   return (
     <Suspense fallback={<h3 className={Style.heading}>Загрузка...</h3>}>
       <Await resolve={event}>
         {(resolvedEvent) =>
           resolvedEvent?.id ? (
             <Await resolve={places}>
-              <PlacesRender busyPlaces={busyPlaces} />
+              <PlacesRender
+                busyPlaces={busyPlaces}
+                eventId={resolvedEvent!.id}
+              />
             </Await>
           ) : (
             <Navigate to={'/events'} />
@@ -46,38 +54,34 @@ export const Places = () => {
 };
 
 // TODO на следующей странице нужно будет проверить откуда пришел пользователь
-function PlacesRender({ busyPlaces }: { busyPlaces: IPlacesEvent[] }) {
+function PlacesRender({
+  busyPlaces,
+  eventId,
+}: {
+  busyPlaces: IPlacesEvent[];
+  eventId: number;
+}) {
   const navigate = useNavigate();
   const places = useAsyncValue() as IPlaces[];
 
-  // TODO
-  // const [busyPlaces, setBusyPlaces] = useState<IPlacesEvent[]>([]);
-  // const loadBusyPlaces = useCallback(async () => {
-  //   if (busyPlaces.length === 0) {
-  //     setBusyPlaces(await getBusyPlaces(eventId));
-  //   }
-  // }, [busyPlaces.length, eventId]);
-  // // console.log(busyPlaces);
-
-  // useEffect(() => {
-  //   loadBusyPlaces();
-  // }, [loadBusyPlaces]);
+  async function setJudgePlace(data: {}) {
+    return await judgeClient.setJudgePlace(data);
+  }
 
   const formik = useFormik({
     initialValues: {
-      place: String,
+      place: [] as String[],
     },
     onSubmit: async (values) => {
       const { place } = values;
       console.log(place);
-      // const param = ranks.map((item) => Number(item));
+      const data = {
+        eventId: eventId,
+        placeId: Number(place.find((item) => item)),
+      };
+      console.log(data);
+      setJudgePlace(data);
       // const result = await getEvents(param, 0);
-      // setEvents(result);
-
-      // const button = document.getElementById('load') as HTMLElement;
-      // if (button !== null) {
-      //   button.style.display = 'block';
-      // }
     },
   });
 
@@ -119,8 +123,8 @@ function PlacesRender({ busyPlaces }: { busyPlaces: IPlacesEvent[] }) {
   );
 }
 
-export const eventJudgeLoader = async ({ params }: any) => {
-  const id = params.id;
+export const eventJudgeLoader = async ({ params }: LoaderFunctionArgs) => {
+  const id = params.id || '';
 
   async function getJudge() {
     return await judgeClient.getJudge();
@@ -137,7 +141,7 @@ export const eventJudgeLoader = async ({ params }: any) => {
   const result = {
     event: getJudge(),
     places: getPlaces(),
-    busyPlaces: getBusyPlaces(id),
+    busyPlaces: getBusyPlaces(id.toString()),
   };
 
   return defer(result);

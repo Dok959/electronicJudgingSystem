@@ -135,4 +135,27 @@ export class judgeClient {
       return [];
     }
   };
+
+  // : Promise<IPlacesEvent[]>
+  static setJudgePlace = async (data: any) => {
+    try {
+      const result: IPlacesEvent[] = await api
+        .post('judge/setPlace', {
+          json: {
+            data,
+          },
+        })
+        .json();
+      return result;
+    } catch (error) {
+      console.log(error);
+      if (error instanceof HTTPError) {
+        const errorJson = await error.response.json();
+        console.log(errorJson);
+      } else if (error instanceof Error) {
+        console.log(error.message);
+      }
+      return [];
+    }
+  };
 }

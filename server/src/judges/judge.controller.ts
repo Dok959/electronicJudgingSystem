@@ -77,4 +77,23 @@ export class JudgeController {
 
     return res.send(result);
   }
+
+  @UseGuards(UserGuard)
+  @Post('setPlace')
+  @HttpCode(HttpStatus.OK)
+  async setPlace(
+    @Headers('user') user: User,
+    @Body() args: any,
+    @Res() res: Response,
+  ) {
+    const eventId = args.data.eventId;
+
+    const judge = await this.judgeService.getJudge(eventId, user.id);
+    args.data.judgeId = judge;
+    delete args.data.eventId;
+
+    const result = await this.judgeService.setPlace(args);
+
+    return res.send(result);
+  }
 }

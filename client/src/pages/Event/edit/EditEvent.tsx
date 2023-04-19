@@ -1,6 +1,7 @@
 import { Suspense, useState } from 'react';
 import {
   Await,
+  LoaderFunctionArgs,
   NavLink,
   defer,
   useAsyncValue,
@@ -354,7 +355,7 @@ async function getRanks() {
   return await utilClient.getRanks();
 }
 
-export const eventLoader = async ({ params }: any) => {
+export const eventLoader = async ({ params }: LoaderFunctionArgs) => {
   const id = Number(params.id);
 
   const result = {

@@ -32,7 +32,7 @@ import {
   ranksLoaderForCreateAthlete,
 } from './pages/Athlete/create';
 import { InfoEventPage, loaderInfoEvent } from './pages/Event/info';
-import { eventJudgeLoader } from './pages/Judging';
+import { eventJudgeLoader, Judging } from './pages/Judging';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -132,10 +132,10 @@ const router = createBrowserRouter(
       />
       {/* TODO */}
       <Route
-        path="judging"
+        path="events/:id/judging"
         element={
           <RequireAuth>
-            <Places />
+            <Judging />
           </RequireAuth>
         }
         loader={ranksLoaderForCreateAthlete}
