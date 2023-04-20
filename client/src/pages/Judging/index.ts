@@ -1,2 +1,2 @@
 export { Places, eventJudgeLoader } from './Places';
-export { Judging } from './Judging';
+export { Judging, judgePlaceLoader } from './Judging';

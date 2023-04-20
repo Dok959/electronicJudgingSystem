@@ -75,4 +75,27 @@ export class partisipantClient {
       return false;
     }
   };
+
+  static getPartisipants = async (args: any = {}) => {
+    try {
+      const result: [] = await api
+        .get('partisipant/queue', {
+          headers: {
+            ...args,
+          },
+        })
+        .json();
+
+      return result;
+    } catch (error) {
+      console.log(error);
+      if (error instanceof HTTPError) {
+        const errorJson = await error.response.json();
+        console.log(errorJson);
+      } else if (error instanceof Error) {
+        console.log(error.message);
+      }
+      return [];
+    }
+  };
 }

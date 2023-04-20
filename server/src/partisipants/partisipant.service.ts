@@ -11,9 +11,9 @@ type IPartisipants = {
 export class PartisipantService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getAllRegistered(id: number): Promise<IPartisipants[]> {
+  async getAllRegistered(eventId: number): Promise<IPartisipants[]> {
     const partisipants = await this.prisma.partisipantsIndividual.findMany({
-      where: { settingsEvent: { eventId: id } },
+      where: { settingsEvent: { eventId: eventId } },
       select: { athlete: true, settingsEvent: true },
     });
 
@@ -54,5 +54,23 @@ export class PartisipantService {
       PartisipantsIndividualCreateManyArgs,
     );
     return result ? true : false;
+  }
+
+  async getPartisipants(eventId: number) {
+    const partisipants = await this.prisma.partisipantsIndividual.findMany({
+      where: { settingsEvent: { eventId } },
+      include: { athlete: true, settingsEvent: true },
+    });
+
+    return partisipants;
+  }
+
+  async getRanks(eventId: number) {
+    const ranks = await this.prisma.partisipantsIndividual.findMany({
+      where: { settingsEvent: { eventId } },
+      select: { settingsEvent: { select: { rank: true } } },
+    });
+
+    return ranks;
   }
 }

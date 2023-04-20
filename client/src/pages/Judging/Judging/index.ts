@@ -1,1 +1,1 @@
-export { Judging } from './Judging';
+export { Judging, judgePlaceLoader } from './Judging';

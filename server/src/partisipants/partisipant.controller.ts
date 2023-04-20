@@ -55,4 +55,17 @@ export class PartisipantController {
 
     return res.send(result);
   }
+
+  @Get('queue')
+  @HttpCode(HttpStatus.OK)
+  async getPartisipants(
+    @Headers('eventId') eventId: string,
+    @Res() res: Response,
+  ) {
+    const partisipants = await this.partisipantService.getPartisipants(
+      Number(eventId),
+    );
+
+    return res.send(partisipants);
+  }
 }

@@ -60,11 +60,12 @@ model Athlete {
 }
 
 model Item {
-  id                Int                 @id @default(autoincrement())
-  title             String
-  RaitingIndividual RaitingIndividual[]
-  RaitingGroup      RaitingGroup[]
-  Score             Score[]
+  id                          Int                           @id @default(autoincrement())
+  title                       String
+  RaitingIndividual           RaitingIndividual[]
+  RaitingGroup                RaitingGroup[]
+  Score                       Score[]
+  QueuePartisipantsIndividual QueuePartisipantsIndividual[]
 
   @@map("items")
 }
@@ -116,15 +117,27 @@ model SettingsEvent {
 }
 
 model PartisipantsIndividual {
-  id                Int                 @id @default(autoincrement())
-  settingsEvent     SettingsEvent       @relation(fields: [settingsEventId], references: [id], onDelete: Cascade)
-  settingsEventId   Int
-  athlete           Athlete             @relation(fields: [athleteId], references: [id])
-  athleteId         Int
-  RaitingIndividual RaitingIndividual[]
-  Score             Score[]
+  id                          Int                           @id @default(autoincrement())
+  settingsEvent               SettingsEvent                 @relation(fields: [settingsEventId], references: [id], onDelete: Cascade)
+  settingsEventId             Int
+  athlete                     Athlete                       @relation(fields: [athleteId], references: [id])
+  athleteId                   Int
+  RaitingIndividual           RaitingIndividual[]
+  Score                       Score[]
+  QueuePartisipantsIndividual QueuePartisipantsIndividual[]
 
   @@map("partisipantsIndividual")
+}
+
+model QueuePartisipantsIndividual {
+  id            Int                    @id @default(autoincrement())
+  partisipant   PartisipantsIndividual @relation(fields: [partisipantId], references: [id], onDelete: Cascade)
+  partisipantId Int
+  item          Item                   @relation(fields: [itemId], references: [id])
+  itemId        Int
+  queue         Int
+
+  @@map("queuePartisipantsIndividual")
 }
 
 model RaitingIndividual {

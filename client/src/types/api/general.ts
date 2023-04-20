@@ -17,3 +17,8 @@ export interface IPlaces {
   id: number;
   title: string;
 }
+
+export interface IItem {
+  id: number;
+  title: string;
+}

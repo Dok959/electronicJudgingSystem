@@ -74,14 +74,14 @@ function PlacesRender({
     },
     onSubmit: async (values) => {
       const { place } = values;
-      console.log(place);
       const data = {
         eventId: eventId,
         placeId: Number(place.find((item) => item)),
       };
-      console.log(data);
-      setJudgePlace(data);
-      // const result = await getEvents(param, 0);
+      const result = await setJudgePlace(data);
+      if (result) {
+        navigate(`/events/${eventId}/judging`);
+      }
     },
   });
 
@@ -103,6 +103,11 @@ function PlacesRender({
                 value={item.id}
                 onBlur={formik.handleBlur}
                 defaultChecked={Boolean(
+                  resolvedBusyPlaces?.find(
+                    (el: IPlacesEvent) => el.placeId === item.id,
+                  ),
+                )}
+                disabled={Boolean(
                   resolvedBusyPlaces?.find(
                     (el: IPlacesEvent) => el.placeId === item.id,
                   ),

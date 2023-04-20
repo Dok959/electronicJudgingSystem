@@ -1,1 +1,1 @@
-export type { IRanks, IRoles, ITypes, IPlaces } from './general';
+export type { IRanks, IRoles, ITypes, IPlaces, IItem } from './general';

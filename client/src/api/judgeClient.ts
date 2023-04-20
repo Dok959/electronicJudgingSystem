@@ -2,7 +2,7 @@ import { HTTPError } from 'ky';
 import api from './kyClient';
 import { ISelectUser } from '@/types/user';
 import { ISelectEvent } from '@/types/event';
-import { IPlaces } from '@/types';
+import { IItem, IPlaces, IRanks } from '@/types';
 import { IPlacesEvent } from '@/types/judging';
 
 export class judgeClient {
@@ -156,6 +156,92 @@ export class judgeClient {
         console.log(error.message);
       }
       return [];
+    }
+  };
+
+  // Занятое судьёй место
+  static getJudgePlace = async (eventId: string) => {
+    try {
+      const result: IPlacesEvent = await api
+        .get('judge/place', {
+          headers: {
+            eventId: eventId,
+          },
+        })
+        .json();
+      return result;
+    } catch (error) {
+      console.log(error);
+      if (error instanceof HTTPError) {
+        const errorJson = await error.response.json();
+        console.log(errorJson);
+      } else if (error instanceof Error) {
+        console.log(error.message);
+      }
+      return null;
+    }
+  };
+
+  // Список предметов
+  static getItems = async () => {
+    try {
+      const result: IItem[] = await api.get('judge/items', {}).json();
+      return result;
+    } catch (error) {
+      console.log(error);
+      if (error instanceof HTTPError) {
+        const errorJson = await error.response.json();
+        console.log(errorJson);
+      } else if (error instanceof Error) {
+        console.log(error.message);
+      }
+      return null;
+    }
+  };
+
+  // Список разрядов соревнования
+  static getRanks = async (args: any = {}) => {
+    try {
+      const result: IRanks[] = await api
+        .get('judge/ranks', {
+          headers: {
+            ...args,
+          },
+        })
+        .json();
+      return result;
+    } catch (error) {
+      console.log(error);
+      if (error instanceof HTTPError) {
+        const errorJson = await error.response.json();
+        console.log(errorJson);
+      } else if (error instanceof Error) {
+        console.log(error.message);
+      }
+      return null;
+    }
+  };
+
+  // Установить очередность
+  static getQueue = async (args: any = {}) => {
+    try {
+      const result: boolean = await api
+        .post('judge/queue', {
+          json: {
+            ...args,
+          },
+        })
+        .json();
+      return result;
+    } catch (error) {
+      console.log(error);
+      if (error instanceof HTTPError) {
+        const errorJson = await error.response.json();
+        console.log(errorJson);
+      } else if (error instanceof Error) {
+        console.log(error.message);
+      }
+      return false;
     }
   };
 }

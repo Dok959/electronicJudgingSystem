@@ -32,6 +32,11 @@ export const item = style({
   margin: 0,
 });
 
+export const ranks = style({
+  margin: 0,
+  padding: 8,
+});
+
 export const inputCheckbox = style({
   selectors: {
     '&:not(:checked), &:checked': {
@@ -69,10 +74,11 @@ export const labelCheckbox = recipe({
           },
           [`${inputCheckbox}:disabled+&::before`]: {
             boxShadow: 'none',
-            cursor: 'auto',
+            borderColor: '#bbb',
+            backgroundColor: '#e9e9e9',
           },
           [`${inputCheckbox}:disabled+&`]: {
-            cursor: 'auto',
+            color: '#aaa',
           },
           [`${inputCheckbox}:focus+&::before`]: {
             boxShadow: '0 0 0 6px rgba(236, 0, 140, 0.2)',
@@ -115,5 +121,56 @@ export const labelCheckbox = recipe({
 
   defaultVariants: {
     type: 'default',
+  },
+});
+
+export const wrapperItems = style({
+  display: 'grid',
+  width: '60%',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+});
+
+export const button = recipe({
+  base: {
+    outline: 'none',
+    fontSize: 20,
+    boxShadow: vars.shadow.buttonActive,
+    borderRadius: vars.borderRadius.default,
+    padding: '18px 32px',
+    cursor: 'pointer',
+    transition: vars.transition.all,
+    position: 'relative',
+    height: 60,
+    display: 'flex',
+    alignItems: 'center',
+    textDecoration: 'none',
+    selectors: {
+      '&:hover': {
+        boxShadow: 'none',
+      },
+    },
+  },
+
+  variants: {
+    type: {
+      primary: {
+        backgroundColor: vars.colors.accent.primary,
+        color: vars.colors.background.primary,
+        border: 'none',
+      },
+      secondary: {
+        backgroundColor: vars.colors.background.primary,
+        color: vars.colors.text.secondary,
+        border: '1.9px solid',
+        borderColor: vars.colors.accent.primary,
+        height: 'auto',
+        padding: '12px 20px',
+        marginTop: 20,
+      },
+    },
+  },
+
+  defaultVariants: {
+    type: 'primary',
   },
 });

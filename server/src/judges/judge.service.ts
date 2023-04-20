@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, User, Event, Place, PlacesEvent } from '@prisma/client';
+import { Prisma, User, Event, Place, PlacesEvent, Item } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import * as dayjs from 'dayjs';
 
@@ -91,12 +91,26 @@ export class JudgeService {
     return place;
   }
 
-  // Получитьь идентификатор судьи
+  // Получить идентификатор судьи
   async getJudge(eventId: number, userId: number): Promise<number> {
     const judge = await this.prisma.judge.findFirst({
       where: { eventId: eventId, userId: userId },
       select: { id: true },
     });
     return judge.id;
+  }
+
+  // Получить место судьи
+  async getPlace(eventId: number, userId: number): Promise<PlacesEvent> {
+    const place = await this.prisma.placesEvent.findFirst({
+      where: { judge: { eventId, userId } },
+    });
+    return place;
+  }
+
+  // Получить список предметов
+  async getItems(): Promise<Item[]> {
+    const items = await this.prisma.item.findMany();
+    return items;
   }
 }

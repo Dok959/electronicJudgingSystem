@@ -7,5 +7,6 @@ import { PrismaService } from 'src/prisma.service';
   imports: [],
   controllers: [PartisipantController],
   providers: [PartisipantService, PrismaService],
+  exports: [PartisipantService],
 })
 export class PartisipantModule {}
