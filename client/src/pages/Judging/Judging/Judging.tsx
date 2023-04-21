@@ -17,7 +17,8 @@ import { $grant } from '@/context/auth';
 import { useFormik } from 'formik';
 import { IPartisipants, ISelectAthlete } from '@/types/athlete';
 import { IItem, IRanks } from '@/types';
-import { EnumRank } from '@/utils';
+import { handleAlertMessage } from '@/utils/auth';
+import { EnumRank, alertStatus } from '@/utils/enum';
 
 interface IReturnTypes {
   id: string;
@@ -46,7 +47,7 @@ export const Judging = () => {
             resolvedPlace?.placeId === 14 && isHasRights === true ? (
               <div>Главный судья</div>
             ) : resolvedPlace?.placeId === 13 ? (
-              <Await resolve={{ partisipants, ranks, items }}>
+              <Await resolve={{ id, ranks, items }}>
                 <Secretary />
               </Await>
             ) : (
@@ -134,14 +135,11 @@ const BaseJudge = () => {
 
 const Secretary = () => {
   const props = useAsyncValue() as {
-    partisipants: IPartisipants[];
+    id: number;
     ranks: IRanks[];
     items: IItem[];
   };
-  const { partisipants, ranks, items } = props;
-  // console.log(partisipants);
-  // console.log(items);
-  // console.log(ranks);
+  const { id, ranks, items } = props;
 
   interface IInitValues {
     rank: number;
@@ -153,17 +151,23 @@ const Secretary = () => {
       select: [] as IInitValues[],
     },
     onSubmit: async (values) => {
-      console.log(values);
-      // const { place } = values;
-      // const data = {
-      //   eventId: eventId,
-      //   placeId: Number(place.find((item) => item)),
-      // };
-      const result = await judgeClient.getQueue(values.select);
+      const result = await judgeClient.getQueue(id, values.select);
       console.log(result);
-      // if (result) {
-      //   navigate(`/events/${eventId}/judging`);
-      // }
+      if (!result) {
+        handleAlertMessage({
+          alertText: 'Не корректные данные',
+          alertStatus: alertStatus.warning,
+        });
+        return null;
+      }
+      const button = document.getElementById('button');
+      if (button !== null) {
+        button.setAttribute('disabled', 'disabled');
+      }
+      return handleAlertMessage({
+        alertText: 'Жеребьевка составлена',
+        alertStatus: alertStatus.success,
+      });
     },
   });
 
@@ -231,7 +235,6 @@ const Secretary = () => {
 
         <button type="submit" className={Style.button({})} id="button">
           Сохранить
-          {/* {spinner ? <Spinner top={0} left={0} /> : 'Сохранить'} */}
         </button>
       </form>
     </Suspense>

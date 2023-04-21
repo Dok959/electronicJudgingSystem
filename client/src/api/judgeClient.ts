@@ -223,10 +223,13 @@ export class judgeClient {
   };
 
   // Установить очередность
-  static getQueue = async (args: any = {}) => {
+  static getQueue = async (eventId: number, args: any = {}) => {
     try {
       const result: boolean = await api
         .post('judge/queue', {
+          headers: {
+            eventId: eventId.toString(),
+          },
           json: {
             ...args,
           },

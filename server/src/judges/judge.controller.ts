@@ -141,29 +141,55 @@ export class JudgeController {
     return res.send(resultRanks);
   }
 
+  @UseGuards(EventGuard)
   @Post('queue')
   @HttpCode(HttpStatus.OK)
-  async setQueue(@Body() args: any, @Res() res: Response) {
-    console.log(args);
+  async setQueue(
+    @Headers('eventId') eventId: string,
+    @Body() args: any,
+    @Res() res: Response,
+  ) {
+    console.log('Пришло ', args);
     const sortRanks: IInitValues[] = Object.values(args);
-    console.log(sortRanks);
-    const uniqRanks = sortRanks.map((item) => item.rank);
-    console.log(uniqRanks);
+    console.log('Массив поступившего ', sortRanks);
+    const uniqRanks = [...new Set(sortRanks.map((item) => item.rank))];
+    console.log('Уникальные разряды ', uniqRanks);
+
+    const partisipants = await this.partisipantService.getPartisipants(
+      Number(eventId),
+    );
 
     // TODO
     const data = [];
-    const test = uniqRanks.map((item) => {
-      sortRanks.map((el) =>
-        el.rank === item
-          ? data.push({ id: 1, rank: item, item: el.item })
-          : null,
-      );
+    uniqRanks.map((rank) => {
+      console.log('Текущий разряд ', rank);
+      let queue = 0;
+      const baseQueue = queue; //?
+      for (let j = 0; j < partisipants.length; j++) {
+        const partisipant = partisipants[j];
+        console.log('Ид участника ', partisipant.id);
+        console.log('Номер в очереди ', queue);
+        sortRanks.map((el) => {
+          console.log('Ид предмета ', el.item);
+          el.rank === rank
+            ? data.push({
+                partisipantId: partisipant.id,
+                itemId: el.item,
+                queue: queue,
+              })
+            : null;
+          queue += 2;
+        });
+        queue = baseQueue + 1;
+      }
     });
-    console.log(test);
+    // для 1 разряда +
+    console.log(data.sort((i, j) => i.queue - j.queue));
     console.log(data);
-    // const result = await this.partisipantService.getRanks(Number(eventId));
-    // table QueuePartisipantsIndividual
-    return res.send(false);
+    const result = await this.judgeService.setQueue({ data: data });
+    console.log(result);
+
+    return res.send(result);
   }
 }
 

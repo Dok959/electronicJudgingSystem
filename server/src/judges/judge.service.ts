@@ -113,4 +113,12 @@ export class JudgeService {
     const items = await this.prisma.item.findMany();
     return items;
   }
+
+  // Создать последовательность выступлений
+  async setQueue(args: Prisma.QueuePartisipantsIndividualCreateManyArgs) {
+    const queue = await this.prisma.queuePartisipantsIndividual.createMany(
+      args,
+    );
+    return queue ? true : false;
+  }
 }
