@@ -53,7 +53,6 @@ export const Places = () => {
   );
 };
 
-// TODO на следующей странице нужно будет проверить откуда пришел пользователь
 function PlacesRender({
   busyPlaces,
   eventId,
@@ -90,38 +89,40 @@ function PlacesRender({
       {(resolvedBusyPlaces) => (
         <form onSubmit={formik.handleSubmit} className={Style.container}>
           <h3 className={Style.heading}>Бригада 1</h3>
-          {places.map((item: IPlaces, index: number) => (
-            <p key={index} className={Style.item}>
-              <input
-                type="checkbox"
-                id={item.id.toString()}
-                name="place"
-                onChange={(e) => {
-                  formik.handleChange(e);
-                  formik.submitForm();
-                }}
-                value={item.id}
-                onBlur={formik.handleBlur}
-                defaultChecked={Boolean(
-                  resolvedBusyPlaces?.find(
-                    (el: IPlacesEvent) => el.placeId === item.id,
-                  ),
-                )}
-                disabled={Boolean(
-                  resolvedBusyPlaces?.find(
-                    (el: IPlacesEvent) => el.placeId === item.id,
-                  ),
-                )}
-                className={Style.inputCheckbox}
-              />
-              <label
-                htmlFor={item.id.toString()}
-                className={Style.labelCheckbox()}
-              >
-                {item.title}
-              </label>
-            </p>
-          ))}
+          <article className={Style.wrapperItems}>
+            {places.map((item: IPlaces, index: number) => (
+              <p key={index} className={Style.item}>
+                <input
+                  type="checkbox"
+                  id={item.id.toString()}
+                  name="place"
+                  onChange={(e) => {
+                    formik.handleChange(e);
+                    formik.submitForm();
+                  }}
+                  value={item.id}
+                  onBlur={formik.handleBlur}
+                  defaultChecked={Boolean(
+                    resolvedBusyPlaces?.find(
+                      (el: IPlacesEvent) => el.placeId === item.id,
+                    ),
+                  )}
+                  disabled={Boolean(
+                    resolvedBusyPlaces?.find(
+                      (el: IPlacesEvent) => el.placeId === item.id,
+                    ),
+                  )}
+                  className={Style.inputCheckbox}
+                />
+                <label
+                  htmlFor={item.id.toString()}
+                  className={Style.labelCheckbox()}
+                >
+                  {item.title}
+                </label>
+              </p>
+            ))}
+          </article>
         </form>
       )}
     </Await>

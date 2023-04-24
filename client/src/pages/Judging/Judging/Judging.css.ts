@@ -174,3 +174,58 @@ export const button = recipe({
     type: 'primary',
   },
 });
+
+export const label = style({
+  display: 'flex',
+  flexDirection: 'column',
+  width: '100%',
+  gap: 8,
+});
+
+export const input = recipe({
+  base: {
+    transition: vars.transition.all,
+    color: vars.colors.text.primary,
+    background: vars.colors.background.primary,
+    border: '1.9px solid rgba(36, 41, 61, 0.3)',
+    borderRadius: vars.borderRadius.default,
+    height: '25px',
+    padding: '0 8px',
+    outline: 'none',
+    fontSize: 14,
+  },
+
+  variants: {
+    border: {
+      default: {
+        borderColor: 'rgba(36, 41, 61, 0.3)',
+      },
+      error: {
+        borderColor: '#a90000',
+      },
+      success: {
+        borderColor: '#00a910',
+      },
+    },
+  },
+
+  defaultVariants: {
+    border: 'default',
+  },
+});
+
+export const infoError = style({
+  height: 12,
+  fontSize: 10,
+  color: '#a90000',
+  marginTop: -8,
+});
+
+export const subTitle = style({
+  textDecoration: 'none',
+  cursor: 'pointer',
+  fontSize: 18,
+  fontFamily: vars.fonts.heading,
+  color: vars.colors.headings.primary,
+  margin: 0,
+});

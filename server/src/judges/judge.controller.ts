@@ -191,6 +191,15 @@ export class JudgeController {
 
     return res.send(result);
   }
+
+  @UseGuards(EventGuard)
+  @Post('getQueue')
+  @HttpCode(HttpStatus.OK)
+  async getQueue(@Headers('eventId') eventId: string, @Res() res: Response) {
+    const result = await this.judgeService.getQueue(Number(eventId));
+
+    return res.send(result);
+  }
 }
 
 interface IInitValues {

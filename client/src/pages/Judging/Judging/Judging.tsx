@@ -10,7 +10,7 @@ import {
   useNavigate,
 } from 'react-router-dom';
 import { judgeClient, partisipantClient } from '@/api';
-import { IPlacesEvent } from '@/types/judging';
+import { IEntryPartisipant, IPlacesEvent } from '@/types/judging';
 import * as Style from './Judging.css';
 import { useStore } from 'effector-react';
 import { $grant } from '@/context/auth';
@@ -51,7 +51,9 @@ export const Judging = () => {
                 <Secretary />
               </Await>
             ) : (
-              <BaseJudge />
+              <Await resolve={{ id, place }}>
+                <BaseJudge />
+              </Await>
             )
           ) : (
             <Navigate to={'/events'} />
@@ -63,18 +65,31 @@ export const Judging = () => {
 };
 
 const BaseJudge = () => {
-  const [partisipant, setPartisipant] = useState<ISelectAthlete>();
-  const [cursorInit, setCursorInit] = useState<number>(0);
+  const props = useAsyncValue() as {
+    id: string;
+    place: IPlacesEvent;
+  };
+  const { id, place } = props;
+  // console.log(place);
+
+  const [partisipant, setPartisipant] = useState<IEntryPartisipant[] | null>(
+    [],
+  );
+  const [cursor, setCursor] = useState<number>(0);
 
   const loadInitData = useCallback(async () => {
-    // function changeCursor() {
-    //   setCursorInit(events[events.length - 1]?.id);
-    // }
-    // if (cursorInit === 0) {
-    //   // setPartisipant(await getEvents([], cursorInit));
-    // }
-    // changeCursor();
-  }, []);
+    async function getQueue() {
+      return await judgeClient.getQueue(id);
+    }
+
+    if (cursor === 0) {
+      setPartisipant(await getQueue());
+      setCursor(1);
+    }
+
+    console.log(partisipant);
+    console.log(cursor);
+  }, [cursor, id]);
 
   useEffect(() => {
     loadInitData();
@@ -82,54 +97,69 @@ const BaseJudge = () => {
 
   const formik = useFormik({
     initialValues: {
-      place: [] as String[],
+      score: 0,
     },
     onSubmit: async (values) => {
-      const { place } = values;
-      // const data = {
-      //   eventId: eventId,
-      //   placeId: Number(place.find((item) => item)),
-      // };
-      // const result = await setJudgePlace(data);
-      // if (result) {
-      //   navigate(`/events/${eventId}/judging`);
-      // }
+      const { score } = values;
+      console.log(score);
     },
   });
 
   return (
-    <form onSubmit={formik.handleSubmit} className={Style.container}>
-      <h3 className={Style.heading}>Иванов Иван</h3>
-      {/* {places.map((item: IPlaces, index: number) => (
-        <p key={index} className={Style.item}>
-          <input
-            type="checkbox"
-            id={item.id.toString()}
-            name="place"
-            onChange={(e) => {
-              formik.handleChange(e);
-              formik.submitForm();
-            }}
-            value={item.id}
-            onBlur={formik.handleBlur}
-            defaultChecked={Boolean(
-              resolvedBusyPlaces?.find(
-                (el: IPlacesEvent) => el.placeId === item.id,
-              ),
-            )}
-            disabled={Boolean(
-              resolvedBusyPlaces?.find(
-                (el: IPlacesEvent) => el.placeId === item.id,
-              ),
-            )}
-            className={Style.inputCheckbox}
-          />
-          <label htmlFor={item.id.toString()} className={Style.labelCheckbox()}>
-            {item.title}
-          </label>
-        </p>
-      ))} */}
-    </form>
+    <Suspense fallback={<h3 className={Style.heading}>Загрузка...</h3>}>
+      <Await resolve={place}>
+        {(resolvedPlace: IPlacesEvent) => (
+          <>
+            <form onSubmit={formik.handleSubmit} className={Style.container}>
+              {partisipant?.map((item: IEntryPartisipant, index: number) => (
+                <>
+                  <h3 className={Style.heading}>
+                    {`${item.partisipant.athlete.sirname} ${
+                      item.partisipant.athlete.name
+                    } ${
+                      item.partisipant.athlete.patronymic
+                        ? item.partisipant.athlete.patronymic
+                        : ''
+                    }`}
+                  </h3>
+                  <h3 className={Style.subTitle}>Предмет: {item.item.title}</h3>
+                  <p key={index} className={Style.item}>
+                    <label className={Style.label}>
+                      Оценка
+                      <input
+                        type="number"
+                        min="0"
+                        max={resolvedPlace.placeId < 5 ? 20 : 10} //?
+                        name="score"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.score}
+                        className={Style.input({
+                          border:
+                            formik.touched.score && formik.errors.score
+                              ? 'error'
+                              : formik.touched.score &&
+                                formik.values.score.toString() !== ''
+                              ? 'success'
+                              : 'default',
+                        })}
+                      />
+                      {formik.touched.score && formik.errors.score ? (
+                        <span className={Style.infoError}>
+                          {formik.errors.score}
+                        </span>
+                      ) : (
+                        <span className={Style.infoError} />
+                      )}
+                    </label>
+                  </p>
+                </>
+              ))}
+            </form>
+          </>
+        )}
+      </Await>
+    </Suspense>
   );
 };
 
@@ -151,8 +181,7 @@ const Secretary = () => {
       select: [] as IInitValues[],
     },
     onSubmit: async (values) => {
-      const result = await judgeClient.getQueue(id, values.select);
-      console.log(result);
+      const result = await judgeClient.setQueue(id, values.select);
       if (!result) {
         handleAlertMessage({
           alertText: 'Не корректные данные',

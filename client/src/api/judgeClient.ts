@@ -3,7 +3,7 @@ import api from './kyClient';
 import { ISelectUser } from '@/types/user';
 import { ISelectEvent } from '@/types/event';
 import { IItem, IPlaces, IRanks } from '@/types';
-import { IPlacesEvent } from '@/types/judging';
+import { IEntryPartisipant, IPlacesEvent } from '@/types/judging';
 
 export class judgeClient {
   static getAllOnRegisteredJudge = async (
@@ -223,7 +223,7 @@ export class judgeClient {
   };
 
   // Установить очередность
-  static getQueue = async (eventId: number, args: any = {}) => {
+  static setQueue = async (eventId: number, args: any = {}) => {
     try {
       const result: boolean = await api
         .post('judge/queue', {
@@ -245,6 +245,32 @@ export class judgeClient {
         console.log(error.message);
       }
       return false;
+    }
+  };
+
+  // Получить очередность
+  static getQueue = async (eventId: string, args: any = {}) => {
+    try {
+      const result: IEntryPartisipant[] = await api
+        .post('judge/getQueue', {
+          headers: {
+            eventId: eventId.toString(),
+          },
+          json: {
+            ...args,
+          },
+        })
+        .json();
+      return result;
+    } catch (error) {
+      console.log(error);
+      if (error instanceof HTTPError) {
+        const errorJson = await error.response.json();
+        console.log(errorJson);
+      } else if (error instanceof Error) {
+        console.log(error.message);
+      }
+      return null;
     }
   };
 }

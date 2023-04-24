@@ -121,4 +121,19 @@ export class JudgeService {
     );
     return queue ? true : false;
   }
+
+  // Получить последовательность выступлений
+  async getQueue(eventId: number) {
+    const queue = await this.prisma.queuePartisipantsIndividual.findMany({
+      where: { partisipant: { settingsEvent: { eventId } } },
+      select: {
+        id: true,
+        item: true,
+        partisipant: { select: { id: true, athlete: true } },
+      },
+    });
+    console.log(queue);
+    console.log(queue[0].partisipant.athlete);
+    return queue;
+  }
 }

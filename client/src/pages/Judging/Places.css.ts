@@ -117,3 +117,10 @@ export const labelCheckbox = recipe({
     type: 'default',
   },
 });
+
+export const wrapperItems = style({
+  display: 'grid',
+  width: '60%',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+  gap: 16,
+});
