@@ -129,11 +129,24 @@ export class JudgeService {
       select: {
         id: true,
         item: true,
-        partisipant: { select: { id: true, athlete: true } },
+        partisipant: {
+          select: {
+            id: true,
+            athlete: {
+              select: {
+                id: true,
+                name: true,
+                sirname: true,
+                patronymic: true,
+                dateOfBirth: true,
+                rank: true,
+                trainerId: true,
+              },
+            },
+          },
+        },
       },
     });
-    console.log(queue);
-    console.log(queue[0].partisipant.athlete);
     return queue;
   }
 }

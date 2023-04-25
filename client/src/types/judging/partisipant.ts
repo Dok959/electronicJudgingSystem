@@ -1,4 +1,4 @@
-import { IItem } from '../api';
+import { IItem, IRanks } from '../api';
 
 export type IEntryPartisipant = {
   id: number;
@@ -17,6 +17,6 @@ type IAthlete = {
   sirname: string;
   patronymic: string;
   dateOfBirth: Date;
-  rankId: number;
-  trainterId: number;
+  rank: IRanks;
+  trainerId: number;
 };

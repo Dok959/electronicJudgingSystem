@@ -222,10 +222,33 @@ export const infoError = style({
 });
 
 export const subTitle = style({
-  textDecoration: 'none',
-  cursor: 'pointer',
   fontSize: 18,
   fontFamily: vars.fonts.heading,
   color: vars.colors.headings.primary,
   margin: 0,
+});
+
+export const arrows = style({
+  display: 'flex',
+  width: '100%',
+  justifyContent: 'space-around',
+
+  '@media': {
+    'screen and (min-width: 768px)': {
+      position: 'absolute',
+      top: 25,
+    },
+  },
+});
+
+export const arrow = style({
+  cursor: 'pointer',
+  width: 'fit-content',
+});
+
+export const athlete = style({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: 8,
 });

@@ -149,28 +149,20 @@ export class JudgeController {
     @Body() args: any,
     @Res() res: Response,
   ) {
-    console.log('Пришло ', args);
     const sortRanks: IInitValues[] = Object.values(args);
-    console.log('Массив поступившего ', sortRanks);
     const uniqRanks = [...new Set(sortRanks.map((item) => item.rank))];
-    console.log('Уникальные разряды ', uniqRanks);
 
     const partisipants = await this.partisipantService.getPartisipants(
       Number(eventId),
     );
 
-    // TODO
     const data = [];
     uniqRanks.map((rank) => {
-      console.log('Текущий разряд ', rank);
       let queue = 0;
       const baseQueue = queue; //?
       for (let j = 0; j < partisipants.length; j++) {
         const partisipant = partisipants[j];
-        console.log('Ид участника ', partisipant.id);
-        console.log('Номер в очереди ', queue);
         sortRanks.map((el) => {
-          console.log('Ид предмета ', el.item);
           el.rank === rank
             ? data.push({
                 partisipantId: partisipant.id,
@@ -183,11 +175,8 @@ export class JudgeController {
         queue = baseQueue + 1;
       }
     });
-    // для 1 разряда +
-    console.log(data.sort((i, j) => i.queue - j.queue));
-    console.log(data);
+
     const result = await this.judgeService.setQueue({ data: data });
-    console.log(result);
 
     return res.send(result);
   }
