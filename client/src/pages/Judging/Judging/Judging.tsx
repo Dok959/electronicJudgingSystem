@@ -9,16 +9,16 @@ import {
   useLocation,
   useNavigate,
 } from 'react-router-dom';
-import { judgeClient, partisipantClient } from '@/api';
-import { IEntryPartisipant, IPlacesEvent } from '@/types/judging';
-import * as Style from './Judging.css';
-import { useStore } from 'effector-react';
-import { $grant } from '@/context/auth';
 import { useFormik } from 'formik';
-import { IPartisipants, ISelectAthlete } from '@/types/athlete';
+import { useStore } from 'effector-react';
+import { judgeClient, partisipantClient } from '@/api';
+import { $grant } from '@/context/auth';
+import { IEntryPartisipant, IPlacesEvent } from '@/types/judging';
+import { IPartisipants } from '@/types/athlete';
 import { IItem, IRanks } from '@/types';
 import { handleAlertMessage } from '@/utils/auth';
 import { EnumRank, alertStatus } from '@/utils/enum';
+import * as Style from './Judging.css';
 
 interface IReturnTypes {
   id: string;
@@ -93,88 +93,148 @@ const BaseJudge = () => {
     loadInitData();
   }, [loadInitData]);
 
+  type IStorageScore = {
+    id: number;
+    score: number;
+  };
+
+  const [masScore, setMasScore] = useState<IStorageScore[]>([]);
+
   const formik = useFormik({
     initialValues: {
-      score: 0,
+      score: '0',
     },
     onSubmit: async (values) => {
       const { score } = values;
       console.log(score);
+      const result = {
+        id: cursor,
+        score: Number(score),
+      };
+      console.log(result);
+
+      setMasScore([...masScore, result]);
+      console.log(masScore);
+
+      handlerNext();
     },
   });
 
-  // const partisipantRenderInit = () => {
-  //   return (
-  //     <>
-  //       <h3 className={Style.heading}>
-  //         {/* {`${item.partisipant.athlete.sirname} ${
-  //           item.partisipant.athlete.name
-  //         } ${
-  //           item.partisipant.athlete.patronymic
-  //             ? item.partisipant.athlete.patronymic
-  //             : ''
-  //         }`} */}
-  //         Gthfjsdfsd sdfsdf sadasd
-  //       </h3>
-  //       {/* <h3 className={Style.subTitle}>Предмет: {item.item.title}</h3> */}
-  //       <h3 className={Style.subTitle}>Предмет: asdasdsad</h3>
-  //     </>
-  //   );
-  // };
-
-  // useEffect(() => {
-  //   // const loadInitData = useCallback(async () => {
-  //   //   partisipantRender();
-  //   // });
-  //   console.log(cursor);
-  //   const item = partisipants![cursor];
-  //   console.log(item);
-  //   setRenderPartisipant(item);
-  // }, [cursor, partisipants]);
-
-  // useEffect(() => {
-  //   const partisipantRender = () => {
-  //     return (
-  //       <>
-  //         <h3 className={Style.heading}>
-  //           {/* {`${item.partisipant.athlete.sirname} ${
-  //           item.partisipant.athlete.name
-  //         } ${
-  //           item.partisipant.athlete.patronymic
-  //             ? item.partisipant.athlete.patronymic
-  //             : ''
-  //         }`} */}
-  //           Gthfjsdfsd sdfsdf sadasd
-  //         </h3>
-  //         {/* <h3 className={Style.subTitle}>Предмет: {item.item.title}</h3> */}
-  //         <h3 className={Style.subTitle}>Предмет: asdasdsad</h3>
-  //       </>
-  //     );
-  //   };
-
-  //   partisipantRender();
-  // }, [renderPartisipant]);
+  useEffect(() => {
+    const buttonSubmit = document.getElementById('submitButton') as HTMLElement;
+    const input = document.getElementById('score') as HTMLElement;
+    const numButtons = document.getElementsByName('numButton'); // as HTMLElement;
+    if (masScore.find((item) => item.id === cursor)) {
+      buttonSubmit.setAttribute('disabled', 'disabled');
+      input.setAttribute('disabled', 'disabled');
+      for (let index = 0; index < numButtons.length; index++) {
+        const element = numButtons[index];
+        element.setAttribute('disabled', 'disabled');
+      }
+    } else {
+      buttonSubmit.removeAttribute('disabled');
+      input.removeAttribute('disabled');
+      for (let index = 0; index < numButtons.length; index++) {
+        const element = numButtons[index];
+        element.removeAttribute('disabled');
+      }
+    }
+  }, [cursor, masScore]);
 
   const handlerPrev = () => {
     if (cursor > 0) {
       setCursor(cursor - 1);
+      formik.values.score = '0';
+      handleChangeInputValue();
     }
   };
   const handlerNext = () => {
-    if (cursor < partisipants!.length) {
+    if (cursor < partisipants!.length - 1) {
       setCursor(cursor + 1);
+      formik.values.score = '0';
+      handleChangeInputValue();
     }
   };
 
   useEffect(() => {
-    console.log(partisipants);
-    console.log(cursor);
-    console.log(renderPartisipant?.partisipant.athlete);
-
     if (cursor !== -1) {
       setRenderPartisipant(partisipants![cursor]);
     }
   }, [cursor, partisipants]);
+
+  let dot = useRef<boolean>(false);
+
+  const handleSetValue = (value: string) => {
+    const currentValue = formik.values.score;
+    if (
+      (!currentValue.includes('.') || value !== '.') &&
+      currentValue.length < 4
+    ) {
+      let newValue;
+      if (dot.current === false) {
+        if (currentValue === '0' && value === '0') {
+          newValue = `0`;
+        } else if (currentValue === '0' && value === '.') {
+          newValue = `0.`;
+        } else {
+          newValue = `${(currentValue + value).replace(/^0+/, '')}`;
+          if (newValue[0] === '.') {
+            newValue = `0` + newValue;
+          }
+        }
+      } else {
+        newValue = `${(currentValue.slice(0, -1) + value).replace(/^0+/, '')}`;
+        if (newValue[0] === '.') {
+          newValue = `0` + newValue;
+        }
+        dot.current = !dot.current;
+      }
+
+      if (value === '.') {
+        formik.values.score = newValue + '0';
+        dot.current = !dot.current;
+      } else {
+        formik.values.score = newValue;
+      }
+    } else if (currentValue.includes('.') || value === '.') {
+      return;
+    }
+
+    handleChangeInputValue();
+  };
+
+  const handleBackButton = () => {
+    const currentValue = formik.values.score.toString();
+    if (currentValue !== '') {
+      const removeValue = formik.values.score[formik.values.score.length - 1];
+      if (
+        removeValue === '0' &&
+        formik.values.score[formik.values.score.length - 2] === '.'
+      ) {
+        formik.values.score = currentValue.slice(0, currentValue.length - 2);
+        dot.current = !dot.current;
+      } else if (
+        removeValue !== '0' &&
+        formik.values.score[formik.values.score.length - 2] === '.'
+      ) {
+        formik.values.score =
+          formik.values.score.slice(0, currentValue.length - 1) + '0';
+        dot.current = !dot.current;
+      } else {
+        const result = currentValue.slice(0, currentValue.length - 1);
+        formik.values.score = result === '' ? '0' : result;
+      }
+    } else {
+      formik.values.score = '0';
+    }
+
+    handleChangeInputValue();
+  };
+
+  const handleChangeInputValue = () => {
+    (document.getElementById('score') as HTMLInputElement)!.value =
+      formik.values.score;
+  };
 
   return (
     <Suspense fallback={<h3 className={Style.heading}>Загрузка...</h3>}>
@@ -236,100 +296,149 @@ const BaseJudge = () => {
               </h3>
             </div>
 
-            {/* {partisipants ?? (
-              <>
-                <div
-                  className={Style.button({ type: 'secondary' })}
-                  onClick={handler}
+            <form onSubmit={formik.handleSubmit} className={Style.container}>
+              <div className={Style.numberPad}>
+                <button
+                  name="numButton"
+                  type="button"
+                  className={Style.numberButton}
+                  onClick={() => handleSetValue(String(7))}
                 >
-                  3-й элемент
-                </div>
+                  {7}
+                </button>
+                <button
+                  name="numButton"
+                  type="button"
+                  className={Style.numberButton}
+                  onClick={() => handleSetValue(String(8))}
+                >
+                  {8}
+                </button>
+                <button
+                  name="numButton"
+                  type="button"
+                  className={Style.numberButton}
+                  onClick={() => handleSetValue(String(9))}
+                >
+                  {9}
+                </button>
+                <button
+                  name="numButton"
+                  type="button"
+                  className={Style.numberButton}
+                  onClick={() => handleSetValue(String(4))}
+                >
+                  {4}
+                </button>
+                <button
+                  name="numButton"
+                  type="button"
+                  className={Style.numberButton}
+                  onClick={() => handleSetValue(String(5))}
+                >
+                  {5}
+                </button>
+                <button
+                  name="numButton"
+                  type="button"
+                  className={Style.numberButton}
+                  onClick={() => handleSetValue(String(6))}
+                >
+                  {6}
+                </button>
+                <button
+                  name="numButton"
+                  type="button"
+                  className={Style.numberButton}
+                  onClick={() => handleSetValue(String(1))}
+                >
+                  {1}
+                </button>
+                <button
+                  name="numButton"
+                  type="button"
+                  className={Style.numberButton}
+                  onClick={() => handleSetValue(String(2))}
+                >
+                  {2}
+                </button>
+                <button
+                  name="numButton"
+                  type="button"
+                  className={Style.numberButton}
+                  onClick={() => handleSetValue(String(3))}
+                >
+                  {3}
+                </button>
+                <button
+                  name="numButton"
+                  type="button"
+                  className={Style.numberButton}
+                  onClick={() => handleBackButton()}
+                >
+                  &#8592;
+                </button>
+                <button
+                  name="numButton"
+                  type="button"
+                  className={Style.numberButton}
+                  onClick={() => handleSetValue(String(0))}
+                >
+                  {0}
+                </button>
+                <button
+                  name="numButton"
+                  type="button"
+                  className={Style.numberButton}
+                  onClick={() => handleSetValue('.')}
+                >
+                  .
+                </button>
+              </div>
+              <p className={Style.item}>
+                <label className={Style.label}>
+                  Оценка
+                  <input
+                    id="score"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    max={resolvedPlace.placeId < 5 ? 20 : 10} //?
+                    name="score"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.score}
+                    className={Style.input({
+                      border:
+                        formik.touched.score && formik.errors.score
+                          ? 'error'
+                          : formik.touched.score &&
+                            formik.values.score.toString() !== ''
+                          ? 'success'
+                          : 'default',
+                    })}
+                  />
+                  {formik.touched.score && formik.errors.score ? (
+                    <span className={Style.infoError}>
+                      {formik.errors.score}
+                    </span>
+                  ) : (
+                    <span className={Style.infoError} />
+                  )}
+                </label>
+              </p>
 
-                <form
-                  onSubmit={formik.handleSubmit}
-                  className={Style.container}
-                >
-                  <p className={Style.item}>
-                    <label className={Style.label}>
-                      Оценка
-                      <input
-                        type="number"
-                        min="0"
-                        max={resolvedPlace.placeId < 5 ? 20 : 10} //?
-                        name="score"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.score}
-                        className={Style.input({
-                          border:
-                            formik.touched.score && formik.errors.score
-                              ? 'error'
-                              : formik.touched.score &&
-                                formik.values.score.toString() !== ''
-                              ? 'success'
-                              : 'default',
-                        })}
-                      />
-                      {formik.touched.score && formik.errors.score ? (
-                        <span className={Style.infoError}>
-                          {formik.errors.score}
-                        </span>
-                      ) : (
-                        <span className={Style.infoError} />
-                      )}
-                    </label>
-                  </p>
-                </form>
-              </>
-            )} */}
+              <button
+                id="submitButton"
+                type="submit"
+                className={Style.button({})}
+              >
+                {/* {spinner ? <Spinner top={0} left={0} /> : 'Создать'} */}
+                Оценить
+              </button>
+            </form>
           </>
         )}
-        {/* {partisipant?.map((item: IEntryPartisipant, index: number) => (
-                    <>
-                      <h3 className={Style.heading}>
-                        {`${item.partisipant.athlete.sirname} ${
-                          item.partisipant.athlete.name
-                        } ${
-                          item.partisipant.athlete.patronymic
-                            ? item.partisipant.athlete.patronymic
-                            : ''
-                        }`}
-                      </h3>
-                      <h3 className={Style.subTitle}>Предмет: {item.item.title}</h3>
-                      {partisipantRender(item)}
-                      <p key={index} className={Style.item}>
-                        <label className={Style.label}>
-                          Оценка
-                          <input
-                            type="number"
-                            min="0"
-                            max={resolvedPlace.placeId < 5 ? 20 : 10} //?
-                            name="score"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.score}
-                            className={Style.input({
-                              border:
-                                formik.touched.score && formik.errors.score
-                                  ? 'error'
-                                  : formik.touched.score &&
-                                    formik.values.score.toString() !== ''
-                                  ? 'success'
-                                  : 'default',
-                            })}
-                          />
-                          {formik.touched.score && formik.errors.score ? (
-                            <span className={Style.infoError}>
-                              {formik.errors.score}
-                            </span>
-                          ) : (
-                            <span className={Style.infoError} />
-                          )}
-                        </label>
-                      </p>
-                    </>
-                  ))} */}
-        {/* {partisipantRenderInit()} */}
       </Await>
     </Suspense>
   );

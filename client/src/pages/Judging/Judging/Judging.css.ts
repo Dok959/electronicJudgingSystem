@@ -148,6 +148,11 @@ export const button = recipe({
       '&:hover': {
         boxShadow: 'none',
       },
+      '&:disabled': {
+        boxShadow: 'none',
+        backgroundColor: vars.colors.accent.secondary,
+        cursor: 'auto',
+      },
     },
   },
 
@@ -251,4 +256,44 @@ export const athlete = style({
   flexDirection: 'column',
   alignItems: 'center',
   gap: 8,
+});
+
+export const numberPad = style({
+  display: 'grid',
+  flexDirection: 'column',
+  gap: 8,
+  gridTemplateColumns: '1fr 1fr 1fr',
+});
+
+export const numberButton = style({
+  backgroundColor: vars.colors.background.secondary,
+  outline: 'none',
+  cursor: 'pointer',
+  color: vars.colors.text.primary,
+  minHeight: 68,
+  minWidth: 68,
+  border: '1px solid #E7EAF3',
+  transition: '0.5s all ease-in-out',
+  borderRadius: vars.borderRadius.default,
+  fontSize: 20,
+
+  selectors: {
+    '&:active': {
+      backgroundColor: vars.colors.accent.primary,
+      color: vars.colors.background.primary,
+    },
+    '&:focus': {
+      borderColor: vars.colors.accent.primary,
+    },
+    '&:disabled': {
+      cursor: 'auto',
+    },
+    '&:disabled:active': {
+      backgroundColor: vars.colors.background.secondary,
+      color: vars.colors.text.primary,
+    },
+    '&:disabled:focus': {
+      border: '1px solid #E7EAF3',
+    },
+  },
 });

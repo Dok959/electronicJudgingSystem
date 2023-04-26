@@ -1,9 +1,5 @@
 import { Suspense } from 'react';
-import { useStore } from 'effector-react';
 import { useFormik } from 'formik';
-import { judgeClient } from '@/api';
-import { $grant } from '@/context/auth';
-import { ISelectEvent } from '@/types/event';
 import {
   Await,
   LoaderFunctionArgs,
@@ -13,7 +9,9 @@ import {
   useLoaderData,
   useNavigate,
 } from 'react-router-dom';
+import { judgeClient } from '@/api';
 import { IPlaces } from '@/types';
+import { ISelectEvent } from '@/types/event';
 import { IPlacesEvent } from '@/types/judging';
 import * as Style from './Places.css';
 
@@ -26,8 +24,6 @@ export interface IReturnTypes {
 export const Places = () => {
   const { event, places, busyPlaces } = useLoaderData() as IReturnTypes;
   const navigate = useNavigate();
-
-  const isHasRights = useStore($grant);
 
   if (event === null) {
     navigate('/events');
