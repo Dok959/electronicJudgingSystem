@@ -9,27 +9,18 @@ export const heading = style({
   color: vars.colors.headings.primary,
 });
 
-export const form = style({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 24,
-  alignItems: 'center',
-  maxWidth: 327,
-  width: '100%',
-  position: 'relative',
-});
-
 export const container = style({
   display: 'grid',
   gridTemplateColumns: 'auto',
   gap: 16,
   alignItems: 'baseline',
-  width: '100%',
+  // width: '100%',
   justifyItems: 'center',
 });
 
 export const item = style({
   margin: 0,
+  width: '100%',
 });
 
 export const ranks = style({

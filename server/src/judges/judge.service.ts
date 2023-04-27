@@ -149,4 +149,10 @@ export class JudgeService {
     });
     return queue;
   }
+
+  // Добавить оценку судьи
+  async setJudgeScore(args: Prisma.ScoreCreateArgs) {
+    const score = await this.prisma.score.create(args);
+    return score ? true : false;
+  }
 }

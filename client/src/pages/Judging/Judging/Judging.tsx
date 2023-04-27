@@ -10,6 +10,7 @@ import {
   useNavigate,
 } from 'react-router-dom';
 import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import { useStore } from 'effector-react';
 import { judgeClient, partisipantClient } from '@/api';
 import { $grant } from '@/context/auth';
@@ -51,7 +52,7 @@ export const Judging = () => {
                 <Secretary />
               </Await>
             ) : (
-              <Await resolve={{ id, place }}>
+              <Await resolve={{ id, place: resolvedPlace }}>
                 <BaseJudge />
               </Await>
             )
@@ -74,9 +75,7 @@ const BaseJudge = () => {
   const [partisipants, setPartisipants] = useState<IEntryPartisipant[] | null>(
     [],
   );
-  // let partisipants = useRef<IEntryPartisipant[] | null>([]);
   const [cursor, setCursor] = useState<number>(-1);
-  // let cursor = useRef<number>(-1);
   const [renderPartisipant, setRenderPartisipant] =
     useState<IEntryPartisipant | null>(null);
 
@@ -104,19 +103,48 @@ const BaseJudge = () => {
     initialValues: {
       score: '0',
     },
+    validationSchema: Yup.object({
+      score: Yup.number()
+        .default(0)
+        .min(0, 'Баллы не могут быть меньше 0')
+        .max(
+          place.placeId < 5 ? 20 : 10,
+          'Баллы не могут быть больше разрешенных',
+        ),
+    }),
     onSubmit: async (values) => {
       const { score } = values;
-      console.log(score);
-      const result = {
+
+      const elementMas = {
         id: cursor,
         score: Number(score),
       };
-      console.log(result);
 
-      setMasScore([...masScore, result]);
+      const result = await judgeClient.setJudgeScore({
+        data: {
+          judgeId: place.judgeId,
+          partisipantId: renderPartisipant?.partisipant.id,
+          itemId: renderPartisipant?.item.id,
+          score: Number(score),
+        },
+      });
+
+      if (!result) {
+        handleAlertMessage({
+          alertText: 'Не корректные данные',
+          alertStatus: alertStatus.warning,
+        });
+        return null;
+      }
+      handleAlertMessage({
+        alertText: 'Ваш голос учтен',
+        alertStatus: alertStatus.success,
+      });
+
+      setMasScore([...masScore, elementMas]);
       console.log(masScore);
 
-      handlerNext();
+      return handlerNext();
     },
   });
 
@@ -403,7 +431,7 @@ const BaseJudge = () => {
                     type="number"
                     step="0.01"
                     min="0"
-                    max={resolvedPlace.placeId < 5 ? 20 : 10} //?
+                    max={resolvedPlace.placeId < 5 ? 20 : 10}
                     name="score"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -433,7 +461,6 @@ const BaseJudge = () => {
                 type="submit"
                 className={Style.button({})}
               >
-                {/* {spinner ? <Spinner top={0} left={0} /> : 'Создать'} */}
                 Оценить
               </button>
             </form>

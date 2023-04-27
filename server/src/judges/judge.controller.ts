@@ -189,6 +189,14 @@ export class JudgeController {
 
     return res.send(result);
   }
+
+  @Post('setJudgeScore')
+  @HttpCode(HttpStatus.OK)
+  async setJudgeScore(@Body() args: any, @Res() res: Response) {
+    const result = await this.judgeService.setJudgeScore(args);
+
+    return res.send(result);
+  }
 }
 
 interface IInitValues {
