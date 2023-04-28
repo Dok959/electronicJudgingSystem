@@ -197,6 +197,17 @@ export class JudgeController {
 
     return res.send(result);
   }
+
+  @Post('getScore')
+  @HttpCode(HttpStatus.OK)
+  async getScore(
+    @Body() body: { partisipantId: number; itemId: number },
+    @Res() res: Response,
+  ) {
+    const result = await this.judgeService.getScore(body);
+
+    return res.send(result);
+  }
 }
 
 interface IInitValues {

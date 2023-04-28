@@ -155,4 +155,28 @@ export class JudgeService {
     const score = await this.prisma.score.create(args);
     return score ? true : false;
   }
+
+  // Получить оценки судей
+  async getScore(body: { partisipantId: number; itemId: number }) {
+    const scores = await this.prisma.score.findMany({
+      where: { partisipantId: body.partisipantId, itemId: body.itemId },
+      select: {
+        judge: {
+          select: {
+            PlacesEvent: {
+              orderBy: {
+                placeId: 'asc',
+              },
+              select: {
+                place: true,
+              },
+            },
+          },
+        },
+        item: true,
+        score: true,
+      },
+    });
+    return scores;
+  }
 }
