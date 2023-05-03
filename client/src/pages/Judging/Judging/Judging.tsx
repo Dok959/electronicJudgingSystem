@@ -20,6 +20,7 @@ import { IItem, IPlaces, IRanks } from '@/types';
 import { handleAlertMessage } from '@/utils/auth';
 import { EnumRank, alertStatus } from '@/utils/enum';
 import * as Style from './Judging.css';
+import React from 'react';
 
 interface IReturnTypes {
   id: string;
@@ -186,28 +187,133 @@ const ChiefJudge = () => {
     IDBScore[]
   >([]);
 
-  const loadScore = useCallback(async () => {
-    async function getScore() {
-      return await judgeClient.getScore({
-        partisipantId: renderPartisipant!.partisipant.id,
-        itemId: renderPartisipant!.item.id,
-      });
-    }
+  // const loadScore = useCallback(async () => {
+  //   async function getScore() {
+  //     return await judgeClient.getScore({
+  //       partisipantId: renderPartisipant!.partisipant.id,
+  //       itemId: renderPartisipant!.item.id,
+  //     });
+  //   }
 
-    if (renderPartisipant !== null) {
-      const score = (await getScore()) as IDBScore[];
-      console.log(score);
-      setScoreCurrentPartisipant(score);
-    }
-  }, [renderPartisipant]);
+  //   if (renderPartisipant !== null) {
+  //     const score = (await getScore()) as IDBScore[];
+  //     console.log(score);
+  //     setScoreCurrentPartisipant(score);
+  //     setScoreD(0);
+  //     setScoreA(0);
+  //     setScoreE(0);
+  //     if (score.length < 12) {
+  //       const buttonSubmit = document.getElementById(
+  //         'submitButton',
+  //       ) as HTMLElement;
+  //       buttonSubmit.setAttribute('disabled', 'disabled');
+  //     }
+  //   }
+  // }, [renderPartisipant]);
 
-  useEffect(() => {
-    loadScore();
-  }, [loadScore]);
+  // useEffect(() => {
+  //   loadScore();
+  // }, [loadScore]);
 
   useEffect(() => {
     console.log(scoreCurrentPartisipant);
   }, [scoreCurrentPartisipant]);
+
+  // useEffect(() => {
+  //   setScoreD(0);
+  //   setScoreA(0);
+  //   setScoreE(0);
+  // }, [scoreCurrentPartisipant]);
+
+  // массивы оценок
+  const [scoreD, setScoreD] = useState<number>(0);
+  const [scoreA, setScoreA] = useState<number>(0);
+  const [scoreE, setScoreE] = useState<number>(0);
+
+  // useEffect(() => {
+  //   const pad = document.getElementById('judgePad') as HTMLElement;
+  //   const categoryD = [];
+  //   const categoryA = [];
+  //   const categoryE = [];
+  //   for (let node of pad.childNodes) {
+  //     const id = (node as HTMLElement).getAttribute('id');
+  //     if (Number(id) < 5) {
+  //       categoryD.push(node);
+  //     }
+  //     if (Number(id) > 4 && Number(id) < 9) {
+  //       categoryA.push(node);
+  //     }
+  //     if (Number(id) > 8) {
+  //       categoryE.push(node);
+  //     }
+  //   }
+
+  //   categoryD.map((item) => {
+  //     for (let node of (item as HTMLElement).children) {
+  //       const score = Number(node.textContent);
+  //       if (!Number.isNaN(score)) {
+  //         setScoreD((s) => s + score);
+  //       }
+  //     }
+  //     return null;
+  //   });
+
+  //   let masScoreA: number[] = [];
+  //   categoryA.map((item) => {
+  //     for (let node of (item as HTMLElement).children) {
+  //       const score = Number(node.textContent);
+  //       masScoreA.push(score);
+  //     }
+  //     return null;
+  //   });
+
+  //   let maxScore: number | null = Math.max(...masScoreA);
+  //   let minScore: number | null = Math.min(...masScoreA);
+
+  //   categoryA.map((item) => {
+  //     for (let node of (item as HTMLElement).children) {
+  //       const score = Number(node.textContent);
+  //       if (score === maxScore) {
+  //         node.classList.add(Style.remove);
+  //         maxScore = null;
+  //       } else if (score === minScore) {
+  //         node.classList.add(Style.remove);
+  //         minScore = null;
+  //       } else {
+  //         setScoreA((s) => s + score);
+  //       }
+  //     }
+  //     return null;
+  //   });
+
+  //   let masScoreE: number[] = [];
+  //   categoryE.map((item) => {
+  //     for (let node of (item as HTMLElement).children) {
+  //       const score = Number(node.textContent);
+  //       masScoreE.push(score);
+  //     }
+  //     return null;
+  //   });
+
+  //   maxScore = Math.max(...masScoreE);
+  //   minScore = Math.min(...masScoreE);
+
+  //   categoryE.map((item) => {
+  //     for (let node of (item as HTMLElement).children) {
+  //       const score = Number(node.textContent);
+  //       if (score === maxScore) {
+  //         node.classList.add(Style.remove);
+  //         maxScore = null;
+  //       } else if (score === minScore) {
+  //         node.classList.add(Style.remove);
+  //         minScore = null;
+  //       } else {
+  //         setScoreE((s) => s + score);
+  //       }
+  //     }
+  //     return null;
+  //   });
+  // }, [scoreCurrentPartisipant]);
 
   return (
     <Suspense fallback={<h3 className={Style.heading}>Загрузка...</h3>}>
@@ -270,58 +376,95 @@ const ChiefJudge = () => {
             </div>
 
             <form onSubmit={formik.handleSubmit} className={Style.container}>
-              <div className={Style.numberPad}>
+              <div className={Style.judgePad} id="judgePad">
                 {resolvedListPlace.map((item: IPlaces, index: number) => {
                   if (item.id === 13 || item.id === 14) {
                     return null;
                   } else {
-                    const place = scoreCurrentPartisipant.find(
-                      (element) =>
-                        element.judge.PlacesEvent[0].place.id === item.id,
-                    );
-                    if (place) {
+                    if (item.id % 4 !== 0) {
+                      const place = scoreCurrentPartisipant.find(
+                        (element) =>
+                          element.judge.PlacesEvent[0].place.id === item.id,
+                      );
+                      if (place) {
+                        return (
+                          <div
+                            key={index}
+                            className={Style.judge}
+                            id={item.id.toString()}
+                          >
+                            {item.title}{' '}
+                            <span className={Style.scoreSolo}>
+                              {place.score}
+                            </span>
+                          </div>
+                        );
+                      }
                       return (
-                        <div key={index}>
-                          {item.title} <span>{place.score}</span>
+                        <div
+                          key={index}
+                          className={Style.judge}
+                          id={item.id.toString()}
+                        >
+                          {item.title}
                         </div>
                       );
+                    } else {
+                      const place = scoreCurrentPartisipant.find(
+                        (element) =>
+                          element.judge.PlacesEvent[0].place.id === item.id,
+                      );
+                      if (place) {
+                        return (
+                          <React.Fragment key={index}>
+                            <div
+                              key={index}
+                              className={Style.judge}
+                              id={item.id.toString()}
+                            >
+                              {item.title}{' '}
+                              <span className={Style.scoreSolo}>
+                                {place.score}
+                              </span>
+                            </div>
+                            <div key={'Res' + index} className={Style.judge}>
+                              Итого:{' '}
+                              <span className={Style.scoreSolo}>
+                                {item.id < 5
+                                  ? 'scoreD ' + scoreD
+                                  : item.id > 4 && item.id < 9
+                                  ? 'scoreA ' + scoreA
+                                  : 'scoreE ' + scoreE}
+                              </span>
+                            </div>
+                          </React.Fragment>
+                        );
+                      }
+                      return (
+                        <React.Fragment key={index}>
+                          <div
+                            key={index}
+                            className={Style.judge}
+                            id={item.id.toString()}
+                          >
+                            {item.title}
+                          </div>
+                          <div key={'Res' + index} className={Style.judge}>
+                            Итого:{' '}
+                            <span className={Style.scoreSolo}>
+                              {item.id < 5
+                                ? 'scoreD ' + scoreD
+                                : item.id > 4 && item.id < 9
+                                ? 'scoreA ' + scoreA
+                                : 'scoreE ' + scoreE}
+                            </span>
+                          </div>
+                        </React.Fragment>
+                      );
                     }
-                    return <div key={index}>{item.title}</div>;
                   }
                 })}
               </div>
-              {/* <p className={Style.item}>
-                <label className={Style.label}>
-                  Оценка
-                  <input
-                    id="score"
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    max={resolvedPlace.placeId < 5 ? 20 : 10}
-                    name="score"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.score}
-                    className={Style.input({
-                      border:
-                        formik.touched.score && formik.errors.score
-                          ? 'error'
-                          : formik.touched.score &&
-                            formik.values.score.toString() !== ''
-                          ? 'success'
-                          : 'default',
-                    })}
-                  />
-                  {formik.touched.score && formik.errors.score ? (
-                    <span className={Style.infoError}>
-                      {formik.errors.score}
-                    </span>
-                  ) : (
-                    <span className={Style.infoError} />
-                  )}
-                </label>
-              </p> */}
 
               <button
                 id="submitButton"

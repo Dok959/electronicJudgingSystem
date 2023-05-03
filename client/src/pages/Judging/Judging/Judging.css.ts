@@ -14,7 +14,6 @@ export const container = style({
   gridTemplateColumns: 'auto',
   gap: 16,
   alignItems: 'baseline',
-  // width: '100%',
   justifyItems: 'center',
 });
 
@@ -218,7 +217,7 @@ export const infoError = style({
 });
 
 export const subTitle = style({
-  fontSize: 18,
+  fontSize: 16,
   fontFamily: vars.fonts.heading,
   color: vars.colors.headings.primary,
   margin: 0,
@@ -285,6 +284,41 @@ export const numberButton = style({
     },
     '&:disabled:focus': {
       border: '1px solid #E7EAF3',
+    },
+  },
+});
+
+export const judgePad = style({
+  display: 'grid',
+  gap: 8,
+  gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
+});
+
+export const judge = style({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: 8,
+  minWidth: 50,
+});
+
+export const scoreSolo = style({
+  transition: vars.transition.all,
+  color: '#1000ff',
+  position: 'relative',
+});
+
+export const remove = style({
+  selectors: {
+    '&::after': {
+      position: 'absolute',
+      content: '',
+      width: '140%',
+      height: 2,
+      backgroundColor: '#f00',
+      left: -5,
+      rotate: '-30deg',
+      bottom: 9,
     },
   },
 });

@@ -16,7 +16,8 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "typeRoots": ["node_modules/@types", "src/types"],
-    "types": ["node"]
+    "types": ["node"],
+    "downlevelIteration": true
   },
   "include": ["src", "../index.ts"],
   "extends": "./tsconfig.paths.json"
