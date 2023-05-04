@@ -103,9 +103,6 @@ const ChiefJudge = () => {
     loadInitData();
   }, [loadInitData]);
 
-  const [renderPartisipant, setRenderPartisipant] =
-    useState<IEntryPartisipant | null>(null);
-
   //
   type IStorageScore = {
     id: number;
@@ -113,49 +110,27 @@ const ChiefJudge = () => {
   };
   const [masScore, setMasScore] = useState<IStorageScore[]>([]);
   const formik = useFormik({
-    initialValues: {
-      score: '0',
-    },
-    validationSchema: Yup.object({
-      score: Yup.number()
-        .default(0)
-        .min(0, 'Баллы не могут быть меньше 0')
-        .max(
-          place.placeId < 5 ? 20 : 10,
-          'Баллы не могут быть больше разрешенных',
-        ),
-    }),
-    onSubmit: async (values) => {
-      const { score } = values;
-
-      const elementMas = {
-        id: cursor,
-        score: Number(score),
-      };
-
-      const result = await judgeClient.setJudgeScore({
+    initialValues: {},
+    onSubmit: async () => {
+      const result = await judgeClient.setScore({
         data: {
-          judgeId: place.judgeId,
           partisipantId: renderPartisipant?.partisipant.id,
           itemId: renderPartisipant?.item.id,
-          score: Number(score),
+          score: scoreD + scoreA + scoreE,
         },
       });
 
-      if (!result) {
-        handleAlertMessage({
-          alertText: 'Не корректные данные',
-          alertStatus: alertStatus.warning,
-        });
-        return null;
-      }
-      handleAlertMessage({
-        alertText: 'Ваш голос учтен',
-        alertStatus: alertStatus.success,
-      });
-
-      setMasScore([...masScore, elementMas]);
-      console.log(masScore);
+      // if (!result) {
+      //   handleAlertMessage({
+      //     alertText: 'Не корректные данные',
+      //     alertStatus: alertStatus.warning,
+      //   });
+      //   return null;
+      // }
+      // handleAlertMessage({
+      //   alertText: 'Ваш голос учтен',
+      //   alertStatus: alertStatus.success,
+      // });
 
       return handlerNext();
     },
@@ -177,143 +152,178 @@ const ChiefJudge = () => {
     // }
   };
 
-  useEffect(() => {
-    if (cursor !== -1) {
-      setRenderPartisipant(partisipants![cursor]);
-    }
-  }, [cursor, partisipants]);
+  const [renderPartisipant, setRenderPartisipant] =
+    useState<IEntryPartisipant | null>(null);
 
   const [scoreCurrentPartisipant, setScoreCurrentPartisipant] = useState<
-    IDBScore[]
+    { isResult: boolean; title: string; score: number; remove: boolean }[]
   >([]);
-
-  // const loadScore = useCallback(async () => {
-  //   async function getScore() {
-  //     return await judgeClient.getScore({
-  //       partisipantId: renderPartisipant!.partisipant.id,
-  //       itemId: renderPartisipant!.item.id,
-  //     });
-  //   }
-
-  //   if (renderPartisipant !== null) {
-  //     const score = (await getScore()) as IDBScore[];
-  //     console.log(score);
-  //     setScoreCurrentPartisipant(score);
-  //     setScoreD(0);
-  //     setScoreA(0);
-  //     setScoreE(0);
-  //     if (score.length < 12) {
-  //       const buttonSubmit = document.getElementById(
-  //         'submitButton',
-  //       ) as HTMLElement;
-  //       buttonSubmit.setAttribute('disabled', 'disabled');
-  //     }
-  //   }
-  // }, [renderPartisipant]);
-
-  // useEffect(() => {
-  //   loadScore();
-  // }, [loadScore]);
-
-  useEffect(() => {
-    console.log(scoreCurrentPartisipant);
-  }, [scoreCurrentPartisipant]);
-
-  // useEffect(() => {
-  //   setScoreD(0);
-  //   setScoreA(0);
-  //   setScoreE(0);
-  // }, [scoreCurrentPartisipant]);
 
   // массивы оценок
   const [scoreD, setScoreD] = useState<number>(0);
   const [scoreA, setScoreA] = useState<number>(0);
   const [scoreE, setScoreE] = useState<number>(0);
 
-  // useEffect(() => {
-  //   const pad = document.getElementById('judgePad') as HTMLElement;
-  //   const categoryD = [];
-  //   const categoryA = [];
-  //   const categoryE = [];
-  //   for (let node of pad.childNodes) {
-  //     const id = (node as HTMLElement).getAttribute('id');
-  //     if (Number(id) < 5) {
-  //       categoryD.push(node);
-  //     }
-  //     if (Number(id) > 4 && Number(id) < 9) {
-  //       categoryA.push(node);
-  //     }
-  //     if (Number(id) > 8) {
-  //       categoryE.push(node);
-  //     }
-  //   }
+  const loadScore = useCallback(async () => {
+    async function getScore(currentPartisipant: IEntryPartisipant) {
+      return await judgeClient.getScore({
+        partisipantId: currentPartisipant!.partisipant.id,
+        itemId: currentPartisipant!.item.id,
+      });
+    }
 
-  //   categoryD.map((item) => {
-  //     for (let node of (item as HTMLElement).children) {
-  //       const score = Number(node.textContent);
-  //       if (!Number.isNaN(score)) {
-  //         setScoreD((s) => s + score);
-  //       }
-  //     }
-  //     return null;
-  //   });
+    if (cursor !== -1) {
+      const currentPartisipant = partisipants![cursor];
+      setRenderPartisipant(currentPartisipant);
+      const score = (await getScore(currentPartisipant)) as IDBScore[];
 
-  //   let masScoreA: number[] = [];
-  //   categoryA.map((item) => {
-  //     for (let node of (item as HTMLElement).children) {
-  //       const score = Number(node.textContent);
-  //       masScoreA.push(score);
-  //     }
-  //     return null;
-  //   });
+      if (score.length < 12) {
+        const buttonSubmit = document.getElementById(
+          'submitButton',
+        ) as HTMLElement;
+        buttonSubmit.setAttribute('disabled', 'disabled');
+      }
 
-  //   let maxScore: number | null = Math.max(...masScoreA);
-  //   let minScore: number | null = Math.min(...masScoreA);
+      const masDScore = [];
+      const masAScore = [];
+      const masEScore = [];
+      const categoryD: { title: string; score: number }[] = [];
+      const categoryA: { title: string; score: number }[] = [];
+      const categoryE: { title: string; score: number }[] = [];
+      score
+        .sort(
+          (i, j) =>
+            i.judge.PlacesEvent[0].place.id - j.judge.PlacesEvent[0].place.id,
+        )
+        .map((item) => {
+          const idPlace = item.judge.PlacesEvent[0].place.id;
+          if (Number(idPlace) < 5) {
+            categoryD.push({
+              title: item.judge.PlacesEvent[0].place.title,
+              score: item.score,
+            });
+          } else if (Number(idPlace) > 4 && Number(idPlace) < 9) {
+            categoryA.push({
+              title: item.judge.PlacesEvent[0].place.title,
+              score: item.score,
+            });
+          } else if (Number(idPlace) > 8 && Number(idPlace) < 13) {
+            categoryE.push({
+              title: item.judge.PlacesEvent[0].place.title,
+              score: item.score,
+            });
+          }
+        });
 
-  //   categoryA.map((item) => {
-  //     for (let node of (item as HTMLElement).children) {
-  //       const score = Number(node.textContent);
-  //       if (score === maxScore) {
-  //         node.classList.add(Style.remove);
-  //         maxScore = null;
-  //       } else if (score === minScore) {
-  //         node.classList.add(Style.remove);
-  //         minScore = null;
-  //       } else {
-  //         setScoreA((s) => s + score);
-  //       }
-  //     }
-  //     return null;
-  //   });
+      let result = 0;
+      categoryD.map((item) => {
+        masDScore.push({
+          isResult: false,
+          title: item.title,
+          score: item.score,
+          remove: false,
+        });
+        result += item.score;
+      });
+      masDScore.push({
+        isResult: true,
+        title: 'Итого',
+        score: result,
+        remove: false,
+      });
+      setScoreD(result);
+      result = 0;
 
-  //   let masScoreE: number[] = [];
-  //   categoryE.map((item) => {
-  //     for (let node of (item as HTMLElement).children) {
-  //       const score = Number(node.textContent);
-  //       masScoreE.push(score);
-  //     }
-  //     return null;
-  //   });
+      const filterScore: number[] = [];
+      categoryA.map((item) => filterScore.push(item.score));
 
-  //   maxScore = Math.max(...masScoreE);
-  //   minScore = Math.min(...masScoreE);
+      let maxScore: number | null = Math.max(...filterScore);
+      let minScore: number | null = Math.min(...filterScore);
 
-  //   categoryE.map((item) => {
-  //     for (let node of (item as HTMLElement).children) {
-  //       const score = Number(node.textContent);
-  //       if (score === maxScore) {
-  //         node.classList.add(Style.remove);
-  //         maxScore = null;
-  //       } else if (score === minScore) {
-  //         node.classList.add(Style.remove);
-  //         minScore = null;
-  //       } else {
-  //         setScoreE((s) => s + score);
-  //       }
-  //     }
-  //     return null;
-  //   });
-  // }, [scoreCurrentPartisipant]);
+      categoryA.map((item) => {
+        if (item.score === maxScore || item.score === minScore) {
+          masAScore.push({
+            isResult: false,
+            title: item.title,
+            score: item.score,
+            remove: true,
+          });
+          if (item.score === maxScore) {
+            maxScore = null;
+          } else {
+            minScore = null;
+          }
+        } else {
+          masAScore.push({
+            isResult: false,
+            title: item.title,
+            score: item.score,
+            remove: false,
+          });
+          result += item.score;
+        }
+      });
+      masAScore.push({
+        isResult: true,
+        title: 'Итого',
+        score: 10 - result,
+        remove: false,
+      });
+      setScoreA(10 - result);
+      result = 0;
+      filterScore.splice(0, filterScore.length);
+
+      categoryE.map((item) => filterScore.push(item.score));
+
+      maxScore = Math.max(...filterScore);
+      minScore = Math.min(...filterScore);
+
+      categoryE.map((item) => {
+        if (item.score === maxScore || item.score === minScore) {
+          masEScore.push({
+            isResult: false,
+            title: item.title,
+            score: item.score,
+            remove: true,
+          });
+          if (item.score === maxScore) {
+            maxScore = null;
+          } else {
+            minScore = null;
+          }
+        } else {
+          masEScore.push({
+            isResult: false,
+            title: item.title,
+            score: item.score,
+            remove: false,
+          });
+          result += item.score;
+        }
+      });
+      masEScore.push({
+        isResult: true,
+        title: 'Итого',
+        score: 10 - result,
+        remove: false,
+      });
+      setScoreE(10 - result);
+      result = 0;
+      filterScore.splice(0, filterScore.length);
+
+      setScoreCurrentPartisipant([...masDScore, ...masAScore, ...masEScore]);
+    }
+  }, [cursor, partisipants]);
+
+  useEffect(() => {
+    // if (cursor !== -1) {
+    // setRenderPartisipant(partisipants![cursor]);
+    // setScoreD(0);
+    // setScoreA(0);
+    // setScoreE(0);
+    loadScore();
+    // }
+  }, [loadScore]);
 
   return (
     <Suspense fallback={<h3 className={Style.heading}>Загрузка...</h3>}>
@@ -377,93 +387,37 @@ const ChiefJudge = () => {
 
             <form onSubmit={formik.handleSubmit} className={Style.container}>
               <div className={Style.judgePad} id="judgePad">
-                {resolvedListPlace.map((item: IPlaces, index: number) => {
-                  if (item.id === 13 || item.id === 14) {
-                    return null;
-                  } else {
-                    if (item.id % 4 !== 0) {
-                      const place = scoreCurrentPartisipant.find(
-                        (element) =>
-                          element.judge.PlacesEvent[0].place.id === item.id,
-                      );
-                      if (place) {
-                        return (
-                          <div
-                            key={index}
-                            className={Style.judge}
-                            id={item.id.toString()}
-                          >
-                            {item.title}{' '}
-                            <span className={Style.scoreSolo}>
-                              {place.score}
-                            </span>
-                          </div>
-                        );
-                      }
-                      return (
-                        <div
-                          key={index}
-                          className={Style.judge}
-                          id={item.id.toString()}
-                        >
-                          {item.title}
-                        </div>
-                      );
-                    } else {
-                      const place = scoreCurrentPartisipant.find(
-                        (element) =>
-                          element.judge.PlacesEvent[0].place.id === item.id,
-                      );
-                      if (place) {
-                        return (
-                          <React.Fragment key={index}>
-                            <div
-                              key={index}
-                              className={Style.judge}
-                              id={item.id.toString()}
-                            >
+                <Suspense>
+                  <Await resolve={scoreCurrentPartisipant}>
+                    {(resolveScoreCurrentPartisipant: any[]) => (
+                      <>
+                        {resolveScoreCurrentPartisipant.map(
+                          (item: any, index: number) => (
+                            <div key={index} className={Style.judge}>
                               {item.title}{' '}
-                              <span className={Style.scoreSolo}>
-                                {place.score}
+                              <span
+                                className={
+                                  item.remove
+                                    ? `${Style.scoreSolo} ${Style.remove}`
+                                    : Style.scoreSolo
+                                }
+                              >
+                                {item.score}
                               </span>
                             </div>
-                            <div key={'Res' + index} className={Style.judge}>
-                              Итого:{' '}
-                              <span className={Style.scoreSolo}>
-                                {item.id < 5
-                                  ? 'scoreD ' + scoreD
-                                  : item.id > 4 && item.id < 9
-                                  ? 'scoreA ' + scoreA
-                                  : 'scoreE ' + scoreE}
-                              </span>
-                            </div>
-                          </React.Fragment>
-                        );
-                      }
-                      return (
-                        <React.Fragment key={index}>
-                          <div
-                            key={index}
-                            className={Style.judge}
-                            id={item.id.toString()}
-                          >
-                            {item.title}
-                          </div>
-                          <div key={'Res' + index} className={Style.judge}>
-                            Итого:{' '}
-                            <span className={Style.scoreSolo}>
-                              {item.id < 5
-                                ? 'scoreD ' + scoreD
-                                : item.id > 4 && item.id < 9
-                                ? 'scoreA ' + scoreA
-                                : 'scoreE ' + scoreE}
-                            </span>
-                          </div>
-                        </React.Fragment>
-                      );
-                    }
-                  }
-                })}
+                          ),
+                        )}
+                      </>
+                    )}
+                  </Await>
+                </Suspense>
+              </div>
+
+              <div className={Style.judge}>
+                Итоговая оценка:
+                <span className={Style.scoreSolo}>
+                  {scoreD + scoreA + scoreE}
+                </span>
               </div>
 
               <button
@@ -471,7 +425,7 @@ const ChiefJudge = () => {
                 type="submit"
                 className={Style.button({})}
               >
-                Оценить
+                Подтвердить
               </button>
             </form>
           </>

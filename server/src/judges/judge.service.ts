@@ -179,4 +179,10 @@ export class JudgeService {
     });
     return scores;
   }
+
+  // Получить оценки судей
+  async setScore(args: Prisma.RaitingIndividualCreateArgs) {
+    const raiting = await this.prisma.raitingIndividual.create(args);
+    return raiting;
+  }
 }
