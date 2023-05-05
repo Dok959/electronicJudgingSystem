@@ -1,6 +1,7 @@
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import {
   Await,
+  Link,
   LoaderFunctionArgs,
   Navigate,
   defer,
@@ -12,27 +13,24 @@ import {
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useStore } from 'effector-react';
-import { judgeClient, partisipantClient } from '@/api';
+import { judgeClient } from '@/api';
 import { $grant } from '@/context/auth';
 import { IEntryPartisipant, IPlacesEvent } from '@/types/judging';
-import { IPartisipants } from '@/types/athlete';
 import { IItem, IPlaces, IRanks } from '@/types';
 import { handleAlertMessage } from '@/utils/auth';
 import { EnumRank, alertStatus } from '@/utils/enum';
 import * as Style from './Judging.css';
-import React from 'react';
 
 interface IReturnTypes {
   id: string;
   place: IPlacesEvent;
-  partisipants: IPartisipants[];
   ranks: IRanks[];
   items: IItem[];
   listPlace: IPlaces[];
 }
 
 export const Judging = () => {
-  const { id, place, partisipants, ranks, items, listPlace } =
+  const { id, place, ranks, items, listPlace } =
     useLoaderData() as IReturnTypes;
   const location = useLocation();
   const navigate = useNavigate();
@@ -83,7 +81,7 @@ const ChiefJudge = () => {
     place: IPlacesEvent;
     listPlace: IPlaces[];
   };
-  const { id, place, listPlace } = props;
+  const { id, listPlace } = props;
 
   const [partisipants, setPartisipants] = useState<IEntryPartisipant[] | null>(
     [],
@@ -103,12 +101,13 @@ const ChiefJudge = () => {
     loadInitData();
   }, [loadInitData]);
 
-  //
   type IStorageScore = {
     id: number;
-    score: number;
+    flag: boolean;
   };
+
   const [masScore, setMasScore] = useState<IStorageScore[]>([]);
+
   const formik = useFormik({
     initialValues: {},
     onSubmit: async () => {
@@ -120,36 +119,32 @@ const ChiefJudge = () => {
         },
       });
 
-      // if (!result) {
-      //   handleAlertMessage({
-      //     alertText: 'Не корректные данные',
-      //     alertStatus: alertStatus.warning,
-      //   });
-      //   return null;
-      // }
-      // handleAlertMessage({
-      //   alertText: 'Ваш голос учтен',
-      //   alertStatus: alertStatus.success,
-      // });
+      if (!result) {
+        handleAlertMessage({
+          alertText: 'Не корректные данные',
+          alertStatus: alertStatus.warning,
+        });
+        return null;
+      }
+      handleAlertMessage({
+        alertText: 'Оценка подтверждена',
+        alertStatus: alertStatus.success,
+      });
 
+      setMasScore([...masScore, { id: renderPartisipant!.id, flag: true }]);
       return handlerNext();
     },
   });
-  //
 
   const handlerPrev = () => {
-    // if (cursor > 0) {
-    //   setCursor(cursor - 1);
-    //   formik.values.score = '0';
-    //   handleChangeInputValue();
-    // }
+    if (cursor > 0) {
+      setCursor(cursor - 1);
+    }
   };
   const handlerNext = () => {
-    // if (cursor < partisipants!.length - 1) {
-    //   setCursor(cursor + 1);
-    //   formik.values.score = '0';
-    //   handleChangeInputValue();
-    // }
+    if (cursor < partisipants!.length - 1) {
+      setCursor(cursor + 1);
+    }
   };
 
   const [renderPartisipant, setRenderPartisipant] =
@@ -176,11 +171,16 @@ const ChiefJudge = () => {
       const currentPartisipant = partisipants![cursor];
       setRenderPartisipant(currentPartisipant);
       const score = (await getScore(currentPartisipant)) as IDBScore[];
+      const buttonSubmit = document.getElementById(
+        'submitButton',
+      ) as HTMLElement;
+      buttonSubmit.removeAttribute('disabled');
 
       if (score.length < 12) {
-        const buttonSubmit = document.getElementById(
-          'submitButton',
-        ) as HTMLElement;
+        buttonSubmit.setAttribute('disabled', 'disabled');
+      }
+
+      if (masScore.find((item) => item.id === currentPartisipant.id)) {
         buttonSubmit.setAttribute('disabled', 'disabled');
       }
 
@@ -213,6 +213,7 @@ const ChiefJudge = () => {
               score: item.score,
             });
           }
+          return null;
         });
 
       let result = 0;
@@ -223,7 +224,7 @@ const ChiefJudge = () => {
           score: item.score,
           remove: false,
         });
-        result += item.score;
+        return (result += item.score);
       });
       masDScore.push({
         isResult: true,
@@ -262,6 +263,7 @@ const ChiefJudge = () => {
           });
           result += item.score;
         }
+        return null;
       });
       masAScore.push({
         isResult: true,
@@ -300,6 +302,7 @@ const ChiefJudge = () => {
           });
           result += item.score;
         }
+        return null;
       });
       masEScore.push({
         isResult: true,
@@ -313,16 +316,10 @@ const ChiefJudge = () => {
 
       setScoreCurrentPartisipant([...masDScore, ...masAScore, ...masEScore]);
     }
-  }, [cursor, partisipants]);
+  }, [cursor, masScore, partisipants]);
 
   useEffect(() => {
-    // if (cursor !== -1) {
-    // setRenderPartisipant(partisipants![cursor]);
-    // setScoreD(0);
-    // setScoreA(0);
-    // setScoreE(0);
     loadScore();
-    // }
   }, [loadScore]);
 
   return (
@@ -330,6 +327,12 @@ const ChiefJudge = () => {
       <Await resolve={listPlace}>
         {(resolvedListPlace: IPlaces[]) => (
           <>
+            <div className={Style.breadcrumb}>
+              <Link to={`/events/${id}/places`} className={Style.link}>
+                К выбору места
+              </Link>
+            </div>
+
             <div className={Style.arrows}>
               <div className={Style.arrow} onClick={handlerPrev}>
                 <svg
@@ -386,39 +389,57 @@ const ChiefJudge = () => {
             </div>
 
             <form onSubmit={formik.handleSubmit} className={Style.container}>
-              <div className={Style.judgePad} id="judgePad">
-                <Suspense>
-                  <Await resolve={scoreCurrentPartisipant}>
-                    {(resolveScoreCurrentPartisipant: any[]) => (
-                      <>
-                        {resolveScoreCurrentPartisipant.map(
-                          (item: any, index: number) => (
-                            <div key={index} className={Style.judge}>
-                              {item.title}{' '}
-                              <span
-                                className={
-                                  item.remove
-                                    ? `${Style.scoreSolo} ${Style.remove}`
-                                    : Style.scoreSolo
-                                }
-                              >
-                                {item.score}
-                              </span>
-                            </div>
-                          ),
-                        )}
-                      </>
-                    )}
-                  </Await>
-                </Suspense>
-              </div>
+              <Suspense>
+                <Await resolve={scoreCurrentPartisipant}>
+                  {(resolveScoreCurrentPartisipant: any[]) => {
+                    if (resolveScoreCurrentPartisipant.length < 12) {
+                      return (
+                        <div className={Style.judge}>Оценки не выставлены</div>
+                      );
+                    } else {
+                      return (
+                        <div className={Style.judgePad} id="judgePad">
+                          {resolveScoreCurrentPartisipant.map(
+                            (item: any, index: number) => (
+                              <div key={index} className={Style.judge}>
+                                {item.title}{' '}
+                                <span
+                                  className={
+                                    item.remove
+                                      ? `${Style.scoreSolo} ${Style.remove}`
+                                      : Style.scoreSolo
+                                  }
+                                >
+                                  {item.score}
+                                </span>
+                              </div>
+                            ),
+                          )}
+                        </div>
+                      );
+                    }
+                  }}
+                </Await>
+              </Suspense>
 
-              <div className={Style.judge}>
-                Итоговая оценка:
-                <span className={Style.scoreSolo}>
-                  {scoreD + scoreA + scoreE}
-                </span>
-              </div>
+              <Suspense>
+                <Await resolve={scoreCurrentPartisipant}>
+                  {(resolveScoreCurrentPartisipant: any[]) => {
+                    if (resolveScoreCurrentPartisipant.length < 12) {
+                      return <></>;
+                    } else {
+                      return (
+                        <div className={Style.judge}>
+                          Итоговая оценка:
+                          <span className={Style.scoreSolo}>
+                            {scoreD + scoreA + scoreE}
+                          </span>
+                        </div>
+                      );
+                    }
+                  }}
+                </Await>
+              </Suspense>
 
               <button
                 id="submitButton"
@@ -639,6 +660,12 @@ const BaseJudge = () => {
       <Await resolve={place}>
         {(resolvedPlace: IPlacesEvent) => (
           <>
+            <div className={Style.breadcrumb}>
+              <Link to={`/events/${id}/places`} className={Style.link}>
+                К выбору места
+              </Link>
+            </div>
+
             <div className={Style.arrows}>
               <div className={Style.arrow} onClick={handlerPrev}>
                 <svg
@@ -880,6 +907,12 @@ const Secretary = () => {
 
   return (
     <Suspense fallback={<h3 className={Style.heading}>Загрузка...</h3>}>
+      <div className={Style.breadcrumb}>
+        <Link to={`/events/${id}/places`} className={Style.link}>
+          К выбору места
+        </Link>
+      </div>
+
       <form onSubmit={formik.handleSubmit} className={Style.container}>
         <Await resolve={ranks}>
           {(resolvedRanks: IRanks[]) => (
@@ -955,11 +988,6 @@ export const judgePlaceLoader = async ({ params }: LoaderFunctionArgs) => {
     return await judgeClient.getJudgePlace(id);
   }
 
-  async function getPartisipants() {
-    return await partisipantClient.getPartisipants({
-      eventId: id,
-    });
-  }
   async function getRanks() {
     return await judgeClient.getRanks({
       eventId: id,
@@ -976,7 +1004,6 @@ export const judgePlaceLoader = async ({ params }: LoaderFunctionArgs) => {
   const result = {
     id,
     place: getJudgePlace(),
-    partisipants: getPartisipants(),
     ranks: getRanks(),
     items: getItems(),
     listPlace: getPlaces(),

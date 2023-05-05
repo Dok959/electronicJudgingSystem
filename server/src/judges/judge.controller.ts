@@ -73,10 +73,19 @@ export class JudgeController {
     return res.send(result);
   }
 
-  @UseGuards(EventGuard)
+  @UseGuards(UserGuard, EventGuard)
   @Get('busy')
   @HttpCode(HttpStatus.OK)
-  async busyPlaces(@Headers('eventId') eventId: string, @Res() res: Response) {
+  async busyPlaces(
+    @Headers('user') user: User,
+    @Headers('eventId') eventId: string,
+    @Res() res: Response,
+  ) {
+    const judge = await this.judgeService.getJudge(Number(eventId), user.id);
+
+    const place = await this.judgeService.getJudgePlace(judge);
+    await this.judgeService.clearPlace(place.id);
+
     const result = await this.judgeService.getBusyPlaces(Number(eventId));
 
     return res.send(result);
@@ -212,11 +221,9 @@ export class JudgeController {
   @Post('setScore')
   @HttpCode(HttpStatus.OK)
   async setScore(@Body() args: any, @Res() res: Response) {
-    console.log(args);
-    // const result = await this.judgeService.setScore(args);
+    const result = await this.judgeService.setScore(args);
 
-    // return res.send(result);
-    return;
+    return res.send(result ? true : false);
   }
 }
 

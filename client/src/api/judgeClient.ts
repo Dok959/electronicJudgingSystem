@@ -322,9 +322,9 @@ export class judgeClient {
   };
 
   // Выставить итоговую оценку участника
-  static setScore = async (args: any) => {
+  static setScore = async (args: any): Promise<boolean> => {
     try {
-      const result = await api
+      const result: boolean = await api
         .post('judge/setScore', {
           json: {
             ...args,
@@ -340,7 +340,7 @@ export class judgeClient {
       } else if (error instanceof Error) {
         console.log(error.message);
       }
-      return null;
+      return false;
     }
   };
 }

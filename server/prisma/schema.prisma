@@ -147,7 +147,7 @@ model RaitingIndividual {
   item          Item                   @relation(fields: [itemId], references: [id])
   itemId        Int
 
-  score Int
+  score Float
 
   @@map("raitingIndividual")
 }

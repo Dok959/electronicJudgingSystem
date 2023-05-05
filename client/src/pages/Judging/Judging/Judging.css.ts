@@ -232,6 +232,7 @@ export const arrows = style({
     'screen and (min-width: 768px)': {
       position: 'absolute',
       top: 25,
+      zIndex: 0,
     },
   },
 });
@@ -319,6 +320,22 @@ export const remove = style({
       left: -5,
       rotate: '-30deg',
       bottom: 9,
+    },
+  },
+});
+
+export const breadcrumb = style({
+  display: 'block',
+  zIndex: 10,
+});
+
+export const link = style({
+  transition: vars.transition.all,
+  textDecoration: 'none',
+  color: vars.colors.text.primary,
+  selectors: {
+    '&:hover': {
+      color: vars.colors.accent.primary,
     },
   },
 });

@@ -91,6 +91,26 @@ export class JudgeService {
     return place;
   }
 
+  // Освободить место
+  async getJudgePlace(judgeId: number): Promise<PlacesEvent> {
+    const place = await this.prisma.placesEvent.findFirst({
+      where: {
+        judgeId: judgeId,
+      },
+    });
+    return place;
+  }
+
+  // Освободить место
+  async clearPlace(id: number): Promise<PlacesEvent> {
+    const place = await this.prisma.placesEvent.delete({
+      where: {
+        id: id,
+      },
+    });
+    return place;
+  }
+
   // Получить идентификатор судьи
   async getJudge(eventId: number, userId: number): Promise<number> {
     const judge = await this.prisma.judge.findFirst({
