@@ -206,7 +206,9 @@ export const InfoEventPage = () => {
                         <>
                           {resolvedJudges.map(
                             (item: ISelectUser, index: number) => (
-                              <li key={index}>{`${item.sirname} ${item.name} ${
+                              <li className={Style.list} key={index}>{`${
+                                item.sirname
+                              } ${item.name} ${
                                 item.patronymic ? item.patronymic : ''
                               }`}</li>
                             ),
@@ -237,9 +239,9 @@ export const InfoEventPage = () => {
                         <>
                           {resolvedPartisipants.map(
                             (item: IPartisipants, index: number) => (
-                              <li key={index}>{`${item.athlete.sirname} ${
-                                item.athlete.name
-                              } ${
+                              <li className={Style.list} key={index}>{`${
+                                item.athlete.sirname
+                              } ${item.athlete.name} ${
                                 item.athlete.patronymic
                                   ? item.athlete.patronymic
                                   : ''

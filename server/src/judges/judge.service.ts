@@ -205,4 +205,60 @@ export class JudgeService {
     const raiting = await this.prisma.raitingIndividual.create(args);
     return raiting;
   }
+
+  async getEvent(): Promise<Event | null> {
+    const events = await this.prisma.judge.findMany({
+      orderBy: {
+        event: {
+          startDateTime: 'asc',
+        },
+      },
+      select: {
+        event: true,
+      },
+    });
+
+    const result = events.find((item) => {
+      const now = dayjs();
+      const dateStart = dayjs(item.event.startDateTime);
+      let difference = dateStart.diff(now, 'h');
+      if (difference / 3600 < 6) {
+        return item.event;
+      }
+      const dateEnd = dateStart.add(item.event.duration);
+      difference = dateEnd.diff(now, 'h');
+      if (dateStart < now && difference / 3600 > 0) {
+        return item.event;
+      }
+    });
+
+    return result ? result.event : null;
+  }
+
+  async getRanksForRaiting(id: number) {
+    const ranks = await this.prisma.settingsEvent.findMany({
+      where: {
+        eventId: id,
+        typeId: 1,
+      },
+      select: {
+        id: true,
+        rank: true,
+      },
+    });
+    return ranks;
+  }
+
+  async getSettingsEventForRaiting(id: number) {
+    const settings = await this.prisma.settingsEvent.findMany({
+      where: {
+        eventId: id,
+      },
+      select: {
+        rank: true,
+        PartisipantsIndividual: true,
+      },
+    });
+    return settings;
+  }
 }

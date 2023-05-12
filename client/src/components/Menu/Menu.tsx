@@ -15,15 +15,15 @@ export const Menu = () => {
   const isLoggingIn = useStore($auth);
   const navLinks: INavLinks[] = isLoggingIn
     ? [
-        { to: '/home', title: 'Главная' },
+        // { to: '/home', title: 'Главная' },
         { to: '/events', title: 'Соревнования' },
         { to: '/users', title: 'Пользователи' },
         { to: '/athletes', title: 'Ученики' },
-        { to: '/posts', title: 'Рейтинг' },
+        { to: '/raiting', title: 'Рейтинг' },
       ]
     : [
         { to: '/', title: 'Главная' },
-        { to: '/posts', title: 'Рейтинг' },
+        { to: '/raiting', title: 'Рейтинг' },
         { to: '/login', title: 'Судейство' },
       ];
 

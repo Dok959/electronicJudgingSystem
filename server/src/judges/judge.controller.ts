@@ -84,7 +84,10 @@ export class JudgeController {
     const judge = await this.judgeService.getJudge(Number(eventId), user.id);
 
     const place = await this.judgeService.getJudgePlace(judge);
-    await this.judgeService.clearPlace(place.id);
+
+    if (place !== null) {
+      await this.judgeService.clearPlace(place.id);
+    }
 
     const result = await this.judgeService.getBusyPlaces(Number(eventId));
 
@@ -224,6 +227,53 @@ export class JudgeController {
     const result = await this.judgeService.setScore(args);
 
     return res.send(result ? true : false);
+  }
+
+  @UseGuards(UserGuard)
+  @Get('getEvent')
+  @HttpCode(HttpStatus.OK)
+  async getEvent(@Headers('user') user: User, @Res() res: Response) {
+    const event = await this.judgeService.getEvent();
+
+    if (event === null) {
+      return res.send(null);
+    }
+
+    console.log(event);
+
+    const ranksEvents = await this.judgeService.getRanksForRaiting(
+      Number(event.id),
+    );
+    console.log(ranksEvents);
+
+    return res.send(ranksEvents);
+  }
+
+  @UseGuards(UserGuard)
+  @Get('getRaiting')
+  @HttpCode(HttpStatus.OK)
+  async getRaitingEvent(@Headers('user') user: User, @Res() res: Response) {
+    // const event = await this.judgeService.getEvent();
+
+    // if (event === null) {
+    //   return res.send(null);
+    // }
+
+    // console.log(event);
+
+    // const ranksEvents = await this.judgeService.getRanksForRaiting(
+    //   Number(event.id),
+    // );
+    // console.log(ranksEvents);
+
+    // const settings = await this.judgeService.getSettingsEventForRaiting(
+    //   Number(event.id),
+    // );
+
+    // console.log(settings);
+    // console.log(settings[0].PartisipantsIndividual);
+
+    return res.send(null);
   }
 }
 

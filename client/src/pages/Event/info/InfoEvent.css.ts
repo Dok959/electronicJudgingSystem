@@ -180,3 +180,7 @@ export const judgesList = style({
   width: '100%',
   gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
 });
+
+export const list = style({
+  textAlign: 'center',
+});

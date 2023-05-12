@@ -343,4 +343,21 @@ export class judgeClient {
       return false;
     }
   };
+
+  // Получить итоговый рейтинг
+  static getEvent = async () => {
+    try {
+      const result = await api.get('judge/getEvent', {}).json();
+      return result;
+    } catch (error) {
+      console.log(error);
+      if (error instanceof HTTPError) {
+        const errorJson = await error.response.json();
+        console.log(errorJson);
+      } else if (error instanceof Error) {
+        console.log(error.message);
+      }
+      return null;
+    }
+  };
 }

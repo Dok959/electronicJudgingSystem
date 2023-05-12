@@ -15,6 +15,7 @@ export const container = style({
   gap: 16,
   alignItems: 'baseline',
   justifyItems: 'center',
+  width: '100%',
 });
 
 export const item = style({
@@ -314,11 +315,10 @@ export const remove = style({
     '&::after': {
       position: 'absolute',
       content: '',
-      width: '140%',
+      width: '100%',
       height: 2,
       backgroundColor: '#f00',
-      left: -5,
-      rotate: '-30deg',
+      left: 0,
       bottom: 9,
     },
   },
