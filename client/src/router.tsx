@@ -34,7 +34,6 @@ import {
 } from './pages/Athlete/create';
 import { InfoEventPage, loaderInfoEvent } from './pages/Event/info';
 import { eventJudgeLoader, judgePlaceLoader, Judging } from './pages/Judging';
-import { raitingLoader } from './pages/Raiting';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -141,7 +140,7 @@ const router = createBrowserRouter(
         }
         loader={judgePlaceLoader}
       />
-      <Route path="raiting" element={<RaitingPage />} loader={raitingLoader} />
+      <Route path="raiting" element={<RaitingPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Route>,
   ),

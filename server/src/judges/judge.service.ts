@@ -1,5 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, User, Event, Place, PlacesEvent, Item } from '@prisma/client';
+import {
+  Prisma,
+  User,
+  Event,
+  Place,
+  PlacesEvent,
+  Item,
+  Athlete,
+} from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import * as dayjs from 'dayjs';
 
@@ -272,13 +280,41 @@ export class JudgeService {
       select: {
         partisipant: {
           select: {
+            id: true,
             athlete: true,
           },
         },
-        item: true,
         score: true,
       },
     });
-    return raiting;
+
+    const result: { partisipant: Athlete; scores: number[]; sum: number }[] =
+      [];
+    const uniquePartisipant = [];
+    raiting.map((item) => uniquePartisipant.push(item.partisipant.id));
+
+    [...new Set(uniquePartisipant)].map((partisipantId) => {
+      const items = raiting.filter(
+        (item) => item.partisipant.id === partisipantId,
+      );
+      const scores: number[] = [];
+      items.map((item) => {
+        scores.push(item.score);
+      });
+      while (scores.length < 4) {
+        scores.push(null);
+      }
+
+      result.push({
+        partisipant: items[0].partisipant.athlete,
+        scores: scores,
+        sum: scores.reduce(
+          (accumulator, currentValue) => accumulator + currentValue,
+          0,
+        ),
+      });
+    });
+
+    return result.sort((x, y) => x.sum - y.sum);
   }
 }

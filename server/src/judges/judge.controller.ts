@@ -239,12 +239,9 @@ export class JudgeController {
       return res.send(null);
     }
 
-    console.log(event);
-
     const ranksEvents = await this.judgeService.getRanksForRaiting(
       Number(event.id),
     );
-    console.log(ranksEvents);
 
     return res.send(ranksEvents);
   }
@@ -258,7 +255,6 @@ export class JudgeController {
     const raiting = await this.judgeService.getRaiting(
       settingsEvent.settingsEvent,
     );
-    console.log(raiting);
     return res.send(raiting);
   }
 }

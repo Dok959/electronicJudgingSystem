@@ -1,1 +1,1 @@
-export { RaitingPage, raitingLoader } from './Raiting';
+export { RaitingPage } from './Raiting';
