@@ -31,11 +31,11 @@ export const Slider = () => {
       autoplay={true}
       wrapAround={true}
     >
-      <img src="/images/first.jpg" className={Style.images} alt="" />
-      <img src="/images/first.jpg" className={Style.images} alt="" />
-      <img src="/images/first.jpg" className={Style.images} alt="" />
-      <img src="/images/first.jpg" className={Style.images} alt="" />
-      <img src="/images/first.jpg" className={Style.images} alt="" />
+      <img src="/images/1.jpg" className={Style.images} alt="" />
+      <img src="/images/2.jpg" className={Style.images} alt="" />
+      <img src="/images/3.jpg" className={Style.images} alt="" />
+      <img src="/images/4.jpg" className={Style.images} alt="" />
+      <img src="/images/5.jpg" className={Style.images} alt="" />
     </Carousel>
   );
 };

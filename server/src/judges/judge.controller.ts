@@ -249,31 +249,17 @@ export class JudgeController {
     return res.send(ranksEvents);
   }
 
-  @UseGuards(UserGuard)
-  @Get('getRaiting')
+  @Post('getRaiting')
   @HttpCode(HttpStatus.OK)
-  async getRaitingEvent(@Headers('user') user: User, @Res() res: Response) {
-    // const event = await this.judgeService.getEvent();
-
-    // if (event === null) {
-    //   return res.send(null);
-    // }
-
-    // console.log(event);
-
-    // const ranksEvents = await this.judgeService.getRanksForRaiting(
-    //   Number(event.id),
-    // );
-    // console.log(ranksEvents);
-
-    // const settings = await this.judgeService.getSettingsEventForRaiting(
-    //   Number(event.id),
-    // );
-
-    // console.log(settings);
-    // console.log(settings[0].PartisipantsIndividual);
-
-    return res.send(null);
+  async getRaitingEvent(
+    @Body() settingsEvent: { settingsEvent: number },
+    @Res() res: Response,
+  ) {
+    const raiting = await this.judgeService.getRaiting(
+      settingsEvent.settingsEvent,
+    );
+    console.log(raiting);
+    return res.send(raiting);
   }
 }
 

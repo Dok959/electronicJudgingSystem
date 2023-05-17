@@ -261,4 +261,24 @@ export class JudgeService {
     });
     return settings;
   }
+
+  async getRaiting(settingsEvent: number) {
+    const raiting = await this.prisma.raitingIndividual.findMany({
+      where: {
+        partisipant: {
+          settingsEventId: settingsEvent,
+        },
+      },
+      select: {
+        partisipant: {
+          select: {
+            athlete: true,
+          },
+        },
+        item: true,
+        score: true,
+      },
+    });
+    return raiting;
+  }
 }

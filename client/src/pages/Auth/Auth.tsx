@@ -95,7 +95,7 @@ const AuthContent = () => {
     <>
       <h3 className={Style.mainTitle}>Электронное судейство соревнований</h3>
       <div className={Style.wrapper}>
-        <img src="/images/first.jpg" alt="" className={Style.image} />
+        <img src="/images/3.jpg" alt="" className={Style.image} />
         <form onSubmit={formik.handleSubmit} className={Style.formLogin}>
           <label className={Style.label}>
             Почта

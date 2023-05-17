@@ -344,10 +344,33 @@ export class judgeClient {
     }
   };
 
-  // Получить итоговый рейтинг
+  // Получить данные о соревновании
   static getEvent = async () => {
     try {
       const result = await api.get('judge/getEvent', {}).json();
+      return result;
+    } catch (error) {
+      console.log(error);
+      if (error instanceof HTTPError) {
+        const errorJson = await error.response.json();
+        console.log(errorJson);
+      } else if (error instanceof Error) {
+        console.log(error.message);
+      }
+      return null;
+    }
+  };
+
+  // Получить итоговый рейтинг
+  static getRaiting = async (settingsEvent: number) => {
+    try {
+      const result = await api
+        .post('judge/getRaiting', {
+          json: {
+            settingsEvent,
+          },
+        })
+        .json();
       return result;
     } catch (error) {
       console.log(error);
