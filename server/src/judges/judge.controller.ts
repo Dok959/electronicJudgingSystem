@@ -229,10 +229,9 @@ export class JudgeController {
     return res.send(result ? true : false);
   }
 
-  @UseGuards(UserGuard)
   @Get('getEvent')
   @HttpCode(HttpStatus.OK)
-  async getEvent(@Headers('user') user: User, @Res() res: Response) {
+  async getEvent(@Res() res: Response) {
     const event = await this.judgeService.getEvent();
 
     if (event === null) {
