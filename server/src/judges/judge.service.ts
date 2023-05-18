@@ -315,6 +315,6 @@ export class JudgeService {
       });
     });
 
-    return result.sort((x, y) => x.sum - y.sum);
+    return result.sort((x, y) => y.sum - x.sum);
   }
 }

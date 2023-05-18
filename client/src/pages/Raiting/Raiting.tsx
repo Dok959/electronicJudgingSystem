@@ -1,16 +1,10 @@
-import {
-  Await,
-  LoaderFunctionArgs,
-  defer,
-  useLoaderData,
-} from 'react-router-dom';
+import { Await } from 'react-router-dom';
 import * as Style from './Raiting.css';
 import { judgeClient } from '@/api';
-import { IItem, IRanks } from '@/types';
+import { IRanks } from '@/types';
 import { Suspense, useCallback, useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import { EnumRank } from '@/utils';
-import React from 'react';
 import { ISelectAthlete } from '@/types/athlete';
 
 export const RaitingPage = () => {
@@ -62,7 +56,7 @@ export const RaitingPage = () => {
   }, [raiting]);
 
   async function getRaiting(settingsEvent: number) {
-    return await judgeClient.getRaiting(settingsEvent);
+    return (await judgeClient.getRaiting(settingsEvent)) as IRaitingTypes[];
   }
 
   const formik = useFormik({
@@ -70,14 +64,9 @@ export const RaitingPage = () => {
       settingsEvent: 0,
     },
     onSubmit: async (values) => {
-      console.log('-----');
       const { settingsEvent } = values;
-      console.log(settingsEvent);
-
-      const result = getRaiting(settingsEvent);
-      console.log(result);
-
-      return;
+      const result = await getRaiting(settingsEvent);
+      return setRaiting(result);
     },
   });
 
@@ -88,7 +77,7 @@ export const RaitingPage = () => {
           <form onSubmit={formik.handleSubmit} className={Style.container}>
             {infoEvent.map((item: any, index: number) => {
               return (
-                <p className={Style.item} key={item.id}>
+                <p className={Style.item} key={index}>
                   <input
                     type="radio"
                     id={`rankId${item.id}`}
@@ -112,23 +101,24 @@ export const RaitingPage = () => {
               );
             })}
           </form>
-          <table>
-            <thead>
-              <tr>
-                <th>Место</th>
-                <th>ФИО</th>
-                <th>Предмет 1</th>
-                <th>Предмет 2</th>
-                <th>Предмет 3</th>
-                <th>Предмет 4</th>
-                <th>Итого</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
+          <div className={Style.tableWrapper}>
+            <table className={Style.table}>
+              <thead>
+                <tr>
+                  <th className={Style.tableHeader}>Место</th>
+                  <th className={Style.tableHeader}>ФИО</th>
+                  <th className={Style.tableHeader}>Предмет 1</th>
+                  <th className={Style.tableHeader}>Предмет 2</th>
+                  <th className={Style.tableHeader}>Предмет 3</th>
+                  <th className={Style.tableHeader}>Предмет 4</th>
+                  <th className={Style.tableHeader}>Итого</th>
+                </tr>
+              </thead>
+              <tbody>
+                {/* TODO стили таблиц */}
                 {raiting.map((item, index: number) => {
                   return (
-                    <React.Fragment key={index}>
+                    <tr key={index}>
                       <td>{index + 1}</td>
                       <td>{`${item.partisipant.sirname} ${
                         item.partisipant.name
@@ -137,20 +127,20 @@ export const RaitingPage = () => {
                           ? item.partisipant.patronymic
                           : ''
                       }`}</td>
-                      {item.scores.map((score: number) => {
+                      {item.scores.map((score: number, JIndex: number) => {
                         if (score === null) {
-                          return <td></td>;
+                          return <td key={JIndex}></td>;
                         } else {
-                          return <td>{score}</td>;
+                          return <td key={JIndex}>{score.toFixed(3)}</td>;
                         }
                       })}
-                      <td>{item.sum}</td>
-                    </React.Fragment>
+                      <td>{item.sum.toFixed(3)}</td>
+                    </tr>
                   );
                 })}
-              </tr>
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          </div>
         </>
       </Await>
     </Suspense>
