@@ -20,7 +20,7 @@ export const container = style({
 
 export const item = style({
   margin: 0,
-  width: '100%',
+  width: 'max-content',
 });
 
 export const ranks = style({

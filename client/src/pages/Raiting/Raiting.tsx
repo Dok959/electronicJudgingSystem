@@ -29,10 +29,6 @@ export const RaitingPage = () => {
     loadRanksData();
   }, [loadRanksData]);
 
-  useEffect(() => {
-    console.log(infoEvent);
-  }, [infoEvent]);
-
   interface IRaitingTypes {
     partisipant: ISelectAthlete;
     scores: number[];
@@ -50,10 +46,6 @@ export const RaitingPage = () => {
   useEffect(() => {
     loadRaitingData();
   }, [infoEvent, loadRaitingData]);
-
-  useEffect(() => {
-    console.log(raiting);
-  }, [raiting]);
 
   async function getRaiting(settingsEvent: number) {
     return (await judgeClient.getRaiting(settingsEvent)) as IRaitingTypes[];

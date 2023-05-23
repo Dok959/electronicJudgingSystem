@@ -83,7 +83,7 @@ const AuthContent = () => {
         return null;
       }
 
-      navigate(`/home`);
+      navigate(`/events`);
       return handleAlertMessage({
         alertText: 'Вход выполнен',
         alertStatus: alertStatus.success,
