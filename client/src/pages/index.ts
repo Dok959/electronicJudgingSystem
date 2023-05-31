@@ -7,3 +7,4 @@ export { NotFoundPage } from './NotFound';
 export { UserPage } from './User';
 export { Places } from './Judging';
 export { RaitingPage } from './Raiting';
+export { ContactPage } from './Contact';

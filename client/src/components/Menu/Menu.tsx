@@ -23,6 +23,7 @@ export const Menu = () => {
       ]
     : [
         { to: '/', title: 'Главная' },
+        { to: '/contacts', title: 'Контакты' },
         { to: '/raiting', title: 'Рейтинг' },
         { to: '/login', title: 'Судейство' },
       ];

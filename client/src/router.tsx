@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom';
 import {
   AuthPage,
+  ContactPage,
   ErrorPage,
   EventPage,
   HomePage,
@@ -40,14 +41,15 @@ const router = createBrowserRouter(
     <Route path="/" element={<Layout />} errorElement={<ErrorPage />}>
       <Route index element={<MainPage />} loader={ranksLoader} />
       <Route path="login" element={<AuthPage />} loader={reLoginLoader} />
-      <Route
+      <Route path="contacts" element={<ContactPage />} />
+      {/* <Route
         path="home"
         element={
           <RequireAuth>
             <HomePage />
           </RequireAuth>
         }
-      />
+      /> */}
       <Route
         path="events"
         element={
