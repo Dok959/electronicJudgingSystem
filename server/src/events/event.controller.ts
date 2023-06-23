@@ -53,10 +53,7 @@ export class EventController {
   @UseGuards(JWTGuard)
   @Post('create')
   @HttpCode(HttpStatus.CREATED)
-  async create(
-    @Body() eventCreateArgs: Prisma.EventCreateArgs,
-    @Res() res: Response,
-  ) {
+  async create(@Body() eventCreateArgs: any, @Res() res: Response) {
     const event = await this.eventService.create(eventCreateArgs);
 
     return res.send(event);

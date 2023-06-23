@@ -82,16 +82,15 @@ export class EventService {
     });
   }
 
-  async create(eventCreateArgs: Prisma.EventCreateArgs): Promise<EventModel> {
-    const data = eventCreateArgs.data;
+  async create(eventCreateArgs: any): Promise<EventModel> {
     const newEvent = await this.prisma.event.create({
       data: {
-        title: data.title,
-        startDateTime: data.startDateTime,
-        duration: data.duration,
+        title: eventCreateArgs.title,
+        startDateTime: eventCreateArgs.startDateTime,
+        duration: eventCreateArgs.duration,
         SettingsEvent: {
           createMany: {
-            data: data.SettingsEvent as Prisma.SettingsEventCreateManyEventInput,
+            data: eventCreateArgs.SettingsEvent as Prisma.SettingsEventCreateManyEventInput,
           },
         },
       },
